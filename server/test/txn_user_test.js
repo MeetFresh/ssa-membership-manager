@@ -1,5 +1,5 @@
-const Txn = require('./models/txn')
-const User = require('./models/user')
+const Txn = require('../models/txn')
+const User = require('../models/user')
 
 const mongoose = require('mongoose');
 var de = require('dotenv').config();
