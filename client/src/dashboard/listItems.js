@@ -16,11 +16,11 @@ export const linksListItems = (
         <ListSubheader inset>
             Links to Related Sites
         </ListSubheader>
-        <ListItem button>
+        <ListItem button component="a" href="http://affectsociety.com">
             <ListItemIcon>
                 <WebAssetIcon />
             </ListItemIcon>
-            <ListItemText primary="Site 1" />
+            <ListItemText primary="#SSASS" />
         </ListItem>
         <ListItem button>
             <ListItemIcon>
@@ -45,7 +45,6 @@ export const how2Join = (
         </ListItem>
     </div>
 );
-
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>Recent Events</ListSubheader>

@@ -19,32 +19,21 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import {how2Join, linksListItems, mainListItems, secondaryListItems} from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
 import {TypographyTypeMap as align} from "@material-ui/core/Typography/Typography";
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
 import AddressForm from '../Payment/AddressForm'
 import PaymentForm from '../Payment/PaymentForm'
 import Checkout from '../Payment/Checkout'
+import Profile from '../Profile';
+import Membership from '../Membership';
+import Event from '../Event';
 import Review from '../Payment/Review'
 import Button from "@material-ui/core/Button";
+import logo from '../img/SSALogo.png';
 
 import { connect } from 'react-redux'
 import {actionCreators} from '../store'
-
-export function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="#">
-                Society of Study of Affect
-            </Link>{' '} {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
 
 const drawerWidth = 240;
 
@@ -157,9 +146,13 @@ function getPageDisplay(props) {
             return <SignIn />
         }
     } else if (props.currPage === 'profile') {
-        return null
+        return <Profile />
     } else if (props.currPage === 'membership') {
-        return <Checkout />
+        return <Membership />
+    } else if (props.currPage === 'checkout') {
+        return <Checkout/>
+    } else if (props.currPage == 'event') {
+        return <Event/>
     } else {
         return null
     }
@@ -211,6 +204,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                     {
                       props.loggedIn ?
                       <Fragment>
+                        {/*<img src={logo} alt="SSA"> </img>*/}
                         <Button
                             variant="contained"
                             style={{
@@ -225,6 +219,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                             }}
                             onClick={() => {props.togglePage('membership')}}
                         >Membership</Button>
+                      <Button
+                          variant="contained"
+                          style={{
+                              marginRight: 10
+                          }}
+                          onClick={() => {props.togglePage('event')}}
+                      >Event</Button>
                       </Fragment> : null
                     }
                   
@@ -234,7 +235,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         color="inherit"
                         noWrap
                         className={classes.title}>
-                        #SSA
                     </Typography>
 
                     <Button
@@ -301,8 +301,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
                 <h1 className={classes.header}>Welcome to SSA Website!</h1>
-                <Copyright />
-
+                {/*<Event/>*/}
                 {
                   getPageDisplay(props)
                 }
