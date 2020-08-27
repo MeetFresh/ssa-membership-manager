@@ -18,17 +18,20 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
+import {how2Join, linksListItems, mainListItems, secondaryListItems} from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
+import {TypographyTypeMap as align} from "@material-ui/core/Typography/Typography";
+import SignIn from '../SignIn';
+import Button from "@material-ui/core/Button";
 
-function Copyright() {
+export function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="#">
+        Society of Study of Affect
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -115,6 +118,12 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
+
 }));
 
 export default function Dashboard() {
@@ -142,16 +151,23 @@ export default function Dashboard() {
           >
             <MenuIcon />
           </IconButton>
+
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Dashboard
+            #SSA
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+
+          <Button variant="contained" style={{marginRight: 10,}}>About Us</Button>
+          <Button variant="contained" style={{marginRight: 10,}}>Log In</Button>
+          <Button variant="contained" style={{marginRight: 10,}}>Register</Button>
+          {/*<IconButton color="inherit">*/}
+            {/*<Badge badgeContent={4} color="secondary">*/}
+              {/*<NotificationsIcon />*/}
+            {/*</Badge>*/}
+          {/*</IconButton>*/}
+
         </Toolbar>
       </AppBar>
+
       <Drawer
         variant="permanent"
         classes={{
@@ -165,37 +181,19 @@ export default function Dashboard() {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <List>{linksListItems}</List>
+        <Divider />
+        <List>{how2Join}</List>
         <Divider />
         <List>{secondaryListItems}</List>
+
       </Drawer>
+
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits />
-              </Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Orders />
-              </Paper>
-            </Grid>
-          </Grid>
-          <Box pt={4}>
-            <Copyright />
-          </Box>
-        </Container>
+        <h1 className={classes.header}>Welcome to SSA Website!</h1>
+        <Copyright/>
+        <SignIn/>
       </main>
     </div>
   );
