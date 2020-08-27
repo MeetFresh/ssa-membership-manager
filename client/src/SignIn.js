@@ -17,6 +17,20 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 import {actionCreators} from './store'
 
+function Copyright() {
+    return (
+        <Typography variant="body2" color="textSecondary" align="center">
+            {'Copyright © '}
+            <Link color="inherit" href="https://material-ui.com/">
+                Society of Study of Affect
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
+
+
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -120,6 +134,9 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                     </Grid>
                 </form>
             </div>
+            <Box mt={5}>
+                <Copyright />
+            </Box>
         </Container>
     );
 })
