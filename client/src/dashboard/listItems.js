@@ -3,68 +3,68 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
+import EventIcon from '@material-ui/icons/Event';
+import SchoolIcon from '@material-ui/icons/School';
+import ExploreIcon from '@material-ui/icons/Explore';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import WebAssetIcon from '@material-ui/icons/WebAsset';
 
-export const mainListItems = (
-  <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Integrations" />
-    </ListItem>
-  </div>
+
+export const linksListItems = (
+    <div>
+        <ListSubheader inset>
+            Links to Related Sites
+        </ListSubheader>
+        <ListItem button component="a" href="http://affectsociety.com">
+            <ListItemIcon>
+                <WebAssetIcon />
+            </ListItemIcon>
+            <ListItemText primary="#SSASS" />
+        </ListItem>
+        <ListItem button>
+            <ListItemIcon>
+            </ListItemIcon>
+            <ListItemText primary="Site 2" />
+        </ListItem>
+        <ListItem button>
+            <ListItemIcon>
+            </ListItemIcon>
+            <ListItemText primary="Site 3" />
+        </ListItem>
+    </div>
 );
 
+export const how2Join = (
+    <div>
+        <ListItem button>
+            <ListItemIcon>
+                <HelpOutlineIcon />
+            </ListItemIcon>
+            <ListItemText primary="How to Joint Us" />
+        </ListItem>
+    </div>
+);
 export const secondaryListItems = (
   <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
+    <ListSubheader inset>Recent Events</ListSubheader>
     <ListItem button>
       <ListItemIcon>
-        <AssignmentIcon />
+        <EventIcon />
       </ListItemIcon>
-      <ListItemText primary="Current month" />
+      <ListItemText primary="Event 1" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <AssignmentIcon />
+        <SchoolIcon />
       </ListItemIcon>
-      <ListItemText primary="Last quarter" />
+      <ListItemText primary="Event 2" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <AssignmentIcon />
+        <ExploreIcon />
       </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
+      <ListItemText primary="Event 3" />
     </ListItem>
   </div>
 );
