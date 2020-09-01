@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Profile() {
+export default function Event() {
     const classes = useStyles();
 
     return (

@@ -5,17 +5,21 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
-import Paper from "./Payment/Checkout";
-import Divider from "./dashboard";
+import Paper from "../Payment/Checkout";
+import Divider from "../dashboard";
 import Button from "@material-ui/core/Button";
+import {connect} from "react-redux";
+import {actionCreators} from "../store";
+import {profile} from "./profileList";
 
 
-const profile = [
-    { name: 'Name', value: 'First Last' },
-    { name: 'Gender', value: 'Male' },
-    { name: 'Institue', value: 'Georgia Tech' },
-    { name: 'Email', value: 'myemail@gatech.edu' },
-];
+// const profile = [
+//     { name: 'Name', value: 'First Last' },
+//     { name: 'Gender', value: 'Male' },
+//     { name: 'Membership Status', value: 'Student' },
+//     { name: 'Institue', value: 'Georgia Tech' },
+//     { name: 'Email', value: 'myemail@gatech.edu' },
+// ];
 
 
 const useStyles = makeStyles((theme) => ({
@@ -47,7 +51,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Profile() {
+const mapDispatchToProps = (dispatch) => ({
+    editProfile() {
+        dispatch(actionCreators.setCurrPage("editProfile"))
+    },
+    changePic() {
+        dispatch(actionCreators.setCurrPage('changePic'))
+    }
+})
+
+export default connect(null, mapDispatchToProps)(function Profile(props) {
     const classes = useStyles();
 
     return (
@@ -71,7 +84,7 @@ export default function Profile() {
                             style={{
                                 marginTop: 10,
                             }}
-                            // onClick={() => {props.changePic()}}
+                            onClick={() => {props.editProfile()}}
                         >Edit</Button>
                     </Grid>
 
@@ -85,7 +98,7 @@ export default function Profile() {
                                 style={{
                                     marginTop: 10,
                                 }}
-                                // onClick={() => {props.changePic()}}
+                                onClick={() => {props.changePic()}}
                             >Change My Picture</Button>
                         </Grid>
                     </Grid>
@@ -94,4 +107,4 @@ export default function Profile() {
             </main>
         </React.Fragment>
     );
-}
+});

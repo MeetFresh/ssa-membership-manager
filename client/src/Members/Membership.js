@@ -5,10 +5,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
-import Paper from "./Payment/Checkout";
-import Divider from "./dashboard";
+import Paper from "../Payment/Checkout";
+import Divider from "../dashboard";
 import Button from "@material-ui/core/Button";
-import {actionCreators} from "./store";
+import {actionCreators} from "../store";
 import {connect} from "react-redux";
 
 const membership = [
@@ -96,6 +96,9 @@ export default connect(null, mapDispatchToProps)(function Membership(props) {
                         >Change My Picture</Button>
                     </Grid>
                 </Grid>
+                <Typography variant="body2">
+                Some Description about the membership fee. Some Description about the membership fee. Some Description about the membership fee. Some Description about the membership fee. Some Description about the membership fee.
+                </Typography>
             </Grid>
 
             </main>
