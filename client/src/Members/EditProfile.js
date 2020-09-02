@@ -12,9 +12,11 @@ import {connect} from "react-redux";
 import {actionCreators} from "../store";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import FormHelperText from '@material-ui/core/FormHelperText';
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
+import validator from 'email-validator'
 import {profile} from "./profileList";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,8 +52,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const mapDispatchToProps = (dispatch) => ({
-    saveProfile() {
+    saveProfile(state) {
         //do something to save the input
+
+        const { first, last, pronoun, status, email } = state
+        const profile = {
+            first, last, pronoun, status, email
+        }
+        if (status === 'faculty' || status === 'student') {
+            profile.institute = state.institute
+        }
+        if (status === 'student') {
+            profile.instituteId = state.instituteId
+        }
+        dispatch(actionCreators.setProfile(profile))
         dispatch(actionCreators.setCurrPage("profile"))
     },
     goProfile() {
@@ -59,21 +73,81 @@ const mapDispatchToProps = (dispatch) => ({
     },
 })
 
-export default connect(null, mapDispatchToProps)(function EditProfile(props) {
+const mapStateToProps = (state) => ({
+    profile: state.getIn(['app', 'profile'])
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile(props) {
     const classes = useStyles();
+    const profile = props.profile.toJS()
     const [state, setState] = React.useState({
-        gender: '',
-        status: '',
-        name: 'hai',
+        pronoun: profile.pronoun || '',
+        status: profile.status || '',
+        statusValidation: true,
+        first: profile.first || '',
+        firstValidation: true,
+        last: profile.last || '',
+        lastValidation: true,
+        institute: profile.institute || '',
+        instituteValidation: true,
+        instituteId: profile.instituteId || '',
+        instituteIdValidation: true,
+        email: profile.email || '',
+        emailValidation: true
     });
 
     const handleChange = (event) => {
         const name = event.target.name;
-        setState({
-            ...state,
-            [name]: event.target.value,
-        });
+        state[[name]] = event.target.value
+        setState({...state})
     };
+
+    const validateInput = (event, name=null, value=null) => {
+        if (event) {
+            name = event.target.name
+            value = event.target.value
+        }
+        const setValue = applyRule(name, value)
+        state[[name + 'Validation']] = setValue
+        setState({...state})
+        return setValue === true ? true : false
+    }
+
+    const validateAll = () => {
+        const basic = validateInput(null, 'first', state.first) && validateInput(null, 'last', state.last)
+        && validateInput(null, 'status', state.status) && validateInput(null, 'email', state.email)
+        if (!basic) {
+            return false
+        }
+        if (state.status === 'student') {
+            return validateInput(null, 'institute', state.institute)
+            && validateInput(null, 'instituteId', state.instituteId)
+        }
+        if (state.status === 'faculty') {
+            return validateInput(null, 'institute', state.institute)
+        }
+        return true
+    }
+
+    const applyRule = (name, value) => {
+        switch (name) {
+            case 'email':
+                return validator.validate(value) ? true :
+                (value === '' ? 'Email is required.' : 'Email is invalid.')
+            case 'status':
+                return value !== '' ? true : 'Must pick one.'
+            case 'institute':
+                return value !== '' ? true : 'Institute is required.'
+            case 'instituteId':
+                return value !== '' ? true : 'Institute ID is required.'
+            case 'first':
+                return value !== '' ? true : 'First name is required.'
+            case 'last':
+                return value !== '' ? true : 'Last name is required.'
+            default:
+                return true
+        }
+    }
 
     return (
         <React.Fragment>
@@ -87,87 +161,168 @@ export default connect(null, mapDispatchToProps)(function EditProfile(props) {
                         <Grid container spacing={1} className={classes.grid}>
                             <Grid item sm={6}>
                                 <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
-                                    First Name
+                                    First Name*
                                 </Typography>
                             </Grid>
                             <Grid item sm={6}>
-                                <TextField id="standard-basic" label="First" fullWidth="true" defaultValue={"First"}/>
+                                <TextField
+                                    id="standard-basic"
+                                    label="First Name"
+                                    fullWidth="true"
+                                    value={state.first}
+                                    onChange={(event) => {handleChange(event); validateInput(event)}}
+                                    inputProps={{
+                                        name: 'first'
+                                    }}
+                                    error={state.firstValidation === true ? false : true}
+                                    helperText={state.firstValidation}
+                                />
                             </Grid>
                         </Grid>
                         <Grid container spacing={1}  className={classes.grid}>
                             <Grid item sm={6}>
                                 <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
-                                    Last Name
+                                    Last Name*
                                 </Typography>
                             </Grid>
                             <Grid item sm={6}>
-                                <TextField id="standard-basic" label="Last" fullWidth="true" defaultValue={"Last"}/>
+                                <TextField
+                                    id="standard-basic"
+                                    label="Last Name"
+                                    fullWidth="true"
+                                    value={state.last}
+                                    onChange={(event) => {handleChange(event); validateInput(event)}}
+                                    inputProps={{
+                                        name: 'last'
+                                    }}
+                                    error={state.lastValidation === true ? false : true}
+                                    helperText={state.lastValidation}
+                                />
                             </Grid>
                         </Grid>
                         <Grid container spacing={1}  className={classes.grid}>
                             <Grid item sm={6}>
                                 <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
-                                    Gender
+                                    Pronoun
                                 </Typography>
                             </Grid>
                             <Grid item sm={6}>
                                 <Select className={classes.col}
                                         native
                                         fullWidth="true"
-                                        value={state.gender}
+                                        value={state.pronoun}
                                         onChange={handleChange}
                                         inputProps={{
-                                            name: 'gender',
+                                            name: 'pronoun',
                                         }}
                                 >
                                     <option aria-label="None" value="" />
-                                    <option value={'male'}>Male</option>
-                                    <option value={'female'}>Female</option>
-                                    <option value={'non-binary'}>Non-Binary</option>
+                                    <option value={'he'}>He</option>
+                                    <option value={'she'}>She</option>
+                                    <option value={'they'}>They</option>
                                 </Select>
                             </Grid>
                         </Grid>
                         <Grid container spacing={1}  className={classes.grid}>
                             <Grid item sm={6}>
                                 <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
-                                    Status
+                                    Status*
                                 </Typography>
                             </Grid>
                             <Grid item sm={6}>
+                                
                                 <Select className={classes.col}
                                     native
                                     fullWidth="true"
                                     value={state.status}
-                                    onChange={handleChange}
+                                    onChange={(event) => {handleChange(event); validateInput(event)}}
                                     inputProps={{
                                         name: 'status',
                                     }}
+                                    error={state.statusValidation === true ? false : true}
                                 >
                                     <option aria-label="None" value="" />
                                     <option value={'student'}>Student</option>
                                     <option value={'faculty'}>Faculty</option>
                                     <option value={'other'}>Other</option>
                                 </Select>
+                                {state.statusValidation !== true ? <FormHelperText error>{state.statusValidation}</FormHelperText> : null}
                             </Grid>
                         </Grid>
+                        {
+                            ['student', 'faculty'].indexOf(state.status) !== -1 ?
+                            <Grid container spacing={1}  className={classes.grid}>
+                                {
+                                    state.status === 'student' ?
+                                    <FormHelperText>To verify your student status, enter the institute you attened and your institute ID.</FormHelperText>
+                                    : state.status === 'faculty' ?
+                                    <FormHelperText>To verify your faculty status, enter the institute you work at.</FormHelperText>
+                                    : null
+                                }
+                                <Grid item sm={6}>
+                                    <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
+                                        Insitute*
+                                    </Typography>
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <TextField
+                                        id="standard-basic"
+                                        label="Intsitute"
+                                        fullWidth="true"
+                                        value={state.institute}
+                                        onChange={(event) => {handleChange(event); validateInput(event)}}
+                                        inputProps={{
+                                            name: 'institute',
+                                        }}
+                                        error={state.instituteValidation === true ? false : true}
+                                        helperText={state.instituteValidation}
+                                    />
+                                </Grid>
+                            </Grid> : null
+                        }
+                        {
+                            state.status === 'student' ?
+                            <Grid container spacing={1}  className={classes.grid}>
+                                <Grid item sm={6}>
+                                    <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
+                                        Insitute ID*
+                                    </Typography>
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <TextField
+                                        id="standard-basic"
+                                        label="Intsitute ID"
+                                        fullWidth="true"
+                                        value={state.instituteId}
+                                        onChange={(event) => {handleChange(event); validateInput(event)}}
+                                        inputProps={{
+                                            name: 'instituteId',
+                                        }}
+                                        error={state.instituteIdValidation === true ? false : true}
+                                        helperText={state.instituteIdValidation}
+                                    />
+                                </Grid>
+                            </Grid> : null
+                        }
                         <Grid container spacing={1}  className={classes.grid}>
                             <Grid item sm={6}>
                                 <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
-                                    Insitute
+                                    Email*
                                 </Typography>
                             </Grid>
                             <Grid item sm={6}>
-                                <TextField id="standard-basic" label="Intsitute" fullWidth="true"/>
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={1}  className={classes.grid}>
-                            <Grid item sm={6}>
-                                <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
-                                    Email
-                                </Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <TextField id="standard-basic" label="Email" fullWidth="true" />
+                                <TextField 
+                                    id="standard-basic" 
+                                    label="Email" 
+                                    fullWidth="true"
+                                    value={state.email}
+                                    onChange={(event) => {handleChange(event); validateInput(event)}}
+                                    inputProps={{
+                                        name: 'email',
+                                    }}
+                                    error={state.emailValidation === true ? false : true}
+                                    helperText={state.emailValidation}
+                                />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -187,7 +342,11 @@ export default connect(null, mapDispatchToProps)(function EditProfile(props) {
                     style={{
                         marginTop: 10,
                     }}
-                    onClick={() => {props.saveProfile()}}
+                    onClick={() => {
+                        if (validateAll()) {
+                            props.saveProfile(state)
+                        }
+                    }}
                 >Save</Button>
             </main>
         </React.Fragment>

@@ -10,7 +10,6 @@ import Divider from "../dashboard";
 import Button from "@material-ui/core/Button";
 import {connect} from "react-redux";
 import {actionCreators} from "../store";
-import {profile} from "./profileList";
 
 
 // const profile = [
@@ -60,8 +59,13 @@ const mapDispatchToProps = (dispatch) => ({
     }
 })
 
-export default connect(null, mapDispatchToProps)(function Profile(props) {
+const mapStateToProps = (state) => ({
+    profile: state.getIn(['app', 'profile'])
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(function Profile(props) {
     const classes = useStyles();
+    const profile = props.profile.toJS()
 
     return (
         <React.Fragment>
@@ -72,12 +76,38 @@ export default connect(null, mapDispatchToProps)(function Profile(props) {
                             My Profile
                         </Typography>
                         <List disablePadding>
-                            {profile.map((profile) => (
-                                <ListItem className={classes.listItem} key={profile.name}>
-                                    <ListItemText primary={profile.name} />
-                                    <Typography variant="body2">{profile.value}</Typography>
-                                </ListItem>
-                            ))}
+                            
+                            <ListItem className={classes.listItem}>
+                                <ListItemText primary='Name' />
+                                <Typography variant="body2">{profile.first + ' ' + profile.last}</Typography>
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <ListItemText primary='Pronoun' />
+                                <Typography variant="body2">{profile.pronoun}</Typography>
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                                <ListItemText primary='Membership Status' />
+                                <Typography variant="body2">{profile.status}</Typography>
+                            </ListItem>
+                            {
+                                profile.institute ?
+                                <ListItem className={classes.listItem}>
+                                    <ListItemText primary='Institute' />
+                                    <Typography variant="body2">{profile.institute}</Typography>
+                                </ListItem> : null
+                            }
+                            {
+                                profile.instituteId ?
+                                <ListItem className={classes.listItem}>
+                                    <ListItemText primary='Institute ID' />
+                                    <Typography variant="body2">{profile.instituteId}</Typography>
+                                </ListItem> : null
+                            }
+                            <ListItem className={classes.listItem}>
+                                <ListItemText primary='Email' />
+                                <Typography variant="body2">{profile.email}</Typography>
+                            </ListItem>
+                            
                         </List>
                         <Button
                             variant="contained" color="primary"
