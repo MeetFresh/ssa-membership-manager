@@ -45,12 +45,12 @@ export default function Event() {
                             Upcoming Event: 2021 Summer School
                         </Typography>
                         <Typography variant="body1" align="left">
-                        Third-party routing library
-                        One common use case is to use the button to trigger navigation to a new page.
-                        The ButtonBase component provides a property to handle this use case: component.
-                        However for certain focus polyfills ButtonBase requires the DOM node of the provided component.
-                        This is achieved by attaching a ref to the component and expecting that the component forwards this ref to the underlying DOM node.
-                        Given that many of the interactive components rely on ButtonBase, you should be able to take advantage of it everywhere.
+                            There will be no better—more energizing, more community-building, more hopeful, more enlightening—way
+                            to spend a week of your summer. Whether you are an undergraduate/Master/PhD student, an early career academic,
+                            a tenured faculty person, or someone outside of the academy altogether, the Society for the
+                            Study of Affect Summer Seminars provides an amazing opportunity to learn, interact, and create
+                            alongside two dozen of the most engaging folks (established and up-and-coming scholars) working
+                            in/around affect studies from all around the world. Come be a participant!
                         </Typography>
 
                     </Grid>
@@ -65,8 +65,8 @@ export default function Event() {
                                 style={{
                                     marginTop: 10,
                                 }}
-                                // onClick={() => {props.changePic()}}
-                            >Location</Button>
+                                href='http://affectsociety.com/#register2'
+                            >Join</Button>
                         </Grid>
                     </Grid>
                 </Grid>
