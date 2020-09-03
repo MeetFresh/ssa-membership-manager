@@ -22,10 +22,11 @@ export const linksListItems = (
             </ListItemIcon>
             <ListItemText primary="#SSASS" />
         </ListItem>
-        <ListItem button>
+        <ListItem button component="a" href="http://capaciousjournal.com">
             <ListItemIcon>
+                <WebAssetIcon />
             </ListItemIcon>
-            <ListItemText primary="Site 2" />
+            <ListItemText primary="Capacious" />
         </ListItem>
         <ListItem button>
             <ListItemIcon>

@@ -80,7 +80,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                         </ListItem>
                     </List>
                     <Button
-                        variant="contained" color="primary"
+                        variant="outlined"
                         style={{
                             marginTop: 10,
                         }}
@@ -95,7 +95,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                         <img className={classes.pic} src={"https://upload.wikimedia.org/wikipedia/en/thumb/6/6c/Georgia_Tech%27s_Buzz_logo.svg/1200px-Georgia_Tech%27s_Buzz_logo.svg.png"}>
                         </img>
                         <Button
-                            variant="contained" color="primary"
+                            variant="outlined"
                             style={{
                                 marginTop: 10,
                             }}

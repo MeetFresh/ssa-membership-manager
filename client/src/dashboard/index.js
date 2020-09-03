@@ -193,7 +193,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
             <CssBaseline/>
             <AppBar
                 position="absolute"
-                className={clsx(classes.appBar, open && classes.appBarShift)}>
+                className={clsx(classes.appBar, open && classes.appBarShift)}
+                style={{ background: '#FFFFFF' }}>
                 <Toolbar className={classes.toolbar}>
                     <IconButton
                         edge="start"
@@ -209,21 +210,21 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                       <Fragment>
                         {/*<img src={logo} alt="SSA"> </img>*/}
                         <Button
-                            variant="contained"
+                            variant="outlined"
                             style={{
                                 marginRight: 10
                             }}
                             onClick={() => {props.togglePage('profile')}}
                         >Profile</Button>
                         <Button
-                            variant="contained"
+                            variant="outlined"
                             style={{
                                 marginRight: 10
                             }}
                             onClick={() => {props.togglePage('membership')}}
                         >Membership</Button>
                       <Button
-                          variant="contained"
+                          variant="outlined"
                           style={{
                               marginRight: 10
                           }}
@@ -241,21 +242,21 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                     </Typography>
 
                     <Button
-                        variant="contained"
+                        variant="outlined"
                         style={{
                         marginRight: 10
                     }}>About Us</Button>
                     {
                       props.loggedIn ? (
                         <Button
-                          variant="contained"
+                          variant="outlined"
                           style={{ marginRight: 10 }}
                         onClick={ () => { props.logout() } }
                         >Log Out</Button>
                       ) : (
                         props.currPage !== 'signUp' ?
                         <Button
-                          variant="contained"
+                          variant="outlined"
                           style={{
                             marginRight: 10
                           }}
@@ -263,7 +264,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         >Sign Up</Button>
                         :
                         <Button
-                          variant="contained"
+                          variant="outlined"
                           style={{
                             marginRight: 10
                           }}
