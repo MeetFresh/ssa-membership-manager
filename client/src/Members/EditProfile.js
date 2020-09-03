@@ -18,6 +18,8 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import validator from 'email-validator'
 import {profile} from "./profileList";
+import { ThemeProvider } from '@material-ui/core/styles';
+import {theme} from '../theme';
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
@@ -152,6 +154,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
     return (
         <React.Fragment>
             <main className={classes.layout}>
+                <ThemeProvider theme={theme}>
                 <Typography variant="h5" gutterBottom className={classes.title}>
                     Edit My Profile
                 </Typography>
@@ -176,7 +179,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     }}
                                     error={state.firstValidation === true ? false : true}
                                     helperText={state.firstValidation}
-                                />
+                                    standard-basic  />
                             </Grid>
                         </Grid>
                         <Grid container spacing={1}  className={classes.grid}>
@@ -187,7 +190,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                             </Grid>
                             <Grid item sm={6}>
                                 <TextField
-                                    id="standard-basic"
+                                    id=""
                                     label="Last Name"
                                     fullWidth="true"
                                     value={state.last}
@@ -330,7 +333,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
 
 
                 <Button className={classes.btn}
-                        variant="contained" color="primary"
+                        variant="outlined"
                         style={{
                             marginTop: 10,
                         }}
@@ -338,7 +341,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                 >Back</Button>
 
                 <Button className={classes.btn}
-                    variant="contained" color="primary"
+                    variant="outlined"
                     style={{
                         marginTop: 10,
                     }}
@@ -348,6 +351,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                         }
                     }}
                 >Save</Button>
+                </ThemeProvider>
             </main>
         </React.Fragment>
     );

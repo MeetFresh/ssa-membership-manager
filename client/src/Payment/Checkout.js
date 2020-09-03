@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import AddressForm from './AddressForm';
 import PaymentForm from './PaymentForm';
 import Review from './Review';
+import { ThemeProvider } from '@material-ui/core/styles';
+import {theme} from '../theme';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -85,6 +87,7 @@ export default function Checkout() {
           <Typography component="h1" variant="h4" align="center">
             Subscribe
           </Typography>
+          <ThemeProvider theme={theme}>
           <Stepper activeStep={activeStep} className={classes.stepper}>
             {steps.map((label) => (
               <Step key={label}>
@@ -92,6 +95,7 @@ export default function Checkout() {
               </Step>
             ))}
           </Stepper>
+          </ThemeProvider>
           <React.Fragment>
             {activeStep === steps.length ? (
               <React.Fragment>
@@ -113,8 +117,7 @@ export default function Checkout() {
                     </Button>
                   )}
                   <Button
-                    variant="contained"
-                    color="primary"
+                    variant="outlined"
                     onClick={handleNext}
                     className={classes.button}
                   >

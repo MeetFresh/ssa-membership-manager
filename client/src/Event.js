@@ -61,7 +61,7 @@ export default function Event() {
                             <img className={classes.pic} src={"https://pbs.twimg.com/media/DTwKMqbXcAEugcd.jpg"}>
                             </img>
                             <Button
-                                variant="contained" color="primary"
+                                variant="outlined"
                                 style={{
                                     marginTop: 10,
                                 }}
