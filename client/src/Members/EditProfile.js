@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -57,15 +57,16 @@ const mapDispatchToProps = (dispatch) => ({
     saveProfile(state) {
         //do something to save the input
 
-        const { first, last, pronoun, status, email } = state
+        const { first, last, pronoun, status } = state
         const profile = {
-            first, last, pronoun, status, email
+            first, last, pronoun, status
         }
         if (status === 'faculty' || status === 'student') {
             profile.institute = state.institute
         }
         if (status === 'student') {
             profile.instituteId = state.instituteId
+            profile.email = state.email
         }
         dispatch(actionCreators.setProfile(profile))
         dispatch(actionCreators.setCurrPage("profile"))
@@ -117,13 +118,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
 
     const validateAll = () => {
         const basic = validateInput(null, 'first', state.first) && validateInput(null, 'last', state.last)
-        && validateInput(null, 'status', state.status) && validateInput(null, 'email', state.email)
+        && validateInput(null, 'status', state.status)
         if (!basic) {
             return false
         }
         if (state.status === 'student') {
             return validateInput(null, 'institute', state.institute)
             && validateInput(null, 'instituteId', state.instituteId)
+            && validateInput(null, 'email', state.email)
         }
         if (state.status === 'faculty') {
             return validateInput(null, 'institute', state.institute)
@@ -134,8 +136,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
     const applyRule = (name, value) => {
         switch (name) {
             case 'email':
-                return validator.validate(value) ? true :
-                (value === '' ? 'Email is required.' : 'Email is invalid.')
+                return validator.validate(value) && value.substring(value.indexOf('.')) === '.edu' ? true :
+                (value === '' ? 'Email is required.' : 'Institute (.edu) email required.')
             case 'status':
                 return value !== '' ? true : 'Must pick one.'
             case 'institute':
@@ -257,7 +259,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                             <Grid container spacing={1}  className={classes.grid}>
                                 {
                                     state.status === 'student' ?
-                                    <FormHelperText>To verify your student status, enter the institute you attened and your institute ID.</FormHelperText>
+                                    <FormHelperText>To verify your student status, enter the institute you attend, institute ID and email.</FormHelperText>
                                     : state.status === 'faculty' ?
                                     <FormHelperText>To verify your faculty status, enter the institute you work at.</FormHelperText>
                                     : null
@@ -285,49 +287,51 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                         }
                         {
                             state.status === 'student' ?
-                            <Grid container spacing={1}  className={classes.grid}>
-                                <Grid item sm={6}>
-                                    <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
-                                        Insitute ID*
-                                    </Typography>
+                            <Fragment>
+                                <Grid container spacing={1}  className={classes.grid}>
+                                    <Grid item sm={6}>
+                                        <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
+                                            Insitute ID*
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item sm={6}>
+                                        <TextField
+                                            id="standard-basic"
+                                            label="Intsitute ID"
+                                            fullWidth="true"
+                                            value={state.instituteId}
+                                            onChange={(event) => {handleChange(event); validateInput(event)}}
+                                            inputProps={{
+                                                name: 'instituteId',
+                                            }}
+                                            error={state.instituteIdValidation === true ? false : true}
+                                            helperText={state.instituteIdValidation}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item sm={6}>
-                                    <TextField
-                                        id="standard-basic"
-                                        label="Intsitute ID"
-                                        fullWidth="true"
-                                        value={state.instituteId}
-                                        onChange={(event) => {handleChange(event); validateInput(event)}}
-                                        inputProps={{
-                                            name: 'instituteId',
-                                        }}
-                                        error={state.instituteIdValidation === true ? false : true}
-                                        helperText={state.instituteIdValidation}
-                                    />
+                                <Grid container spacing={1}  className={classes.grid}>
+                                    <Grid item sm={6}>
+                                        <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
+                                            Institute Email*
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item sm={6}>
+                                        <TextField 
+                                            id="standard-basic" 
+                                            label="Email" 
+                                            fullWidth="true"
+                                            value={state.email}
+                                            onChange={(event) => {handleChange(event); validateInput(event)}}
+                                            inputProps={{
+                                                name: 'email',
+                                            }}
+                                            error={state.emailValidation === true ? false : true}
+                                            helperText={state.emailValidation}
+                                        />
+                                    </Grid>
                                 </Grid>
-                            </Grid> : null
+                            </Fragment> : null
                         }
-                        <Grid container spacing={1}  className={classes.grid}>
-                            <Grid item sm={6}>
-                                <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
-                                    Email*
-                                </Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <TextField 
-                                    id="standard-basic" 
-                                    label="Email" 
-                                    fullWidth="true"
-                                    value={state.email}
-                                    onChange={(event) => {handleChange(event); validateInput(event)}}
-                                    inputProps={{
-                                        name: 'email',
-                                    }}
-                                    error={state.emailValidation === true ? false : true}
-                                    helperText={state.emailValidation}
-                                />
-                            </Grid>
-                        </Grid>
                     </Grid>
                 </form>
 

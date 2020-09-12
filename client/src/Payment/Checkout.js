@@ -85,7 +85,7 @@ export default function Checkout() {
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
-            Subscribe
+            Checkout
           </Typography>
           <ThemeProvider theme={theme}>
           <Stepper activeStep={activeStep} className={classes.stepper}>
