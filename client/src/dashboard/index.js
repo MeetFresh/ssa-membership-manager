@@ -157,7 +157,7 @@ function getPageDisplay(props) {
         return <Membership />
     } else if (props.currPage === 'checkout') {
         return (
-        <div style='./checkoutstyle.css'>
+        <div align="center">
             <Elements stripe={promise}>
                 <Checkout/>
             </Elements>

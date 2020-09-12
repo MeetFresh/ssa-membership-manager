@@ -15,7 +15,7 @@ import PaymentForm from './PaymentForm';
 import Review from './Review';
 import { ThemeProvider } from '@material-ui/core/styles';
 import {theme} from '../theme';
-
+import './checkoutstyle.css'
 
 import React, { useState, useEffect } from "react";
 import {
@@ -25,69 +25,69 @@ import {
 } from "@stripe/react-stripe-js";
 
 
-const useStyles = makeStyles((theme) => ({
-  appBar: {
-    position: 'relative',
-  },
-  layout: {
-    width: 'auto',
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: theme.spacing(6),
-      marginBottom: theme.spacing(6),
-      padding: theme.spacing(3),
-    },
-  },
-  stepper: {
-    padding: theme.spacing(3, 0, 5),
-  },
-  buttons: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  button: {
-    marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1),
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   appBar: {
+//     position: 'relative',
+//   },
+//   layout: {
+//     width: 'auto',
+//     marginLeft: theme.spacing(2),
+//     marginRight: theme.spacing(2),
+//     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
+//       width: 600,
+//       marginLeft: 'auto',
+//       marginRight: 'auto',
+//     },
+//   },
+//   paper: {
+//     marginTop: theme.spacing(3),
+//     marginBottom: theme.spacing(3),
+//     padding: theme.spacing(2),
+//     [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+//       marginTop: theme.spacing(6),
+//       marginBottom: theme.spacing(6),
+//       padding: theme.spacing(3),
+//     },
+//   },
+//   stepper: {
+//     padding: theme.spacing(3, 0, 5),
+//   },
+//   buttons: {
+//     display: 'flex',
+//     justifyContent: 'flex-end',
+//   },
+//   button: {
+//     marginTop: theme.spacing(3),
+//     marginLeft: theme.spacing(1),
+//   },
+// }));
 
-const steps = ['Shipping address', 'Payment details', 'Review your order'];
+// const steps = ['Shipping address', 'Payment details', 'Review your order'];
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <PaymentForm />;
-    case 2:
-      return <Review />;
-    default:
-      throw new Error('Unknown step');
-  }
-}
+// function getStepContent(step) {
+//   switch (step) {
+//     case 0:
+//       return <AddressForm />;
+//     case 1:
+//       return <PaymentForm />;
+//     case 2:
+//       return <Review />;
+//     default:
+//       throw new Error('Unknown step');
+//   }
+// }
 
 export default function Checkout() {
-  const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  // const classes = useStyles();
+  // const [activeStep, setActiveStep] = React.useState(0);
 
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
-  };
+  // const handleNext = () => {
+  //   setActiveStep(activeStep + 1);
+  // };
 
-  const handleBack = () => {
-    setActiveStep(activeStep - 1);
-  };
+  // const handleBack = () => {
+  //   setActiveStep(activeStep - 1);
+  // };
 
 
 const [succeeded, setSucceeded] = useState(false);
@@ -162,13 +162,14 @@ const handleSubmit = async ev => {
 
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit} class='stripe'>
-      <CardElement id="card-element" options={cardStyle} onChange={handleChange} />
-      <button
+    <body class="stripe-form">
+    <form id="payment-form" onSubmit={handleSubmit} class="stripe-form">
+      <CardElement id="card-element" options={cardStyle} onChange={handleChange} className="stripe-form"/>
+      <button class="stripe-form"
         disabled={processing || disabled || succeeded}
         id="submit"
       >
-        <span id="button-text">
+        <span id="button-text" class="stripe-form">
           {processing ? (
             <div className="spinner" id="spinner"></div>
           ) : (
@@ -193,6 +194,7 @@ const handleSubmit = async ev => {
         </a> Refresh the page to pay again.
       </p>
     </form>
+    </body>
   );
 
   // return (

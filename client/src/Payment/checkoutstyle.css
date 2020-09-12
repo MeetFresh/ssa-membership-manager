@@ -1,9 +1,8 @@
-#root {
-  display: flex;
-  align-items: center;
-}
+.stripe-form * {
+    box-sizing: border-box;
+  }
 
-body {
+.stripe-form body {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
@@ -14,8 +13,8 @@ body {
   width: 100vw;
 }
 
-form {
-  width: 30vw;
+.stripe-form form {
+  width: 60vw;
   align-self: center;
   box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
     0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
@@ -23,7 +22,7 @@ form {
   padding: 40px;
 }
 
-input {
+.stripe-form input {
   border-radius: 6px;
   margin-bottom: 6px;
   padding: 12px;
@@ -40,7 +39,7 @@ input {
   font-size: 16px;
 }
 
-.result-message a {
+.stripe-form .result-message a {
   color: rgb(89, 111, 214);
   font-weight: 600;
   text-decoration: none;
@@ -50,7 +49,7 @@ input {
   display: none;
 }
 
-#card-error {
+.stripe-form #card-error {
   color: rgb(105, 115, 134);
   font-size: 16px;
   line-height: 20px;
@@ -58,7 +57,7 @@ input {
   text-align: center;
 }
 
-#card-element {
+.stripe-form #card-element {
   border-radius: 4px 4px 0 0;
   padding: 12px;
   border: 1px solid rgba(50, 50, 93, 0.1);
@@ -68,12 +67,12 @@ input {
   box-sizing: border-box;
 }
 
-#payment-request-button {
+.stripe-form #payment-request-button {
   margin-bottom: 32px;
 } 
 
 /* Buttons and links */
-button {
+.stripe-form button {
   background: #5469d4;
   font-family: Arial, sans-serif;
   color: #ffffff;
@@ -89,23 +88,23 @@ button {
   width: 100%;
 }
 
-button:hover {
+.stripe-form button:hover {
   filter: contrast(115%);
 }
 
-button:disabled {
+.stripe-form button:disabled {
   opacity: 0.5;
   cursor: default;
 }
 
 /* spinner/processing state, errors */
-.spinner,
-.spinner:before,
-.spinner:after {
+.stripe-form .spinner,
+.stripe-form .spinner:before,
+.stripe-form .spinner:after {
   border-radius: 50%;
 }
 
-.spinner {
+.stripe-form .spinner {
   color: #ffffff;
   font-size: 22px;
   text-indent: -99999px;
@@ -119,13 +118,13 @@ button:disabled {
   transform: translateZ(0);
 }
 
-.spinner:before,
-.spinner:after {
+.stripe-form .spinner:before,
+.stripe-form .spinner:after {
   position: absolute;
   content: "";
 }
 
-.spinner:before {
+.stripe-form .spinner:before {
   width: 10.4px;
   height: 20.4px;
   background: #5469d4;
@@ -138,7 +137,7 @@ button:disabled {
   animation: loading 2s infinite ease 1.5s;
 }
 
-.spinner:after {
+.stripe-form .spinner:after {
   width: 10.4px;
   height: 10.2px;
   background: #5469d4;
