@@ -6,7 +6,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Button from "@material-ui/core/Button";
-
+import { connect } from 'react-redux';
+import {actionCreators} from "./store";
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
@@ -33,8 +34,20 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Event() {
+const mapPropsToDispatch = (dispatch) => ({
+    handlePay(eventName) {
+        dispatch(actionCreators.clearCart())
+        dispatch(actionCreators.addToCart(eventName))
+        dispatch(actionCreators.setCurrPage("checkout"))
+    }
+})
+
+export default connect(null, mapPropsToDispatch)(function Event(props) {
     const classes = useStyles();
+
+    const handlePay = (eventName) => {
+        props.handlePay(eventName)
+    }
 
     return (
         <React.Fragment>
@@ -64,9 +77,18 @@ export default function Event() {
                                 variant="outlined"
                                 style={{
                                     marginTop: 10,
+                                    marginRight: 5
                                 }}
                                 href='http://affectsociety.com/#register2'
-                            >Join</Button>
+                            >Learn More</Button>
+                            <Button
+                                variant="outlined"
+                                style={{
+                                    marginTop: 10,
+                                    marginLeft: 5
+                                }}
+                                onClick={() => {handlePay('summer-school')}}
+                            >Pay</Button>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -74,4 +96,4 @@ export default function Event() {
             </main>
         </React.Fragment>
     );
-}
+})

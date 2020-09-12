@@ -46,7 +46,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const mapDispatchToProps = (dispatch) => ({
-    subscribe() {
+    subscribe(status) {
+        dispatch(actionCreators.clearCart())
+        dispatch(actionCreators.addToCart(status + '-membership'))
         dispatch(actionCreators.setCurrPage("checkout"))
     },
     changePic() {
@@ -84,7 +86,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                         style={{
                             marginTop: 10,
                         }}
-                        onClick={() => {props.subscribe()}}
+                        onClick={() => {props.subscribe(profile.status)}}
                         disabled={profile.status === ''}
                     >Subscribe</Button>
                 </Grid>
