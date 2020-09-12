@@ -5,6 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
+import {connect} from "react-redux";
 
 const products = [
   { name: 'Product 1', desc: 'A nice thing', price: '$9.99' },
@@ -33,8 +34,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Review() {
+const mapStateToProps = (state) => ({
+  shoppingCart: state.getIn(['app', 'shoppingCart'])
+})
+
+export default connect(mapStateToProps, null)(function Review(props) {
   const classes = useStyles();
+  const shoppingCart = props.shoppingCart.toJS()
 
   return (
     <React.Fragment>
@@ -42,10 +48,10 @@ export default function Review() {
         Order summary
       </Typography>
       <List disablePadding>
-        {products.map((product) => (
-          <ListItem className={classes.listItem} key={product.name}>
+        {shoppingCart.map((product) => (
+          <ListItem className={classes.listItem} key={product.id}>
             <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{product.price}</Typography>
+            <Typography variant="body2">${product.price}</Typography>
           </ListItem>
         ))}
         <ListItem className={classes.listItem}>
@@ -83,4 +89,4 @@ export default function Review() {
       </Grid>
     </React.Fragment>
   );
-}
+})

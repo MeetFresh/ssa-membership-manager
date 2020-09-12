@@ -14,3 +14,12 @@ export const setProfile = (profile) => ({
     type: constants.SET_PROFILE,
     profile
 })
+
+export const clearCart = () => ({
+    type: constants.CLEAR_CART
+})
+
+export const addToCart = (itemId) => ({
+    type: constants.ADD_TO_CART,
+    itemId
+})
