@@ -13,12 +13,12 @@ const promise = loadStripe("pk_test_51HKUBkCT0gTsZJ1O7Z5eOtt5HwxFFk1Mh6RDeVer8wx
 function App() {
     return (
       <div className="App">
-        {/* <Provider store={store}>
+        <Provider store={store}>
           <Dashboard />
-        </Provider> */}
-        <Elements stripe={promise}>
+        </Provider>
+        {/* <Elements stripe={promise}>
           <CheckoutForm />
-        </Elements>
+        </Elements> */}
       </div>
     );
 }
