@@ -1,4 +1,4 @@
-/* .App {
+.App {
   text-align: center;
 }
 
@@ -35,10 +35,10 @@
   to {
     transform: rotate(360deg);
   }
-} */
+}
 
 
-#root {
+/* #root {
   display: flex;
   align-items: center;
 }
@@ -110,10 +110,10 @@ input {
 
 #payment-request-button {
   margin-bottom: 32px;
-}
+} */
 
 /* Buttons and links */
-button {
+/* button {
   background: #5469d4;
   font-family: Arial, sans-serif;
   color: #ffffff;
@@ -139,7 +139,7 @@ button:disabled {
 }
 
 /* spinner/processing state, errors */
-.spinner,
+/* .spinner,
 .spinner:before,
 .spinner:after {
   border-radius: 50%;
@@ -206,4 +206,4 @@ button:disabled {
   form {
     width: 80vw;
   }
-}
+} */ 
