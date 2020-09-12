@@ -35,6 +35,11 @@ import logo from '../img/SSALogo.png';
 
 import { connect } from 'react-redux'
 import {actionCreators} from '../store'
+import { Elements } from '@stripe/react-stripe-js';
+
+
+import { loadStripe } from "@stripe/stripe-js";
+const promise = loadStripe("pk_test_51HKUBkCT0gTsZJ1O7Z5eOtt5HwxFFk1Mh6RDeVer8wxM5ioHdLohr4HovlxrdDW9SBZIQvSeOX3xbqnK3e4cOQVx00F3k0i43R");
 
 const drawerWidth = 240;
 
@@ -151,7 +156,13 @@ function getPageDisplay(props) {
     } else if (props.currPage === 'membership') {
         return <Membership />
     } else if (props.currPage === 'checkout') {
-        return <Checkout/>
+        return (
+        <div style='./checkoutstyle.css'>
+            <Elements stripe={promise}>
+                <Checkout/>
+            </Elements>
+        </div>
+        )
     } else if (props.currPage == 'event') {
         return <Event/>
     } else if (props.currPage == 'editProfile') {
