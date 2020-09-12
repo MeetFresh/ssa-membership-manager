@@ -8,8 +8,7 @@ const defaultState = fromJS({
         first: '',
         last: '',
         pronoun: '',
-        status: '',
-        email: ''
+        status: ''
     }
 })
 
