@@ -17,6 +17,9 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 import {actionCreators} from './store'
 
+import { ThemeProvider } from '@material-ui/core/styles';
+import {theme} from './theme';
+
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -40,14 +43,14 @@ const useStyles = makeStyles((theme) => ({
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main
+        backgroundColor: '#888888',
     },
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(1)
     },
     submit: {
-        margin: theme.spacing(3, 0, 2)
+        margin: theme.spacing(3, 0, 2),
     }
 }));
 
@@ -86,6 +89,7 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
+                <ThemeProvider theme={theme}>
                 <form 
                     className={classes.form} noValidate
                     onSubmit={(event) => {handleSubmit(event, props.login)}}>
@@ -110,13 +114,12 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                         id="password"
                         autoComplete="current-password"/>
                     <FormControlLabel
-                        control={< Checkbox value = "remember" color = "primary" />}
+                        control={< Checkbox value = "remember" color = "#888888" />}
                         label="Remember me"/>
                     <Button
                         type="submit"
                         fullWidth
-                        variant="contained"
-                        color="primary"
+                        variant="outlined"
                         className={classes.submit}>
                         Sign In
                     </Button>
@@ -133,6 +136,7 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                         </Grid>
                     </Grid>
                 </form>
+                </ThemeProvider>
             </div>
             <Box mt={5}>
                 <Copyright />

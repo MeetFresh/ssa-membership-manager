@@ -16,6 +16,10 @@ import Container from '@material-ui/core/Container';
 import { connect } from 'react-redux'
 import {actionCreators} from './store'
 
+import { ThemeProvider } from '@material-ui/core/styles';
+import {theme} from './theme';
+
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -38,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: '#888888',
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -62,6 +66,7 @@ export default connect(null, mapDispatchToProps)(function SignUp(props) {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
+        <ThemeProvider theme={theme}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -126,8 +131,7 @@ export default connect(null, mapDispatchToProps)(function SignUp(props) {
           <Button
             type="submit"
             fullWidth
-            variant="contained"
-            color="primary"
+            variant="outlined"
             className={classes.submit}
           >
             Sign Up
@@ -140,6 +144,7 @@ export default connect(null, mapDispatchToProps)(function SignUp(props) {
             </Grid>
           </Grid>
         </form>
+        </ThemeProvider>
       </div>
       <Box mt={5}>
         <Copyright />

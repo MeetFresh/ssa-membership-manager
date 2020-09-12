@@ -5,15 +5,15 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
-import Paper from "./Payment/Checkout";
-import Divider from "./dashboard";
+import Paper from "../Payment/Checkout";
+import Divider from "../dashboard";
 import Button from "@material-ui/core/Button";
-import {actionCreators} from "./store";
+import {actionCreators} from "../store";
 import {connect} from "react-redux";
 
 const membership = [
-    { name: 'Status:', desc: 'some description', value: 'Student' },
-    { name: 'Expire Time:', desc: 'some description', value: '08/31/2021' },
+    { name: 'Status:', desc: 'Decides your subscription rate', value: 'Student' },
+    { name: 'Expire Time:', desc: 'Pay to continue as a member!', value: '08/31/2021' },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -54,9 +54,13 @@ const mapDispatchToProps = (dispatch) => ({
     }
 })
 
-export default connect(null, mapDispatchToProps)(function Membership(props) {
-    const classes = useStyles();
+const mapStateToProps = (state) => ({
+    profile: state.getIn(['app', 'profile'])
+})
 
+export default connect(mapStateToProps, mapDispatchToProps)(function Membership(props) {
+    const classes = useStyles();
+    const profile = props.profile.toJS()
     return (
         <React.Fragment>
             <main className={classes.layout}>
@@ -66,19 +70,22 @@ export default connect(null, mapDispatchToProps)(function Membership(props) {
                         My Membership
                     </Typography>
                     <List disablePadding>
-                        {membership.map((membership) => (
-                            <ListItem className={classes.listItem} key={membership.name}>
-                                <ListItemText primary={membership.name} secondary={membership.desc} />
-                                <Typography variant="body2">{membership.value}</Typography>
-                            </ListItem>
-                        ))}
+                        <ListItem className={classes.listItem}>
+                            <ListItemText primary={membership[0].name} secondary={membership[0].desc} />
+                            <Typography variant="body2">{profile.status || 'N/A'}</Typography>
+                        </ListItem>
+                        <ListItem className={classes.listItem}>
+                            <ListItemText primary={membership[1].name} secondary={membership[1].desc} />
+                            <Typography variant="body2">{membership[1].value}</Typography>
+                        </ListItem>
                     </List>
                     <Button
-                        variant="contained" color="primary"
+                        variant="outlined"
                         style={{
                             marginTop: 10,
                         }}
                         onClick={() => {props.subscribe()}}
+                        disabled={profile.status === ''}
                     >Subscribe</Button>
                 </Grid>
 
@@ -88,7 +95,7 @@ export default connect(null, mapDispatchToProps)(function Membership(props) {
                         <img className={classes.pic} src={"https://upload.wikimedia.org/wikipedia/en/thumb/6/6c/Georgia_Tech%27s_Buzz_logo.svg/1200px-Georgia_Tech%27s_Buzz_logo.svg.png"}>
                         </img>
                         <Button
-                            variant="contained" color="primary"
+                            variant="outlined"
                             style={{
                                 marginTop: 10,
                             }}
@@ -96,6 +103,18 @@ export default connect(null, mapDispatchToProps)(function Membership(props) {
                         >Change My Picture</Button>
                     </Grid>
                 </Grid>
+                <Typography variant="body2">
+                    {
+                        profile.status === 'student' ?
+                        'As a student, you may enjoy a discounted subscription rate as low as $2.51 per month.'
+                        : profile.status === 'faculty' ?
+                        'All faculties in SSA must pay $9.96 per month. We appreciate your contribution!'
+                        : profile.status === 'other' ?
+                        'The standard subscritpion rate for SSA is $4.04 per month. We appreciate your contribution!'
+                        : 'Oops, seems you have not declared your status yet. You should claim one in your Profile.'
+                    }
+                    
+                </Typography>
             </Grid>
 
             </main>
