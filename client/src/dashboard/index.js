@@ -202,7 +202,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         aria-label="open drawer"
                         onClick={handleDrawerOpen}
                         className={clsx(classes.menuButton, open && classes.menuButtonHidden)}>
-                        <MenuIcon/>
+                        <MenuIcon style={{fill: "gray"}}/>
                     </IconButton>
 
                     {
