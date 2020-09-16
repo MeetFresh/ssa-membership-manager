@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 const mapPropsToDispatch = (dispatch) => ({
     handlePay(eventSet) {
         dispatch(actionCreators.clearCart());
+        console.log(eventSet)
         eventSet.forEach((eventName) =>
             dispatch(actionCreators.addToCart(eventName))
         );
@@ -108,6 +109,8 @@ export default connect(null, mapPropsToDispatch)(function Event(props) {
     const handlePay = (eventSet) => {
         props.handlePay(eventSet)
     }
+
+    selectedSet = new Set();
 
     return (
         <React.Fragment>

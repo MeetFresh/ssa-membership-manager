@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import AddressForm from './AddressForm';
 import PaymentForm from './PaymentForm';
 import Review from './Review';
+import {connect} from "react-redux";
 import { ThemeProvider } from '@material-ui/core/styles';
 import {theme} from '../theme';
 import './checkoutstyle.css'
@@ -25,42 +26,42 @@ import {
 } from "@stripe/react-stripe-js";
 
 
-// const useStyles = makeStyles((theme) => ({
-//   appBar: {
-//     position: 'relative',
-//   },
-//   layout: {
-//     width: 'auto',
-//     marginLeft: theme.spacing(2),
-//     marginRight: theme.spacing(2),
-//     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-//       width: 600,
-//       marginLeft: 'auto',
-//       marginRight: 'auto',
-//     },
-//   },
-//   paper: {
-//     marginTop: theme.spacing(3),
-//     marginBottom: theme.spacing(3),
-//     padding: theme.spacing(2),
-//     [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-//       marginTop: theme.spacing(6),
-//       marginBottom: theme.spacing(6),
-//       padding: theme.spacing(3),
-//     },
-//   },
-//   stepper: {
-//     padding: theme.spacing(3, 0, 5),
-//   },
-//   buttons: {
-//     display: 'flex',
-//     justifyContent: 'flex-end',
-//   },
-//   button: {
-//     marginTop: theme.spacing(3),
-//     marginLeft: theme.spacing(1),
-//   },
-// }));
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    position: 'relative',
+  },
+  layout: {
+    width: 'auto',
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
+      width: 600,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+  },
+  paper: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(2),
+    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+      marginTop: theme.spacing(6),
+      marginBottom: theme.spacing(6),
+      padding: theme.spacing(3),
+    },
+  },
+  stepper: {
+    padding: theme.spacing(3, 0, 5),
+  },
+  buttons: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  button: {
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1),
+  },
+}));
 
 // const steps = ['Shipping address', 'Payment details', 'Review your order'];
 
@@ -77,8 +78,12 @@ import {
 //   }
 // }
 
-export default function Checkout() {
-  // const classes = useStyles();
+const mapStateToProps = (state) => ({
+  shoppingCart: state.getIn(['app', 'shoppingCart'])
+})
+
+export default connect(mapStateToProps, null)(function Checkout(props) {
+  const classes = useStyles();
   // const [activeStep, setActiveStep] = React.useState(0);
 
   // const handleNext = () => {
@@ -106,7 +111,7 @@ useEffect(() => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({items: [{ id: "xl-tshirt" }]})
+      body: JSON.stringify({items: props.shoppingCart.toJS()})
     })
     .then(res => {
       return res.json();
@@ -162,39 +167,47 @@ const handleSubmit = async ev => {
 
 
   return (
-    <body class="stripe-form">
-    <form id="payment-form" onSubmit={handleSubmit} class="stripe-form">
-      <CardElement id="card-element" options={cardStyle} onChange={handleChange} className="stripe-form"/>
-      <button class="stripe-form"
-        disabled={processing || disabled || succeeded}
-        id="submit"
-      >
-        <span id="button-text" class="stripe-form">
-          {processing ? (
-            <div className="spinner" id="spinner"></div>
-          ) : (
-            "Pay"
-          )}
-        </span>
-      </button>
-      {/* Show any error that happens when processing the payment */}
-      {error && (
-        <div className="card-error" role="alert">
-          {error}
-        </div>
-      )}
-      {/* Show a success message upon completion */}
-      <p className={succeeded ? "result-message" : "result-message hidden"}>
-        Payment succeeded, see the result in your
-        <a
-          href={`https://dashboard.stripe.com/test/payments`}
+    <React.Fragment>
+      <main className={classes.layout}>
+        <Paper className={classes.paper}>
+          <Review />
+        </Paper>
+      </main>
+      
+      <body class="stripe-form">
+      <form id="payment-form" onSubmit={handleSubmit} class="stripe-form">
+        <CardElement id="card-element" options={cardStyle} onChange={handleChange} className="stripe-form"/>
+        <button class="stripe-form"
+          disabled={processing || disabled || succeeded}
+          id="submit"
         >
-          {" "}
-          Stripe dashboard.
-        </a> Refresh the page to pay again.
-      </p>
-    </form>
-    </body>
+          <span id="button-text" class="stripe-form">
+            {processing ? (
+              <div className="spinner" id="spinner"></div>
+            ) : (
+              "Pay"
+            )}
+          </span>
+        </button>
+        {/* Show any error that happens when processing the payment */}
+        {error && (
+          <div className="card-error" role="alert">
+            {error}
+          </div>
+        )}
+        {/* Show a success message upon completion */}
+        <p className={succeeded ? "result-message" : "result-message hidden"}>
+          Payment succeeded, see the result in your
+          <a
+            href={`https://dashboard.stripe.com/test/payments`}
+          >
+            {" "}
+            Stripe dashboard.
+          </a> Refresh the page to pay again.
+        </p>
+      </form>
+      </body>
+    </React.Fragment>
   );
 
   // return (
@@ -248,4 +261,4 @@ const handleSubmit = async ev => {
   //     </main>
   //   </React.Fragment>
   // );
-}
+})
