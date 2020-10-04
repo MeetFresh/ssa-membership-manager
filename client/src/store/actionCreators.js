@@ -23,3 +23,8 @@ export const addToCart = (itemId) => ({
     type: constants.ADD_TO_CART,
     itemId
 })
+
+export const setAdmin = (isLogin) => ({
+    type: constants.SET_ADMIN,
+    isLogin
+})

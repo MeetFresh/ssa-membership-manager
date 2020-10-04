@@ -36,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const mapPropsToState = (state) => ({
+    checkoutItemList: state.getIn(['app', 'checkoutItemList'])
+})
+
 const mapPropsToDispatch = (dispatch) => ({
     handlePay(eventSet) {
         dispatch(actionCreators.clearCart());
@@ -63,6 +67,9 @@ function EventComponent(props) {
             <Grid item xs={12} sm={8}>
                 <Typography variant="h5" align="left" gutterBottom className={classes.title}>
                     Upcoming Event: {props.name}
+                </Typography>
+                <Typography variant="h6" align="left" gutterBottom className={classes.title}>
+                    Price: ${props.price}
                 </Typography>
                 <Typography variant="body1" align="left">
                     {props.description}
@@ -103,7 +110,7 @@ function EventComponent(props) {
     );
 }
 
-export default connect(null, mapPropsToDispatch)(function Event(props) {
+export default connect(mapPropsToState, mapPropsToDispatch)(function Event(props) {
     const classes = useStyles();
 
     const handlePay = (eventSet) => {
@@ -126,30 +133,20 @@ export default connect(null, mapPropsToDispatch)(function Event(props) {
                     }}
                     onClick={() => {handlePay(selectedSet)}}
                 >Checkout</Button>
-                <EventComponent name = "2021 Summer School" id = 'summer-school'
-                    description = " There will be no better—more energizing, more community-building, more hopeful, more enlightening—way
-                    to spend a week of your summer. Whether you are an undergraduate/Master/PhD student, an early career academic,
-                    a tenured faculty person, or someone outside of the academy altogether, the Society for the
-                    Study of Affect Summer Seminars provides an amazing opportunity to learn, interact, and create
-                    alongside two dozen of the most engaging folks (established and up-and-coming scholars) working
-                    in/around affect studies from all around the world. Come be a participant!
-                    "
-                    picSrc = "https://pbs.twimg.com/media/DTwKMqbXcAEugcd.jpg"
-                    learnMoreLink = 'http://affectsociety.com/#register2'
-                />
-
-                <EventComponent name = "2021 SSA Conference" id = 'ssa-conference'
-                                description = " This conference seeks submissions that are shorter in length than most academic journal articles:
-                                generally essays in the range of 500-5000 words. The journal will continuously accept submissions on
-                                an ever-rolling basis and ‘publish’ them to the site after they have gone through the double-blind review process,
-                                been copy-edited, formatted, etc. Once five or six reviewed articles have been posted at the website, the journal
-                                will gather them together as a single downloadable ‘issue’ and, given the respective contents of that particular
-                                issue, recruit an appropriately resonant member from our editorial board to write an introduction or afterword that
-                                captures some of the key aspects and arguments raised across the assembled pieces."
-                                picSrc = "https://pbs.twimg.com/media/DTwKMqbXcAEugcd.jpg"
-                                learnMoreLink = 'http://capaciousjournal.com/submit/submit-an-article/'
-                />
-
+                {
+                    props.checkoutItemList.toJS().filter(
+                        (item) => (item.type === 'event')
+                    ).map(
+                        (item) => (
+                            <EventComponent name = {item.name} id = {item.id}
+                                description = {item.longDesc}
+                                picSrc = {item.picSrc}
+                                learnMoreLink = {item.learnMoreLink}
+                                price = {item.price}
+                            />
+                        )
+                    )
+                }
             </main>
         </React.Fragment>
     );

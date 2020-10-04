@@ -32,6 +32,7 @@ import Event from '../Event';
 import Review from '../Payment/Review'
 import Button from "@material-ui/core/Button";
 import logo from '../img/SSALogo.png';
+import MailingList from './MailingList'
 
 import { connect } from 'react-redux'
 import {actionCreators} from '../store'
@@ -167,6 +168,8 @@ function getPageDisplay(props) {
         return <Event/>
     } else if (props.currPage == 'editProfile') {
         return <EditProfile />
+    } else if (props.currPage == 'mailing-list') {
+        return <MailingList />
     } else {
         return null
     }
@@ -174,12 +177,14 @@ function getPageDisplay(props) {
 
 const mapStateToProps = (state) => ({
   loggedIn: state.getIn(['app', 'loggedIn']),
-  currPage: state.getIn(['app', 'currPage'])
+  currPage: state.getIn(['app', 'currPage']),
+  isAdmin: state.getIn(['app', 'isAdmin'])
 })
 
 const mapDispatchToProps = (dispatch) => ({
   logout() {
       dispatch(actionCreators.setLogin(false))
+      dispatch(actionCreators.setAdmin(false))
       dispatch(actionCreators.setCurrPage(null))
   },
   togglePage(pageName) {
@@ -241,6 +246,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                           }}
                           onClick={() => {props.togglePage('event')}}
                       >Event</Button>
+                      {
+                        !props.isAdmin ? null :
+                        <Button
+                          variant="outlined"
+                          style={{
+                              marginRight: 10
+                          }}
+                          onClick={() => {props.togglePage('mailing-list')}}
+                        >Mailing List</Button>
+                      }
                       </Fragment> : null
                     }
                   
@@ -315,7 +330,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
 
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
-                <h1 className={classes.header}>Welcome to SSA Website!</h1>
+                <h1 className={classes.header}>
+                    {
+                        props.isAdmin ? "Welcome, SSA Admin!" : "Welcome to SSA Website!"
+                    }
+                </h1>
                 {
                   getPageDisplay(props)
                 }

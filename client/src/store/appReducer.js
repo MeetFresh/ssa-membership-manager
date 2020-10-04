@@ -1,6 +1,7 @@
 import * as constants from './constants'
 import { fromJS } from 'immutable'
 import { checkoutItemList } from '../Payment/checkoutItemList'
+import { userList } from '../dashboard/userList'
 
 const defaultState = fromJS({
     loggedIn: false,
@@ -11,7 +12,10 @@ const defaultState = fromJS({
         pronoun: '',
         status: ''
     },
-    shoppingCart: []
+    shoppingCart: [],
+    isAdmin: false,
+    checkoutItemList: checkoutItemList,
+    userList: userList
 })
 
 export const reducer = (state=defaultState, action) => {
@@ -27,6 +31,8 @@ export const reducer = (state=defaultState, action) => {
         case constants.ADD_TO_CART:
             return state.set('shoppingCart', fromJS(
                 [...state.get('shoppingCart').toJS(), ...checkoutItemList.filter((item) => (item.id === action.itemId)) ]));
+        case constants.SET_ADMIN:
+            return state.set('isAdmin', fromJS(action.isLogin))
         default:
             return state
     }

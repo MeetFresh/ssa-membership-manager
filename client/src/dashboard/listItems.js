@@ -42,7 +42,7 @@ export const how2Join = (
             <ListItemIcon>
                 <HelpOutlineIcon />
             </ListItemIcon>
-            <ListItemText primary="How to Joint Us" />
+            <ListItemText primary="How to Join Us" />
         </ListItem>
     </div>
 );

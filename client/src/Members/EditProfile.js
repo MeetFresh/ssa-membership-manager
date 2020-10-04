@@ -249,7 +249,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     <option aria-label="None" value="" />
                                     <option value={'student'}>Student</option>
                                     <option value={'faculty'}>Faculty</option>
-                                    <option value={'other'}>Other</option>
+                                    <option value={'general'}>General</option>
                                 </Select>
                                 {state.statusValidation !== true ? <FormHelperText error>{state.statusValidation}</FormHelperText> : null}
                             </Grid>

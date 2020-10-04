@@ -109,7 +109,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                         'As a student, you may enjoy a discounted subscription rate as low as $2.51 per month.'
                         : profile.status === 'faculty' ?
                         'All faculties in SSA must pay $9.96 per month. We appreciate your contribution!'
-                        : profile.status === 'other' ?
+                        : profile.status === 'general' ?
                         'The standard subscritpion rate for SSA is $4.04 per month. We appreciate your contribution!'
                         : 'Oops, seems you have not declared your status yet. You should claim one in your Profile.'
                     }
