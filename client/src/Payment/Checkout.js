@@ -79,7 +79,8 @@ const useStyles = makeStyles((theme) => ({
 // }
 
 const mapStateToProps = (state) => ({
-  shoppingCart: state.getIn(['app', 'shoppingCart'])
+  shoppingCart: state.getIn(['app', 'shoppingCart']),
+  profile: state.getIn(['app', 'profile'])
 })
 
 export default connect(mapStateToProps, null)(function Checkout(props) {
@@ -111,7 +112,14 @@ useEffect(() => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({items: props.shoppingCart.toJS()})
+      body: JSON.stringify({
+        email: props.profile.toJS().email,
+        items: props.shoppingCart.toJS().map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price
+        }))
+      })
     })
     .then(res => {
       return res.json();

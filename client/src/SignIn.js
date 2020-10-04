@@ -58,13 +58,16 @@ function handleSubmit(event, login, loginAdmin) {
     event.preventDefault();
     const formData = new FormData(event.target);
     // !!! axios.post('/mockAPI/login.json', formData)
-    axios.get('/mockAPI/login.json').then(res => {
-        if (res.data['login-success']) {
-            login()
-        } else {
-            window.alert('login error')
-        }
-    })
+    
+    // axios.get('/mockAPI/login.json').then(res => {
+    //     if (res.data['login-success']) {
+    //         login()
+    //     } else {
+    //         window.alert('login error')
+    //     }
+    // })
+
+    login()
 
     // need to change hardcoded admin
     const email = formData.get('email')
