@@ -69,7 +69,7 @@ function handleSubmit(event, login, loginAdmin) {
     // need to change hardcoded admin
     const email = formData.get('email')
     const password = formData.get('password')
-    if (email === 'wtruran@gatech.edu' && password === '123456') {
+    if (email === 'wtruran@gatech.edu' && password === '111111') {
         loginAdmin(true)
     } else {
         loginAdmin(false)

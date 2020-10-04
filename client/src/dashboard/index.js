@@ -245,7 +245,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                               marginRight: 10
                           }}
                           onClick={() => {props.togglePage('event')}}
-                      >Event</Button>
+                      >Event/Announcement</Button>
                       {
                         !props.isAdmin ? null :
                         <Button

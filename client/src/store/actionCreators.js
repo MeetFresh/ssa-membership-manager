@@ -28,3 +28,17 @@ export const setAdmin = (isLogin) => ({
     type: constants.SET_ADMIN,
     isLogin
 })
+
+export const editCheckoutItemList = (editedItem) => ({
+    type: constants.EDIT_CHECKOUT_ITEM_LIST,
+    editedItem
+})
+
+export const deleteCheckoutItemList = (deletedId) => ({
+    type: constants.DELETE_CHECKOUT_ITEM_LIST,
+    deletedId
+})
+
+export const addCheckoutItemList = () => ({
+    type: constants.ADD_CHECKOUT_ITEM_LIST
+})
