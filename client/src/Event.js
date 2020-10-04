@@ -220,13 +220,16 @@ function EventComponent(props) {
                     {
                         !props.isAdmin ? (
                             <Fragment>
-                                <Button
-                                    variant="outlined"
-                                    style={{
-                                        marginTop: 10,
-                                    }}
-                                    href={props.learnMoreLink}
-                                >Learn More</Button>
+                                {
+                                    props.learnMoreLink !== '' ?
+                                    <Button
+                                        variant="outlined"
+                                        style={{
+                                            marginTop: 10,
+                                        }}
+                                        href={props.learnMoreLink}
+                                    >Learn More</Button> : null
+                                }
                                 {
                                     props.type === 'event' ?
                                     <div style={{
