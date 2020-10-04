@@ -54,9 +54,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function handleSubmit(event, login) {
+function handleSubmit(event, login, loginAdmin) {
     event.preventDefault();
-    // const formData = new FormData(event.target);
+    const formData = new FormData(event.target);
     // !!! axios.post('/mockAPI/login.json', formData)
     axios.get('/mockAPI/login.json').then(res => {
         if (res.data['login-success']) {
@@ -65,6 +65,15 @@ function handleSubmit(event, login) {
             window.alert('login error')
         }
     })
+
+    // need to change hardcoded admin
+    const email = formData.get('email')
+    const password = formData.get('password')
+    if (email === 'wtruran@gatech.edu' && password === '111111') {
+        loginAdmin(true)
+    } else {
+        loginAdmin(false)
+    }
 }
 
 const mapDispatchToProps = (dispatch) => ({
@@ -73,6 +82,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     toSignUp() {
         dispatch(actionCreators.setCurrPage('signUp'))
+    },
+    loginAdmin(isLogin) {
+        dispatch(actionCreators.setAdmin(isLogin))
     }
 })
 
@@ -92,7 +104,7 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                 <ThemeProvider theme={theme}>
                 <form 
                     className={classes.form} noValidate
-                    onSubmit={(event) => {handleSubmit(event, props.login)}}>
+                    onSubmit={(event) => {handleSubmit(event, props.login, props.loginAdmin)}}>
                     <TextField
                         variant="outlined"
                         margin="normal"

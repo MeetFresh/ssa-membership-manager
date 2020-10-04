@@ -1,0 +1,53 @@
+export const userList = [
+    {
+        email: "IreneJFrazier@rhyta.com",
+        first: "Irene",
+        last: "Frazier",
+        status: "student"
+    }, { 
+        email: "augustus77@amazonshopzen.com",
+        first: "Letitia",
+        last: "Kautzer",
+        status: "faculty"
+    }, { 
+        email: "lavon14@gmail.com",
+        first: "Adolf",
+        last: "Weimann",
+        status: "general"
+    }, { 
+        email: "sbogisich@bizimalem-support.de",
+        first: "Rubie",
+        last: "Jast",
+        status: "non-member"
+    }, { 
+        email: "shakira.moen@vozvrmfovklad.xyz",
+        first: "Rosie",
+        last: "Tromp",
+        status: "student"
+    }, {
+        email: "shyann.stehr@bizimalem-support.de",
+        first: "Joel",
+        last: "Conner",
+        status: "faculty"
+    }, { 
+        email: "quitzon.granvil@mayimed.com",
+        first: "Laurence",
+        last: "Funk",
+        status: "general"
+    }, { 
+        email: "romaguera.virgi@lolibox.ml",
+        first: "Shawna",
+        last: "Dietrich",
+        status: "non-member"
+    }, { 
+        email: "jovanny73@floridaharvard.com",
+        first: "Shana",
+        last: "Prohaska",
+        status: "student"
+    }, { 
+        email: "clark28@napkin.edu",
+        first: "Lavern",
+        last: "Prosacco",
+        status: "faculty"
+    }
+];

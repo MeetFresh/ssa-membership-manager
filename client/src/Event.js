@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -6,9 +6,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Button from "@material-ui/core/Button";
+import Select from "@material-ui/core/Select";
 import { connect } from 'react-redux';
 import {actionCreators} from "./store";
 import Checkbox from "@material-ui/core/Checkbox";
+import TextField from "@material-ui/core/TextField";
 import {Divider} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,14 +38,37 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const mapPropsToState = (state) => ({
+    checkoutItemList: state.getIn(['app', 'checkoutItemList']),
+    isAdmin: state.getIn(['app', 'isAdmin'])
+})
+
 const mapPropsToDispatch = (dispatch) => ({
     handlePay(eventSet) {
         dispatch(actionCreators.clearCart());
-        console.log(eventSet)
         eventSet.forEach((eventName) =>
             dispatch(actionCreators.addToCart(eventName))
         );
         dispatch(actionCreators.setCurrPage("checkout"))
+    },
+    saveEvent(eventId, eventContent) {
+        const targetItem = {
+            id: eventId,
+            name: eventContent.name,
+            type: eventContent.type,
+            desc: 'SSA Event',
+            longDesc: eventContent.description,
+            price: Math.max(parseFloat(eventContent.price) || 0, 0),
+            picSrc: eventContent.tempPicSrc,
+            learnMoreLink: eventContent.learnMoreLink
+        }
+        dispatch(actionCreators.editCheckoutItemList(targetItem))
+    },
+    deleteEvent(deletedId) {
+        dispatch(actionCreators.deleteCheckoutItemList(deletedId))
+    },
+    addEvent() {
+        dispatch(actionCreators.addCheckoutItemList())
     }
 });
 
@@ -51,60 +76,232 @@ let selectedSet = new Set();
 
 function EventComponent(props) {
     const classes = useStyles();
-
     const select = (eventName) => {
         if (selectedSet.has(eventName)) {
             selectedSet.delete(eventName);
         } else selectedSet.add(eventName);
     };
 
+    const [state, setState] = React.useState({
+        tempPicSrc: props.picSrc,
+        name: props.name,
+        price: props.price,
+        description: props.description,
+        learnMoreLink: props.learnMoreLink,
+        type: props.type
+    })
+
+    const handleChange = (event) => {
+      const name = event.target.name;
+      state[[name]] = event.target.value
+      setState({...state})
+      console.log(event.target.value)
+    };
+
+    const saveEvent = () => {
+        props.saveEvent(props.id, state)
+    }
+
+    const deleteEvent = () => {
+        props.deleteEvent(props.id)
+    }
+
+    const addEvent = () => {
+        props.addEvent()
+    }
+
     return (
         <Grid container spacing={2} style={{marginBottom: 30}}>
             <Grid item xs={12} sm={8}>
                 <Typography variant="h5" align="left" gutterBottom className={classes.title}>
-                    Upcoming Event: {props.name}
+                    {
+                        !props.isEditing ? (
+                            props.type === 'event' ? "Upcoming Event" : "Announcement"
+                        ) : (
+                            <Select className={classes.col}
+                                native
+                                value={state.type}
+                                onChange={handleChange}
+                                inputProps={{
+                                    name: 'type',
+                                }}
+                                style={{position: "relative", bottom: 2}}
+                              >
+                                <option value={"event"}>Upcoming Event</option>
+                                <option value={'announcement'}>Announcement</option>
+                            </Select>
+                        )
+                    } : {
+                        props.isEditing ?
+                        <TextField
+                            id={props.id + "-name"}
+                            style={{width: 450}}
+                            onChange={handleChange}
+                            inputProps={{
+                                name: 'name'
+                            }}
+                            defaultValue={props.name}
+                        /> : props.name
+                    }
                 </Typography>
+                {
+                    state.type === 'event' ?
+                    <Typography variant="h6" align="left" gutterBottom className={classes.title}>
+                        Price: $ {
+                            props.isEditing ?
+                            <TextField
+                                id={props.id + "-price"}
+                                style={{width: 100}}
+                                onChange={handleChange}
+                                inputProps={{
+                                    name: 'price'
+                                }}
+                                defaultValue={props.price}
+                            /> : props.price
+                        }
+                    </Typography> : null
+                }
                 <Typography variant="body1" align="left">
-                    {props.description}
+                    {
+                        props.isEditing ?
+                        <TextField
+                            placeholder="Description"
+                            multiline
+                            rows={10}
+                            rowsMax={10}
+                            style={{width: 640}}
+                            variant="outlined"
+                            onChange={handleChange}
+                            inputProps={{
+                                name: 'description'
+                            }}
+                            defaultValue={props.description}
+                        /> : props.description
+                    }
                 </Typography>
-
+                {
+                    props.isEditing ?
+                    <Typography variant="h6" align="left" gutterBottom className={classes.title}>
+                        External URL:
+                        <TextField
+                            id={props.id + "-learn-more-link"}
+                            style={{width: 450, marginLeft: 5}}
+                            onChange={handleChange}
+                            inputProps={{
+                                name: 'learnMoreLink'
+                            }}
+                            defaultValue={props.learnMoreLink}
+                        />
+                    </Typography> : null
+                }
             </Grid>
 
             <Grid item container direction="column" xs={12} sm={4}>
-                <Grid container alignItems="center"
-                      justify="center">
-                    <img className={classes.pic} src={props.picSrc}>
-                    </img>
-                    <Button
-                        variant="outlined"
-                        style={{
-                            marginTop: 10,
-                        }}
-                        href={props.learnMoreLink}
-                    >Learn More</Button>
-                    <div style={{
-                        marginTop: 10,
-                        marginLeft: 20
-                    }}>
-                    <Typography variant="button">
-                        Select
-                    </Typography>
-                    <Checkbox
-                        color="default"
-                        onChange={(e) =>
-                            select(props.id)
-                        }
-                        inputProps={{ 'aria-label': 'checkbox with default color' }}
-                    />
-                    </div>
+                <Grid container alignItems="center" justify="center">
+                    {
+                        props.isEditing ?
+                        <div>
+                            <TextField
+                                id={props.id + "-image-url"}
+                                style={{width: 300, marginBottom: 10}}
+                                onChange={handleChange}
+                                inputProps={{
+                                    name: "tempPicSrc"
+                                }}
+                                placeholder="Paste Image URL"
+                                defaultValue={props.picSrc}
+                            />
+                            {
+                                state.tempPicSrc === '' ? null :
+                                <img alt="Image Not Found" className={classes.pic} src={state.tempPicSrc} />
+                            }
+                        </div> : props.picSrc !== '' ? <img className={classes.pic} src={props.picSrc}/> : null
+                    }
+                    {
+                        !props.isAdmin ? (
+                            <Fragment>
+                                {
+                                    props.learnMoreLink !== '' ?
+                                    <Button
+                                        variant="outlined"
+                                        style={{
+                                            marginTop: 10,
+                                        }}
+                                        href={props.learnMoreLink}
+                                    >Learn More</Button> : null
+                                }
+                                {
+                                    props.type === 'event' ?
+                                    <div style={{
+                                        marginTop: 10,
+                                        marginLeft: 20
+                                    }}>
+                                    <Typography variant="button">
+                                        Select
+                                    </Typography>
+                                    <Checkbox
+                                        color="default"
+                                        onChange={(e) =>
+                                            select(props.id)
+                                        }
+                                        inputProps={{ 'aria-label': 'checkbox with default color' }}
+                                    />
+                                    </div> : null
+                                }
+                            </Fragment>
+                        ) : (
+                            <Fragment>
+                                <Button
+                                    variant="outlined"
+                                    style={{
+                                        marginTop: 10,
+                                        marginRight: 10
+                                    }}
+                                    onClick={deleteEvent}
+                                >Delete</Button>
+                                {
+                                    props.isEditing ?
+                                    <Button
+                                        variant="outlined"
+                                        style={{
+                                            marginLeft: 10,
+                                            marginTop: 10
+                                        }}
+                                        onClick={() => {saveEvent(); props.setEditing(props.id)}}
+                                    >Save</Button> :
+                                    <Button
+                                        variant="outlined"
+                                        style={{
+                                            marginLeft: 10,
+                                            marginTop: 10
+                                        }}
+                                        onClick={() => {props.setEditing(props.id)}}
+                                    >Edit</Button>
+                                }
+                                
+                            </Fragment>
+                        )
+                    }
                 </Grid>
             </Grid>
         </Grid>
     );
 }
 
-export default connect(null, mapPropsToDispatch)(function Event(props) {
+export default connect(mapPropsToState, mapPropsToDispatch)(function Event(props) {
     const classes = useStyles();
+
+    const [state, setState] = React.useState({
+        isEditing: props.checkoutItemList.toJS().filter(
+            (item) => (item.type === 'event' || item.type === 'announcement')
+        ).map((item) => (item.id)).reduce((a,b)=> (a[b]=false,a),{})
+    })
+
+    const handleChange = (event) => {
+      const name = event.target.name;
+      state[[name]] = event.target.value
+      setState({...state})
+    };
 
     const handlePay = (eventSet) => {
         props.handlePay(eventSet)
@@ -115,41 +312,54 @@ export default connect(null, mapPropsToDispatch)(function Event(props) {
     return (
         <React.Fragment>
             <main className={classes.layout}>
-                <Button
-                    variant="outlined"
-                    style={{
-                        display: "flex",
-                        marginTop: 10,
-                        marginBottom: 10,
-                        marginRight: 10,
-                        marginLeft: 'auto',
-                    }}
-                    onClick={() => {handlePay(selectedSet)}}
-                >Checkout</Button>
-                <EventComponent name = "2021 Summer School" id = 'summer-school'
-                    description = " There will be no better—more energizing, more community-building, more hopeful, more enlightening—way
-                    to spend a week of your summer. Whether you are an undergraduate/Master/PhD student, an early career academic,
-                    a tenured faculty person, or someone outside of the academy altogether, the Society for the
-                    Study of Affect Summer Seminars provides an amazing opportunity to learn, interact, and create
-                    alongside two dozen of the most engaging folks (established and up-and-coming scholars) working
-                    in/around affect studies from all around the world. Come be a participant!
-                    "
-                    picSrc = "https://pbs.twimg.com/media/DTwKMqbXcAEugcd.jpg"
-                    learnMoreLink = 'http://affectsociety.com/#register2'
-                />
-
-                <EventComponent name = "2021 SSA Conference" id = 'ssa-conference'
-                                description = " This conference seeks submissions that are shorter in length than most academic journal articles:
-                                generally essays in the range of 500-5000 words. The journal will continuously accept submissions on
-                                an ever-rolling basis and ‘publish’ them to the site after they have gone through the double-blind review process,
-                                been copy-edited, formatted, etc. Once five or six reviewed articles have been posted at the website, the journal
-                                will gather them together as a single downloadable ‘issue’ and, given the respective contents of that particular
-                                issue, recruit an appropriately resonant member from our editorial board to write an introduction or afterword that
-                                captures some of the key aspects and arguments raised across the assembled pieces."
-                                picSrc = "https://pbs.twimg.com/media/DTwKMqbXcAEugcd.jpg"
-                                learnMoreLink = 'http://capaciousjournal.com/submit/submit-an-article/'
-                />
-
+                {
+                    props.isAdmin ? <Button
+                        variant="outlined"
+                        style={{
+                            display: "flex",
+                            marginTop: 10,
+                            marginBottom: 10,
+                            marginRight: 10,
+                            marginLeft: 'auto',
+                        }}
+                        onClick={() => {props.addEvent()}}
+                    >New Event/Announcement</Button> :
+                    <Button
+                        variant="outlined"
+                        style={{
+                            display: "flex",
+                            marginTop: 10,
+                            marginBottom: 10,
+                            marginRight: 10,
+                            marginLeft: 'auto',
+                        }}
+                        onClick={() => {handlePay(selectedSet)}}
+                    >Checkout</Button>
+                }
+                {
+                    props.checkoutItemList.toJS().filter(
+                        (item) => (item.type === 'event' || item.type === 'announcement')
+                    ).map(
+                        (item) => (
+                            <EventComponent
+                                key={"event-list-" + item.id}
+                                name = {item.name}
+                                id = {item.id}
+                                type= {item.type}
+                                description = {item.longDesc}
+                                picSrc = {item.picSrc}
+                                learnMoreLink = {item.learnMoreLink}
+                                price = {item.price}
+                                isAdmin = {props.isAdmin}
+                                isEditing = {state.isEditing[item.id]}
+                                saveEvent = {props.saveEvent}
+                                deleteEvent = {props.deleteEvent}
+                                addEvent = {props.addEvent}
+                                setEditing = {(id) => {state.isEditing[id] = !state.isEditing[id]; setState({...state})}}
+                            />
+                        )
+                    )
+                }
             </main>
         </React.Fragment>
     );
