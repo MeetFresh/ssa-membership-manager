@@ -10,7 +10,8 @@ const defaultState = fromJS({
         first: '',
         last: '',
         pronoun: '',
-        status: ''
+        status: '',
+        username: '',
     },
     shoppingCart: [],
     isAdmin: false,
@@ -68,6 +69,10 @@ export const reducer = (state=defaultState, action) => {
             console.log(newEvent)
             checkoutItemList3.splice(0, 0, newEvent)
             return state.set('checkoutItemList', fromJS(checkoutItemList3))
+        case constants.SET_USERNAME:
+            let profile0 = state.get('profile').toJS()
+            profile0.username = action.username
+            return state.set('profile', fromJS(profile0))
         default:
             return state
     }

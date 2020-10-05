@@ -113,7 +113,7 @@ useEffect(() => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        email: props.profile.toJS().email,
+        email: props.profile.toJS().username,
         items: props.shoppingCart.toJS().map((item) => ({
           id: item.id,
           name: item.name,
