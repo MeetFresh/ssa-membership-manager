@@ -67,8 +67,6 @@ function handleSubmit(event, login, loginAdmin) {
     //     }
     // })
 
-    login()
-
     // need to change hardcoded admin
     const email = formData.get('email')
     const password = formData.get('password')
@@ -77,10 +75,13 @@ function handleSubmit(event, login, loginAdmin) {
     } else {
         loginAdmin(false)
     }
+    login(email)
+
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    login() {
+    login(username) {
+        dispatch(actionCreators.setUsername(username))
         dispatch(actionCreators.setLogin(true))
     },
     toSignUp() {
@@ -88,6 +89,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     loginAdmin(isLogin) {
         dispatch(actionCreators.setAdmin(isLogin))
+    },
+    setUserName(username) {
+        dispatch(actionCreators.setUsername(username))
     }
 })
 

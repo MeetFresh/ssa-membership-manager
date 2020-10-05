@@ -42,3 +42,8 @@ export const deleteCheckoutItemList = (deletedId) => ({
 export const addCheckoutItemList = () => ({
     type: constants.ADD_CHECKOUT_ITEM_LIST
 })
+
+export const setUsername = (username) => ({
+    type: constants.SET_USERNAME,
+    username
+})
