@@ -12,6 +12,7 @@ import {actionCreators} from "./store";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
 import {Divider} from "@material-ui/core";
+import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
@@ -62,13 +63,25 @@ const mapPropsToDispatch = (dispatch) => ({
             picSrc: eventContent.tempPicSrc,
             learnMoreLink: eventContent.learnMoreLink
         }
-        dispatch(actionCreators.editCheckoutItemList(targetItem))
+        axios.post('/edit-event', targetItem).then(res => {
+            if (res.data.success) {
+                dispatch(actionCreators.editCheckoutItemList(targetItem))
+            }
+        })
     },
     deleteEvent(deletedId) {
-        dispatch(actionCreators.deleteCheckoutItemList(deletedId))
+        axios.post('/delete-event', {deletedId: deletedId}).then(res => {
+            if (res.data.success) {
+                dispatch(actionCreators.deleteCheckoutItemList(deletedId))
+            }
+        })
     },
     addEvent() {
-        dispatch(actionCreators.addCheckoutItemList())
+        axios.post('/new-event').then(res => {
+            if (res.data.newId) {
+                dispatch(actionCreators.addCheckoutItemList(res.data.newId))
+            }
+        })
     }
 });
 
@@ -104,10 +117,6 @@ function EventComponent(props) {
 
     const deleteEvent = () => {
         props.deleteEvent(props.id)
-    }
-
-    const addEvent = () => {
-        props.addEvent()
     }
 
     return (
@@ -354,7 +363,6 @@ export default connect(mapPropsToState, mapPropsToDispatch)(function Event(props
                                 isEditing = {state.isEditing[item.id]}
                                 saveEvent = {props.saveEvent}
                                 deleteEvent = {props.deleteEvent}
-                                addEvent = {props.addEvent}
                                 setEditing = {(id) => {state.isEditing[id] = !state.isEditing[id]; setState({...state})}}
                             />
                         )

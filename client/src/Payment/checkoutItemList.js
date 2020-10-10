@@ -18,7 +18,7 @@ export const checkoutItemList = [
         desc: 'Subscription as a faculty member for one month.',
         price: 9.96 
     }, { 
-        id: 'event-0', 
+        id: 'event/announcement-0', 
         name: '2021 Summer School',
         type: 'announcement',
         desc: "SSA Event",
@@ -27,7 +27,7 @@ export const checkoutItemList = [
         picSrc: "https://pbs.twimg.com/media/DTwKMqbXcAEugcd.jpg",
         learnMoreLink: 'http://affectsociety.com/#register2'
     }, { 
-        id: 'event-1', 
+        id: 'event/announcement-1', 
         name: '2021 SSA Conference',
         type: 'event',
         desc: "SSA Event",

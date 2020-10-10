@@ -2,10 +2,11 @@ import * as constants from './constants'
 import { fromJS } from 'immutable'
 import { checkoutItemList } from '../Payment/checkoutItemList'
 import { userList } from '../dashboard/userList'
+import { Redirect } from 'react-router-dom'
 
 const defaultState = fromJS({
     loggedIn: false,
-    currPage: null,
+    currPage: '',
     profile: {
         first: '',
         last: '',
@@ -26,7 +27,10 @@ export const reducer = (state=defaultState, action) => {
         case constants.SET_CURR_PAGE:
             return state.set('currPage', fromJS(action.pageName))
         case constants.SET_PROFILE:
-            return state.set('profile', fromJS(action.profile))
+            return state.set('profile', fromJS({
+                ...action.profile,
+                ...{username: state.get('profile').toJS().username}
+            }))
         case constants.CLEAR_CART:
             return state.set('shoppingCart', fromJS([]))
         case constants.ADD_TO_CART:
@@ -55,7 +59,7 @@ export const reducer = (state=defaultState, action) => {
             let maxId = 0
             checkoutItemList3.filter((item) => (item.type === 'event'))
             .forEach((item) => {parseInt(maxId = Math.max(maxId, item.id.split('-')[1]))})
-            const newId = 'event-' + (maxId + 1)
+            const newId = action.newId
             const newEvent = {
                 id: newId,
                 name: 'New Unnamed Event',
@@ -66,7 +70,6 @@ export const reducer = (state=defaultState, action) => {
                 picSrc: "",
                 learnMoreLink: ''
             }
-            console.log(newEvent)
             checkoutItemList3.splice(0, 0, newEvent)
             return state.set('checkoutItemList', fromJS(checkoutItemList3))
         case constants.SET_USERNAME:

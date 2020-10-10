@@ -56,27 +56,21 @@ const useStyles = makeStyles((theme) => ({
 
 function handleSubmit(event, login, loginAdmin) {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    // !!! axios.post('/mockAPI/login.json', formData)
-    
-    // axios.get('/mockAPI/login.json').then(res => {
-    //     if (res.data['login-success']) {
-    //         login()
-    //     } else {
-    //         window.alert('login error')
-    //     }
-    // })
 
-    // need to change hardcoded admin
-    const email = formData.get('email')
-    const password = formData.get('password')
-    if (email === 'wtruran@gatech.edu' && password === '111111') {
-        loginAdmin(true)
-    } else {
-        loginAdmin(false)
-    }
-    login(email)
-
+    const formData = new FormData(event.target)
+    const LOGIN_API = '/login'
+    axios.post(
+        LOGIN_API, formData,
+        {'Content-Type': 'multipart/form-data'}
+    ).then(res => {
+        if (res.data.loginSuccess) {
+            const username = formData.get('username')
+            loginAdmin(res.data.isAdmin)
+            login(username)
+        }
+    }).catch(err => {
+        console.log(err)
+    })
 }
 
 const mapDispatchToProps = (dispatch) => ({
@@ -85,7 +79,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(actionCreators.setLogin(true))
     },
     toSignUp() {
-        dispatch(actionCreators.setCurrPage('signUp'))
+        dispatch(actionCreators.setCurrPage('signup'))
     },
     loginAdmin(isLogin) {
         dispatch(actionCreators.setAdmin(isLogin))
@@ -119,7 +113,7 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                         fullWidth
                         id="email"
                         label="Email Address"
-                        name="email"
+                        name="username"
                         autoComplete="email"
                         autoFocus/>
                     <TextField
