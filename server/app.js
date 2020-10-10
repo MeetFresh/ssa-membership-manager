@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const multiparty = require('multiparty');
 const mongoose = require('mongoose');
 //replace with Truran's api key
 const stripe = require("stripe")("sk_test_51HKUBkCT0gTsZJ1O1ZC3378RpnCGkOitdo6ymQ5H5H6RTB4w7ZDA82SpV8xgufEuzv7s0M5XtN2dCwShAVPYmchE00Tbu95CAz");
@@ -61,6 +62,44 @@ app.post("/create-payment-intent", async (req, res) => {
     clientSecret: paymentIntent.client_secret
   });
 });
+
+app.post("/update-profile", async (req, res) => {
+  let form = new multiparty.Form();
+  form.parse(req, function(err, fields, files) {
+    console.log(fields)
+    res.send({})
+  });
+})
+
+app.post("/login", async (req, res) => {
+  let form = new multiparty.Form();
+  form.parse(req, function(err, fields, files) {
+    const username = fields.username[0]
+    const password = fields.password[0]
+    if (username === 'wtruran@gatech.edu' && password === '111111') {
+      res.send({loginSuccess: true, isAdmin: true})
+    } else {
+      res.send({loginSuccess: true, isAdmin: false})
+    }
+  });
+})
+
+let DATABASE_ID = 100
+app.post("/new-event", async (req, res) => {
+  const newId = 'event/announcement-' + DATABASE_ID
+  DATABASE_ID++
+  res.send({newId: newId})
+})
+
+app.post("/edit-event", async (req, res) => {
+  console.log(req.body)
+  res.send({success: true})
+})
+
+app.post("/delete-event", async (req, res) => {
+  console.log(req.body)
+  res.send({success: true})
+})
 
 app.listen(4242, () => console.log('Node server listening on port 4242!'));
 

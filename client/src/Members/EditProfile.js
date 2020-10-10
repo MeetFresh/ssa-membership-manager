@@ -20,6 +20,7 @@ import validator from 'email-validator'
 import {profile} from "./profileList";
 import { ThemeProvider } from '@material-ui/core/styles';
 import {theme} from '../theme';
+import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
@@ -54,12 +55,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const mapDispatchToProps = (dispatch) => ({
-    saveProfile(state) {
+    saveProfile(state, event) {
         //do something to save the input
 
         const { first, last, pronoun, status } = state
         const profile = {
-            first, last, pronoun, status
+            first, last, pronoun, status, 
         }
         if (status === 'faculty' || status === 'student') {
             profile.institute = state.institute
@@ -68,8 +69,18 @@ const mapDispatchToProps = (dispatch) => ({
             profile.instituteId = state.instituteId
             profile.email = state.email
         }
-        dispatch(actionCreators.setProfile(profile))
-        dispatch(actionCreators.setCurrPage("profile"))
+        
+        const formData = new FormData(event.target)
+        const UPDATE_PROFILE_API = '/update-profile'
+        axios.post(
+            UPDATE_PROFILE_API, formData,
+            {'Content-Type': 'multipart/form-data'}
+        ).then(res => {
+            dispatch(actionCreators.setProfile(profile))
+            dispatch(actionCreators.setCurrPage("profile"))
+        }).catch(err => {
+            console.log(err)
+        })
     },
     goProfile() {
         dispatch(actionCreators.setCurrPage("profile"))
@@ -161,7 +172,17 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                     Edit My Profile
                 </Typography>
 
-                <form noValidate autoComplete="off" className={classes.btn}>
+                <form
+                    noValidate autoComplete="off"
+                    className={classes.btn}
+                    onSubmit={(event) => {
+                        event.preventDefault()
+                        if (validateAll()) {
+                            props.saveProfile(state, event)
+                        }
+                    }}
+                >
+                    <input type="hidden" id="username-input" name="username" value={props.profile.toJS().username} />
                     <Grid container spacing={2}>
                         <Grid container spacing={1} className={classes.grid}>
                             <Grid item sm={6}>
@@ -333,28 +354,22 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                             </Fragment> : null
                         }
                     </Grid>
-                </form>
-
-
-                <Button className={classes.btn}
+                    <Button className={classes.btn}
                         variant="outlined"
                         style={{
-                            marginTop: 10,
+                            marginTop: 30,
                         }}
                         onClick={() => {props.goProfile()}}
-                >Back</Button>
+                    >Back</Button>
 
-                <Button className={classes.btn}
-                    variant="outlined"
-                    style={{
-                        marginTop: 10,
-                    }}
-                    onClick={() => {
-                        if (validateAll()) {
-                            props.saveProfile(state)
-                        }
-                    }}
-                >Save</Button>
+                    <Button className={classes.btn}
+                        variant="outlined"
+                        style={{
+                            marginTop: 30,
+                        }}
+                        type="submit"
+                    >Save</Button>
+                </form>
                 </ThemeProvider>
             </main>
         </React.Fragment>

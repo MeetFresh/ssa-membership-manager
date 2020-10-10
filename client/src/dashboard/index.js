@@ -37,6 +37,7 @@ import MailingList from './MailingList'
 import { connect } from 'react-redux'
 import {actionCreators} from '../store'
 import { Elements } from '@stripe/react-stripe-js';
+import { Route, Switch, Redirect } from 'react-router-dom'
 
 
 import { loadStripe } from "@stripe/stripe-js";
@@ -145,9 +146,19 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+const CheckoutWrapper = function(props) {
+    return (
+        <div align="center">
+            <Elements stripe={promise}>
+                <Checkout/>
+            </Elements>
+        </div>
+    )
+}
+
 function getPageDisplay(props) {
     if (!props.loggedIn) {
-        if (props.currPage === 'signUp') {
+        if (props.currPage === 'signup') {
             return <SignUp />
         } else {
             return <SignIn />
@@ -166,7 +177,7 @@ function getPageDisplay(props) {
         )
     } else if (props.currPage == 'event') {
         return <Event/>
-    } else if (props.currPage == 'editProfile') {
+    } else if (props.currPage == 'edit-profile') {
         return <EditProfile />
     } else if (props.currPage == 'mailing-list') {
         return <MailingList />
@@ -185,7 +196,7 @@ const mapDispatchToProps = (dispatch) => ({
   logout() {
       dispatch(actionCreators.setLogin(false))
       dispatch(actionCreators.setAdmin(false))
-      dispatch(actionCreators.setCurrPage(null))
+      dispatch(actionCreators.setCurrPage(''))
   },
   togglePage(pageName) {
       dispatch(actionCreators.setCurrPage(pageName))
@@ -280,13 +291,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         onClick={ () => { props.logout() } }
                         >Log Out</Button>
                       ) : (
-                        props.currPage !== 'signUp' ?
+                        props.currPage !== 'signup' ?
                         <Button
                           variant="outlined"
                           style={{
                             marginRight: 10
                           }}
-                          onClick={ () => { props.togglePage('signUp') } }
+                          onClick={ () => { props.togglePage('signup') } }
                         >Sign Up</Button>
                         :
                         <Button
@@ -335,10 +346,23 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         props.isAdmin ? "Welcome, SSA Admin!" : "Welcome to SSA Website!"
                     }
                 </h1>
-                {
+                {/* {
                   getPageDisplay(props)
+                } */}
+                <Redirect to={"/" + props.currPage} push />
+                {
+                    props.loggedIn ?
+                    <Switch>
+                        <Route path="/profile" component={Profile} />
+                        <Route path="/membership" component={Membership} />
+                        <Route path="/checkout" component={CheckoutWrapper} />
+                        <Route path="/event" component={Event} />
+                        <Route path="/edit-profile" component={EditProfile} />
+                        <Route path="/mailing-list" component={MailingList} />
+                    </Switch> :
+                    window.location.pathname === '/signup' ?
+                    <SignUp /> : <SignIn />
                 }
-                
             </main>
 
             
