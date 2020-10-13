@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     editProfile() {
-        dispatch(actionCreators.setCurrPage("editProfile"))
+        dispatch(actionCreators.setCurrPage("edit-profile"))
     },
     changePic() {
         dispatch(actionCreators.setCurrPage('changePic'))

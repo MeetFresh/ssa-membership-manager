@@ -32,10 +32,12 @@ import Event from '../Event';
 import Review from '../Payment/Review'
 import Button from "@material-ui/core/Button";
 import logo from '../img/SSALogo.png';
+import MailingList from './MailingList'
 
 import { connect } from 'react-redux'
 import {actionCreators} from '../store'
 import { Elements } from '@stripe/react-stripe-js';
+import { Route, Switch, Redirect } from 'react-router-dom'
 
 import axios from 'axios'
 
@@ -146,9 +148,19 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+const CheckoutWrapper = function(props) {
+    return (
+        <div align="center">
+            <Elements stripe={promise}>
+                <Checkout/>
+            </Elements>
+        </div>
+    )
+}
+
 function getPageDisplay(props) {
     if (!props.loggedIn) {
-        if (props.currPage === 'signUp') {
+        if (props.currPage === 'signup') {
             return <SignUp />
         } else {
             return <SignIn />
@@ -167,8 +179,10 @@ function getPageDisplay(props) {
         )
     } else if (props.currPage == 'event') {
         return <Event/>
-    } else if (props.currPage == 'editProfile') {
+    } else if (props.currPage == 'edit-profile') {
         return <EditProfile />
+    } else if (props.currPage == 'mailing-list') {
+        return <MailingList />
     } else {
         return null
     }
@@ -176,13 +190,15 @@ function getPageDisplay(props) {
 
 const mapStateToProps = (state) => ({
   loggedIn: state.getIn(['app', 'loggedIn']),
-  currPage: state.getIn(['app', 'currPage'])
+  currPage: state.getIn(['app', 'currPage']),
+  isAdmin: state.getIn(['app', 'isAdmin'])
 })
 
 const mapDispatchToProps = (dispatch) => ({
   logout() {
       dispatch(actionCreators.setLogin(false))
-      dispatch(actionCreators.setCurrPage(null))
+      dispatch(actionCreators.setAdmin(false))
+      dispatch(actionCreators.setCurrPage(''))
   },
   togglePage(pageName) {
       dispatch(actionCreators.setCurrPage(pageName))
@@ -227,28 +243,55 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                     {
                       props.loggedIn ?
                       <Fragment>
-                        {/*<img src={logo} alt="SSA"> </img>*/}
-                        <Button
-                            variant="outlined"
-                            style={{
-                                marginRight: 10
-                            }}
-                            onClick={() => {props.togglePage('profile')}}
-                        >Profile</Button>
-                        <Button
-                            variant="outlined"
-                            style={{
-                                marginRight: 10
-                            }}
-                            onClick={() => {props.togglePage('membership')}}
-                        >Membership</Button>
+                      {
+                          !props.isAdmin ?
+                              <Button
+                                  variant="outlined"
+                                  style={{
+                                      marginRight: 10
+                                  }}
+                                  onClick={() => {
+                                      props.togglePage('profile')
+                                  }}
+                              >Profile</Button> : null
+                      }
+                      {
+                          !props.isAdmin ?
+                            <Button
+                                variant="outlined"
+                                style={{
+                                    marginRight: 10
+                                }}
+                                onClick={() => {props.togglePage('membership')}}
+                            >Membership</Button> : null
+                      }
                       <Button
                           variant="outlined"
                           style={{
                               marginRight: 10
                           }}
                           onClick={() => {props.togglePage('event')}}
-                      >Event</Button>
+                      >Event/Announcement</Button>
+                      {
+                          !props.isAdmin ? null :
+                              <Button
+                                  variant="outlined"
+                                  style={{
+                                      marginRight: 10
+                                  }}
+                                  onClick={() => {props.togglePage('mailing-list')}}
+                              >Mailing List</Button>
+                      }
+                      {
+                          !props.isAdmin ? null :
+                              <Button
+                                  variant="outlined"
+                                  style={{
+                                      marginRight: 10
+                                  }}
+                                  href="http://stripe.com/"
+                              >Transactions</Button>
+                      }
                       </Fragment> : null
                     }
                   
@@ -273,13 +316,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         onClick={ () => { handleLogout(props.logout)} }
                         >Log Out</Button>
                       ) : (
-                        props.currPage !== 'signUp' ?
+                        props.currPage !== 'signup' ?
                         <Button
                           variant="outlined"
                           style={{
                             marginRight: 10
                           }}
-                          onClick={ () => { props.togglePage('signUp') } }
+                          onClick={ () => { props.togglePage('signup') } }
                         >Sign Up</Button>
                         :
                         <Button
@@ -323,11 +366,28 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
 
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
-                <h1 className={classes.header}>Welcome to SSA Website!</h1>
-                {
+                <h1 className={classes.header}>
+                    {
+                        props.isAdmin ? "Welcome, SSA Admin!" : "Welcome to SSA Website!"
+                    }
+                </h1>
+                {/* {
                   getPageDisplay(props)
+                } */}
+                <Redirect to={"/" + props.currPage} push />
+                {
+                    props.loggedIn ?
+                    <Switch>
+                        <Route path="/profile" component={Profile} />
+                        <Route path="/membership" component={Membership} />
+                        <Route path="/checkout" component={CheckoutWrapper} />
+                        <Route path="/event" component={Event} />
+                        <Route path="/edit-profile" component={EditProfile} />
+                        <Route path="/mailing-list" component={MailingList} />
+                    </Switch> :
+                    window.location.pathname === '/signup' ?
+                    <SignUp /> : <SignIn />
                 }
-                
             </main>
 
             

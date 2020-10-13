@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   toSignIn() {
-      dispatch(actionCreators.setCurrPage(null))
+      dispatch(actionCreators.setCurrPage(''))
   }
 })
 

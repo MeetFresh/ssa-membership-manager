@@ -23,3 +23,28 @@ export const addToCart = (itemId) => ({
     type: constants.ADD_TO_CART,
     itemId
 })
+
+export const setAdmin = (isLogin) => ({
+    type: constants.SET_ADMIN,
+    isLogin
+})
+
+export const editCheckoutItemList = (editedItem) => ({
+    type: constants.EDIT_CHECKOUT_ITEM_LIST,
+    editedItem
+})
+
+export const deleteCheckoutItemList = (deletedId) => ({
+    type: constants.DELETE_CHECKOUT_ITEM_LIST,
+    deletedId
+})
+
+export const addCheckoutItemList = (newId) => ({
+    type: constants.ADD_CHECKOUT_ITEM_LIST,
+    newId
+})
+
+export const setUsername = (username) => ({
+    type: constants.SET_USERNAME,
+    username
+})

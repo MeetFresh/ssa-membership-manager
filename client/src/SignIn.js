@@ -54,32 +54,38 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function handleSubmit(event, login) {
+function handleSubmit(event, login, loginAdmin) {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    let status = false;
-    axios.post('/api/login', formData).then(res => {
-        if (res.data['login']) {
-            login();
-        } else {
-            window.alert('login error');
+
+    const formData = new FormData(event.target)
+    const LOGIN_API = '/login'
+    axios.post(
+        LOGIN_API, formData,
+        {'Content-Type': 'multipart/form-data'}
+    ).then(res => {
+        if (res.data.loginSuccess) {
+            const username = formData.get('username')
+            loginAdmin(res.data.isAdmin)
+            login(username)
         }
-    });
-    // axios.get('/mockAPI/login.json').then(res => {
-    //     if (res.data['login-success']) {
-    //         login()
-    //     } else {
-    //         window.alert('login error')
-    //     }
-    // })
+    }).catch(err => {
+        console.log(err)
+    })
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    login() {
+    login(username) {
+        dispatch(actionCreators.setUsername(username))
         dispatch(actionCreators.setLogin(true))
     },
     toSignUp() {
-        dispatch(actionCreators.setCurrPage('signUp'))
+        dispatch(actionCreators.setCurrPage('signup'))
+    },
+    loginAdmin(isLogin) {
+        dispatch(actionCreators.setAdmin(isLogin))
+    },
+    setUserName(username) {
+        dispatch(actionCreators.setUsername(username))
     }
 })
 // onSubmit={(event) => {handleSubmit(event, props.login)}}
@@ -99,7 +105,7 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                 <ThemeProvider theme={theme}>
                 <form 
                     className={classes.form} noValidate
-                    onSubmit={(event) => {handleSubmit(event, props.login)}}>
+                    onSubmit={(event) => {handleSubmit(event, props.login, props.loginAdmin)}}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -107,7 +113,7 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                         fullWidth
                         id="email"
                         label="Email Address"
-                        name="email"
+                        name="username"
                         autoComplete="email"
                         autoFocus/>
                     <TextField
