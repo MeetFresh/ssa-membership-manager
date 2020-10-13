@@ -37,11 +37,14 @@ export default function FilterList(props) {
             {
               props.filteredList.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell style={{maxWidth: 300, overflow: "hidden", whiteSpace: "nowrap"}}>
+                  <TableCell style={{maxWidth: 300, overflow: "hidden", whiteSpace: "nowrap"}}
+                  >
                   <label style={{cursor: "pointer"}}>
                     <Checkbox
                       color="default"
-                      onChange={(e) => {props.toggleCheck(e.target.value)}}
+                      onChange={(e) => {props.toggleCheck(e.target.value);
+                                        props.mouseEnter(e.target.value);
+                                      }}
                       inputProps={{ 'aria-label': 'checkbox with default color' }}
                       checked={props.checks[row.email]}
                       value={row.email}
