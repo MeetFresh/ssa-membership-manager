@@ -129,7 +129,7 @@ input {
   width: 100%;
 }
 
-button:hover {
+button:clicked {
   filter: contrast(115%);
 }
 

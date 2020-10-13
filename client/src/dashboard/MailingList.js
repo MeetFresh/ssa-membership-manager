@@ -12,12 +12,6 @@ import {actionCreators} from "../store";
 import {connect} from "react-redux";
 import FilterList from './FilterList'
 import DisplayList from './DisplayList';
-import { Link } from 'react-router-dom';
-
-const membership = [
-    { name: 'Status:', desc: 'Decides your subscription rate', value: 'Student' },
-    { name: 'Expire Time:', desc: 'Pay to continue as a member!', value: '08/31/2021' },
-];
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
@@ -57,12 +51,14 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(function Membership(props) {
+
     const classes = useStyles();
 
     const [state, setState] = React.useState({
         status: 'none',
         name: '',
         email: '',
+        clicked: '',
         checks: props.userList.toJS().map((user) => (user.email)).reduce((a,b)=> (a[b]=false,a),{})
     })
 
@@ -70,6 +66,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
       const name = event.target.name;
       state[[name]] = event.target.value
       setState({...state})
+    };
+
+    const changeStatus = (event) => {
+
     };
 
     function filteredList() {
@@ -110,6 +110,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
 
     const checkList = props.userList.toJS().filter((row) => (state.checks[row.email] === true))
     const sendEmailString = checkList.map((row) => (row.email)).join(';')
+    const isClicked = props.userList.toJS().find(e => e.email === state.clicked);
 
     return (
         <React.Fragment>
@@ -170,11 +171,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                             </Typography>
                         </ListItem>
                     </List>
-                    <Grid style={{marginTop: 20, marginBottom: 20}}container alignItems="center" justify="center">
+
+                    <Grid style={{marginTop: 20, marginBottom: 20}} container alignItems="center" justify="center">
                       <FilterList
                         filteredList={filteredList()}
                         checks={state.checks}
                         toggleCheck={(email) => {state.checks[email] = !state.checks[email]; setState({...state})}}
+                        mouseEnter={(email) => {state.clicked = email; setState({...state});
+                                                console.log(state)}}
                       />
                     </Grid>
                     <Grid container alignItems="center" justify="center">
@@ -198,6 +202,52 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                 </Grid>
 
                 <Grid item container direction="column" xs={12} sm={6}>
+                    <Typography variant="h5" gutterBottom className={classes.title}>
+                        Member Info
+                    </Typography>
+                    <Grid container alignItems="center" justify="center">
+
+                        {   state.clicked === '' ?
+                            <Typography variant="body">
+                                Click from the list on the left to show member's information.
+                            </Typography>
+                            :
+                            <List disablePadding>
+
+                            <ListItem className={classes.listItem}>
+                            <ListItemText primary='Name' />
+                            <Typography variant="body2" style={{marginLeft: 40}}>{isClicked.first + ' ' + isClicked.last}</Typography>
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                            <ListItemText primary='Membership Status' />
+                                <Typography variant="body2" style={{marginLeft: 40}}>
+                                    <Select className={classes.col}
+                                            native
+                                            fullWidth="true"
+                                            value={isClicked.status}
+                                            // onChange={}
+                                            inputProps={{
+                                                name: 'status',
+                                            }}
+                                    >
+                                        <option aria-label="None" value="none">All</option>
+                                        <option value={'student'}>Student</option>
+                                        <option value={'faculty'}>Faculty</option>
+                                        <option value={'general'}>General</option>
+                                        <option value={'member'}>Member</option>
+                                        <option value={'non-member'}>Non-Member</option>
+                                    </Select>
+                                </Typography>
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
+                            <ListItemText primary='Email' />
+                            <Typography variant="body2" style={{marginLeft: 40}}>{isClicked.email}</Typography>
+                            </ListItem>
+
+                            </List>
+
+                        }
+                    </Grid>
                     <Typography variant="h5" gutterBottom className={classes.title}>
                         Mailing List
                     </Typography>

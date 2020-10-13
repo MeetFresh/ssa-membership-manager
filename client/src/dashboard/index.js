@@ -235,21 +235,28 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                     {
                       props.loggedIn ?
                       <Fragment>
-                        {/*<img src={logo} alt="SSA"> </img>*/}
-                        <Button
-                            variant="outlined"
-                            style={{
-                                marginRight: 10
-                            }}
-                            onClick={() => {props.togglePage('profile')}}
-                        >Profile</Button>
-                        <Button
-                            variant="outlined"
-                            style={{
-                                marginRight: 10
-                            }}
-                            onClick={() => {props.togglePage('membership')}}
-                        >Membership</Button>
+                      {
+                          !props.isAdmin ?
+                              <Button
+                                  variant="outlined"
+                                  style={{
+                                      marginRight: 10
+                                  }}
+                                  onClick={() => {
+                                      props.togglePage('profile')
+                                  }}
+                              >Profile</Button> : null
+                      }
+                      {
+                          !props.isAdmin ?
+                            <Button
+                                variant="outlined"
+                                style={{
+                                    marginRight: 10
+                                }}
+                                onClick={() => {props.togglePage('membership')}}
+                            >Membership</Button> : null
+                      }
                       <Button
                           variant="outlined"
                           style={{
@@ -258,14 +265,24 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                           onClick={() => {props.togglePage('event')}}
                       >Event/Announcement</Button>
                       {
-                        !props.isAdmin ? null :
-                        <Button
-                          variant="outlined"
-                          style={{
-                              marginRight: 10
-                          }}
-                          onClick={() => {props.togglePage('mailing-list')}}
-                        >Mailing List</Button>
+                          !props.isAdmin ? null :
+                              <Button
+                                  variant="outlined"
+                                  style={{
+                                      marginRight: 10
+                                  }}
+                                  onClick={() => {props.togglePage('mailing-list')}}
+                              >Mailing List</Button>
+                      }
+                      {
+                          !props.isAdmin ? null :
+                              <Button
+                                  variant="outlined"
+                                  style={{
+                                      marginRight: 10
+                                  }}
+                                  href="http://stripe.com/"
+                              >Transactions</Button>
                       }
                       </Fragment> : null
                     }
