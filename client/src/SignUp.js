@@ -19,6 +19,7 @@ import {actionCreators} from './store'
 import { ThemeProvider } from '@material-ui/core/styles';
 import {theme} from './theme';
 
+import { createUser } from './queries';
 
 function Copyright() {
   return (
@@ -73,7 +74,7 @@ export default connect(null, mapDispatchToProps)(function SignUp(props) {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} action='/api/user' method='post'>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField

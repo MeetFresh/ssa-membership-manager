@@ -37,6 +37,8 @@ import { connect } from 'react-redux'
 import {actionCreators} from '../store'
 import { Elements } from '@stripe/react-stripe-js';
 
+import axios from 'axios'
+
 
 import { loadStripe } from "@stripe/stripe-js";
 const promise = loadStripe("pk_test_51HKUBkCT0gTsZJ1O7Z5eOtt5HwxFFk1Mh6RDeVer8wxM5ioHdLohr4HovlxrdDW9SBZIQvSeOX3xbqnK3e4cOQVx00F3k0i43R");
@@ -187,6 +189,12 @@ const mapDispatchToProps = (dispatch) => ({
   }
 })
 
+function handleLogout(logout) {
+    axios.get('/api/logout').then(res => {
+        logout();
+    });
+}
+
 export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(props) {
     const classes = useStyles();
     const [open,
@@ -262,7 +270,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         <Button
                           variant="outlined"
                           style={{ marginRight: 10 }}
-                        onClick={ () => { props.logout() } }
+                        onClick={ () => { handleLogout(props.logout)} }
                         >Log Out</Button>
                       ) : (
                         props.currPage !== 'signUp' ?

@@ -25,6 +25,7 @@ import {
   useElements
 } from "@stripe/react-stripe-js";
 
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -106,7 +107,7 @@ const elements = useElements();
 useEffect(() => {
   // Create PaymentIntent as soon as the page loads
   window
-    .fetch("/create-payment-intent", {
+    .fetch("/api/create-payment-intent", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -159,6 +160,7 @@ const handleSubmit = async ev => {
     setError(`Payment failed ${payload.error.message}`);
     setProcessing(false);
   } else {
+    axios.put('./api/user/membership_update', payload.paymentIntent);
     setError(null);
     setProcessing(false);
     setSucceeded(true);

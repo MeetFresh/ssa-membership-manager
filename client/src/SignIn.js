@@ -56,15 +56,22 @@ const useStyles = makeStyles((theme) => ({
 
 function handleSubmit(event, login) {
     event.preventDefault();
-    // const formData = new FormData(event.target);
-    // !!! axios.post('/mockAPI/login.json', formData)
-    axios.get('/mockAPI/login.json').then(res => {
-        if (res.data['login-success']) {
-            login()
+    const formData = new FormData(event.target);
+    let status = false;
+    axios.post('/api/login', formData).then(res => {
+        if (res.data['login']) {
+            login();
         } else {
-            window.alert('login error')
+            window.alert('login error');
         }
-    })
+    });
+    // axios.get('/mockAPI/login.json').then(res => {
+    //     if (res.data['login-success']) {
+    //         login()
+    //     } else {
+    //         window.alert('login error')
+    //     }
+    // })
 }
 
 const mapDispatchToProps = (dispatch) => ({
@@ -75,7 +82,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(actionCreators.setCurrPage('signUp'))
     }
 })
-
+// onSubmit={(event) => {handleSubmit(event, props.login)}}
 export default connect(null, mapDispatchToProps)(function SignIn(props) {
     const classes = useStyles();
 

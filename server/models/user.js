@@ -5,18 +5,15 @@ const userDataSchema = new mongoose.Schema(
   {
     usertype: {
       type: String,
-      enum: ['student', 'regular']
+      enum: ['student', 'faculty', 'other']
     },
-    bio: {
-      first_name: { type: String },
-      last_name: { type: String },
-      phone_number: { type: String },
-      email: { type: String, index: true, unique: true },
-      gender: {type: String},
-      institute: {type: String}
-    },
-    memberid: {
-        type: String,
+    firstName: { type: String },
+    lastNname: { type: String },
+    email: { type: String, index: true, unique: true },
+    password: {type: String},
+    institute: {type: String},
+    membership: {
+        type: Boolean,
         required: false
     },
     expirationdate: {
