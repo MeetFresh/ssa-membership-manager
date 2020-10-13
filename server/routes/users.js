@@ -15,20 +15,21 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', (req, res, next)=> {
-    const newUserData = req.body
-    console.log(newUserData);
-    const newUser = new UserData(newUserData);
-    // console.log(req)
-    newUser
-    .save()
-    .then(() => {
-      res.json({
-        message: 'User successfully created!'
-      });
-    })
-    .catch(err => {
-      next(err);
-    });
+    res.redirect("./");
+    // const newUserData = req.body
+    // console.log(newUserData);
+    // const newUser = new UserData(newUserData);
+    // // console.log(req)
+    // newUser
+    // .save()
+    // .then(() => {
+    //   res.json({
+    //     message: 'User successfully created!'
+    //   });
+    // })
+    // .catch(err => {
+    //   next(err);
+    // });
 })
 
 router.put('/', (req, res, next) => {

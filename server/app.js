@@ -49,10 +49,10 @@ app.use(session({
 app.use('/api', api);
 
 // Render React page
-// app.use(express.static(path.join(__dirname, "../client/build/")));
-// app.get("/*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "../client/build/index.html"));
-// });
+app.use(express.static(path.join(__dirname, "../client/build/")));
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+});
 
 const calculateOrderAmount = items => {
   // Replace this constant with a calculation of the order's amount
