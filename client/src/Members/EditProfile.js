@@ -71,8 +71,8 @@ const mapDispatchToProps = (dispatch) => ({
         }
         
         const formData = new FormData(event.target)
-        const UPDATE_PROFILE_API = '/update-profile'
-        axios.post(
+        const UPDATE_PROFILE_API = '/api/user'
+        axios.put(
             UPDATE_PROFILE_API, formData,
             {'Content-Type': 'multipart/form-data'}
         ).then(res => {
@@ -263,7 +263,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     value={state.status}
                                     onChange={(event) => {handleChange(event); validateInput(event)}}
                                     inputProps={{
-                                        name: 'usertype',
+                                        name: 'status',
                                     }}
                                     error={state.statusValidation === true ? false : true}
                                 >
