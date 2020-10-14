@@ -7,6 +7,7 @@ var session = require('express-session');
 require('dotenv').config()
 
 const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
 //replace with Truran's api key
 const stripe = require("stripe")("sk_test_51HKUBkCT0gTsZJ1O1ZC3378RpnCGkOitdo6ymQ5H5H6RTB4w7ZDA82SpV8xgufEuzv7s0M5XtN2dCwShAVPYmchE00Tbu95CAz");
 
@@ -101,7 +102,17 @@ app.post("/api/create-payment-intent", async (req, res) => {
 app.post("/update-profile", async (req, res) => {
   let form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {
-    console.log(fields)
+    // console.log(fields)
+    let filter = {}
+    console.log(Object.keys(fields))
+    Object.keys(fields).forEach((k) => {
+      if (k === 'username') {
+        continue;
+      }
+      console.log(fields[k]);
+      filter[k] = fields[k][0];
+    })
+    console.log(filter)
     res.send({})
   });
 })
@@ -132,6 +143,7 @@ app.post('/api/login',  (req, res) => {
         }
         res.send({loginSuccess: status, isAdmin: false});
       })
+      // res.send({loginSuccess: status, isAdmin: false});
     }
   })
 });

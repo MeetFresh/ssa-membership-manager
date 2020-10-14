@@ -9,6 +9,7 @@ const userDataSchema = new mongoose.Schema(
     },
     first: { type: String },
     last: { type: String },
+    pronoun: {type: String},
     email: { type: String, index: true, unique: true },
     password: {type: String},
     institute: {type: String},
