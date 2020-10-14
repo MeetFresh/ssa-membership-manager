@@ -7,11 +7,12 @@ const userDataSchema = new mongoose.Schema(
       type: String,
       enum: ['student', 'faculty', 'other']
     },
-    firstName: { type: String },
-    lastNname: { type: String },
+    first: { type: String },
+    last: { type: String },
     email: { type: String, index: true, unique: true },
     password: {type: String},
     institute: {type: String},
+    instituteId: {type: String},
     membership: {
         type: Boolean,
         required: false

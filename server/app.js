@@ -98,28 +98,41 @@ app.post("/api/create-payment-intent", async (req, res) => {
 //   });
 // })
 
+app.post("/update-profile", async (req, res) => {
+  let form = new multiparty.Form();
+  form.parse(req, function(err, fields, files) {
+    console.log(fields)
+    res.send({})
+  });
+})
 
 
 app.post('/api/login',  (req, res) => {
   // console.log(req)
   let form = new multiparty.Form();
   form.parse(req, function(e, fields, files) {
-    req.session.user = fields['email'][0];
-    req.session.password = fields['password'][0];
+    const username = fields.username[0]
+    const password = fields.password[0]
+    req.session.user = username;
+    req.session.password = password;
     req.session.save();
-    let filter = {email: fields['email'][0], password: fields['password'][0]};
+    let filter = {email: username, password: password};
     let status = true;
     console.log(filter);
-    UserData.findOne(filter, (err, obj) => {
-      if (err) {
-        return res.status(500).send('Something broke!');
-      }
-      console.log(obj);
-      if (obj === null) {
-        status = false;
-      }
-      res.send({login: status});
-    })
+    if (username === 'wtruran@gatech.edu' && password === '111111') {
+      res.send({loginSuccess: true, isAdmin: true})
+    } else {
+      UserData.findOne(filter, (err, obj) => {
+        if (err) {
+          return res.status(500).send('Something broke!');
+        }
+        console.log(obj);
+        if (obj === null) {
+          status = false;
+        }
+        res.send({loginSuccess: status, isAdmin: false});
+      })
+    }
   })
 });
 

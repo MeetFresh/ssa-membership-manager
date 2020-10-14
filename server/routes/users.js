@@ -15,21 +15,21 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', (req, res, next)=> {
-    res.redirect("./");
-    // const newUserData = req.body
-    // console.log(newUserData);
-    // const newUser = new UserData(newUserData);
-    // // console.log(req)
-    // newUser
-    // .save()
-    // .then(() => {
-    //   res.json({
-    //     message: 'User successfully created!'
-    //   });
-    // })
-    // .catch(err => {
-    //   next(err);
-    // });
+    // res.redirect("./");
+    const newUserData = req.body
+    console.log(newUserData);
+    const newUser = new UserData(newUserData);
+    // console.log(req)
+    newUser
+    .save()
+    .then(() => {
+      res.json({
+        message: 'User successfully created!'
+      });
+    })
+    .catch(err => {
+      next(err);
+    });
 })
 
 router.put('/', (req, res, next) => {
@@ -48,7 +48,7 @@ router.put('/', (req, res, next) => {
   });
 })
 
-router.put('/membership_update', async (req, res, next)=> {
+router.put('/update', async (req, res, next)=> {
   console.log(req.body);
   console.log('Here update');
   const user = req.session.user;

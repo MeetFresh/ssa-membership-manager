@@ -58,11 +58,12 @@ function handleSubmit(event, login, loginAdmin) {
     event.preventDefault();
 
     const formData = new FormData(event.target)
-    const LOGIN_API = '/login'
+    const LOGIN_API = '/api/login'
     axios.post(
         LOGIN_API, formData,
         {'Content-Type': 'multipart/form-data'}
     ).then(res => {
+        // console.log(res.data.isAdmin)
         if (res.data.loginSuccess) {
             const username = formData.get('username')
             loginAdmin(res.data.isAdmin)

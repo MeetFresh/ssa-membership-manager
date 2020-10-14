@@ -263,7 +263,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     value={state.status}
                                     onChange={(event) => {handleChange(event); validateInput(event)}}
                                     inputProps={{
-                                        name: 'status',
+                                        name: 'usertype',
                                     }}
                                     error={state.statusValidation === true ? false : true}
                                 >
