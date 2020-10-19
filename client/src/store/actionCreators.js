@@ -48,3 +48,9 @@ export const setUsername = (username) => ({
     type: constants.SET_USERNAME,
     username
 })
+
+export const changeUserStatus = (username, newStatus) => ({
+    type: constants.CHANGE_USER_STATUS,
+    username,
+    newStatus
+})

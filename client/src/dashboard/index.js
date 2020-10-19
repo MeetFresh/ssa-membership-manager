@@ -33,6 +33,7 @@ import Review from '../Payment/Review'
 import Button from "@material-ui/core/Button";
 import logo from '../img/SSALogo.png';
 import MailingList from './MailingList'
+import MemberList from './MemberList'
 
 import { connect } from 'react-redux'
 import {actionCreators} from '../store'
@@ -156,36 +157,6 @@ const CheckoutWrapper = function(props) {
     )
 }
 
-function getPageDisplay(props) {
-    if (!props.loggedIn) {
-        if (props.currPage === 'signup') {
-            return <SignUp />
-        } else {
-            return <SignIn />
-        }
-    } else if (props.currPage === 'profile') {
-        return <Profile />
-    } else if (props.currPage === 'membership') {
-        return <Membership />
-    } else if (props.currPage === 'checkout') {
-        return (
-        <div align="center">
-            <Elements stripe={promise}>
-                <Checkout/>
-            </Elements>
-        </div>
-        )
-    } else if (props.currPage == 'event') {
-        return <Event/>
-    } else if (props.currPage == 'edit-profile') {
-        return <EditProfile />
-    } else if (props.currPage == 'mailing-list') {
-        return <MailingList />
-    } else {
-        return null
-    }
-}
-
 const mapStateToProps = (state) => ({
   loggedIn: state.getIn(['app', 'loggedIn']),
   currPage: state.getIn(['app', 'currPage']),
@@ -273,6 +244,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                                   }}
                                   onClick={() => {props.togglePage('mailing-list')}}
                               >Mailing List</Button>
+                      }
+                      {
+                          !props.isAdmin ? null :
+                              <Button
+                                  variant="outlined"
+                                  style={{
+                                      marginRight: 10
+                                  }}
+                                  onClick={() => {props.togglePage('member-list')}}
+                              >Member List</Button>
                       }
                       {
                           !props.isAdmin ? null :
@@ -376,6 +357,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         <Route path="/event" component={Event} />
                         <Route path="/edit-profile" component={EditProfile} />
                         <Route path="/mailing-list" component={MailingList} />
+                        <Route path="/member-list" component={MemberList} />
                     </Switch> :
                     window.location.pathname === '/signup' ?
                     <SignUp /> : <SignIn />

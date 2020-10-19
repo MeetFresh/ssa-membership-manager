@@ -76,6 +76,14 @@ export const reducer = (state=defaultState, action) => {
             let profile0 = state.get('profile').toJS()
             profile0.username = action.username
             return state.set('profile', fromJS(profile0))
+        case constants.CHANGE_USER_STATUS:
+            let userList0 = state.get('userList').toJS()
+            for (let idx = 0; idx < userList0.length; ++idx) {
+                if (userList0[idx].email === action.username) {
+                    userList0[idx].status = action.newStatus
+                }
+            }
+            return state.set('userList', fromJS(userList0))
         default:
             return state
     }

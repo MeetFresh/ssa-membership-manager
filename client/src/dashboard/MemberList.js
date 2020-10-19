@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -12,6 +12,12 @@ import {actionCreators} from "../store";
 import {connect} from "react-redux";
 import FilterList from './FilterList'
 import DisplayList from './DisplayList';
+import Table from '@material-ui/core/Table';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
@@ -43,7 +49,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const mapDispatchToProps = (dispatch) => ({
-
+  changeUserStatus(username, newStatus) {
+      dispatch(actionCreators.changeUserStatus(username, newStatus))
+  }
 })
 
 const mapStateToProps = (state) => ({
@@ -66,6 +74,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
       const name = event.target.name;
       state[[name]] = event.target.value
       setState({...state})
+    };
+
+    const changeStatus = (event, email) => {
+        props.changeUserStatus(email, event.target.value)
     };
 
     function filteredList() {
@@ -174,65 +186,116 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                         checks={state.checks}
                         toggleCheck={(email) => {state.checks[email] = !state.checks[email]; setState({...state})}}
                         mouseEnter={(email) => {state.clicked = email; setState({...state})}}
-                        showCheckbox={true}
+                        showCheckbox={false}
                       />
-                    </Grid>
-                    <Grid container alignItems="center" justify="center">
-                      <Button
-                        variant="outlined"
-                        style={{
-                            marginTop: 10,
-                            marginRight: 10,
-                        }}
-                        onClick={() => {filteredList().forEach((row) => {state.checks[row.email] = false}); setState({...state}) }}
-                      >Clear Select</Button>
-                      <Button
-                        variant="outlined"
-                        style={{
-                            marginTop: 10,
-                            marginRight: 10,
-                        }}
-                        onClick={() => {filteredList().forEach((row) => {state.checks[row.email] = true}); setState({...state}) }}
-                      >Select All</Button>
                     </Grid>
                 </Grid>
 
                 <Grid item container direction="column" xs={12} sm={6}>
                     <Typography variant="h5" gutterBottom className={classes.title}>
-                        Mailing List
+                        Member Info
                     </Typography>
-                    <Grid style={{marginTop: 20, marginBottom: 20}}container alignItems="center" justify="center">
-                      <DisplayList
-                        checkList={checkList}
-                      />
-                    </Grid>
                     <Grid container alignItems="center" justify="center">
-                      <Button
-                          variant="outlined"
-                          style={{
-                              marginTop: 10,
-                              marginRight: 10,
-                          }}
-                          onClick={() => {copyToClipboard(sendEmailString)}}
-                          disabled={ sendEmailString.length === 0}
-                      >Copy Address</Button>
-                      <a
-                        style={{textDecoration: "none"}}
-                        disabled={ sendEmailString.length === 0}
-                        href={"mailto:" + sendEmailString}
-                      >
-                        <Button
-                            disabled={ sendEmailString.length === 0}
-                            variant="outlined"
-                            style={{
-                                marginTop: 10,
-                                marginRight: 10,
-                            }}
-                        >Send Email</Button>
-                      </a>
+
+                        {   state.clicked === '' ?
+                            <Typography variant="body">
+                                Click from the list on the left to show member's information.
+                            </Typography>
+                            :
+                            <Fragment>
+                                <List disablePadding>
+
+                                <ListItem className={classes.listItem}>
+                                <ListItemText primary='Name' />
+                                <Typography variant="body2" style={{marginLeft: 40}}>{isClicked.first + ' ' + isClicked.last}</Typography>
+                                </ListItem>
+                                <ListItem className={classes.listItem}>
+                                <ListItemText primary='Membership Status' />
+                                    <Typography variant="body2" style={{marginLeft: 40}}>
+                                        <Select className={classes.col}
+                                                native
+                                                fullWidth="true"
+                                                value={isClicked.status}
+                                                onChange={(event) => {changeStatus(event, state.clicked)}}
+                                                inputProps={{
+                                                    name: 'status',
+                                                }}
+                                        >
+                                            <option value={'student'}>Student</option>
+                                            <option value={'faculty'}>Faculty</option>
+                                            <option value={'general'}>General</option>
+                                            <option value={'non-member'}>Non-Member</option>
+                                        </Select>
+                                    </Typography>
+                                </ListItem>
+                                <ListItem className={classes.listItem}>
+                                <ListItemText primary='Email' />
+                                <Typography variant="body2" style={{marginLeft: 40}}>{isClicked.email}</Typography>
+                                </ListItem>
+
+                                </List>
+                                <Typography variant="h6" gutterBottom className={classes.title}>
+                                    Membership History
+                                </Typography>
+                                <Grid style={{marginTop: 20, marginBottom: 20}} container alignItems="center" justify="center">
+                                    <TableContainer style={{ maxHeight: 246 }}>
+                                        <Table stickyHeader size="small">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Status</TableCell>
+                                                <TableCell>Registration</TableCell>
+                                                <TableCell>Expiration</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            <TableRow>
+                                                <TableCell>student</TableCell>
+                                                <TableCell>2013-01-03</TableCell>
+                                                <TableCell>2014-01-04</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>student</TableCell>
+                                                <TableCell>2014-01-03</TableCell>
+                                                <TableCell>2015-01-04</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>student</TableCell>
+                                                <TableCell>2015-01-03</TableCell>
+                                                <TableCell>2016-01-04</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>student</TableCell>
+                                                <TableCell>2016-01-03</TableCell>
+                                                <TableCell>2017-01-04</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>student</TableCell>
+                                                <TableCell>2017-01-03</TableCell>
+                                                <TableCell>2018-01-04</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>faculty</TableCell>
+                                                <TableCell>2018-01-03</TableCell>
+                                                <TableCell>2019-01-04</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>faculty</TableCell>
+                                                <TableCell>2019-01-03</TableCell>
+                                                <TableCell>2020-01-04</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>faculty</TableCell>
+                                                <TableCell>2020-01-03</TableCell>
+                                                <TableCell>2021-01-04</TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Grid>
+                            </Fragment>
+                        }
                     </Grid>
                 </Grid>
-                
             </Grid>
 
             </main>
