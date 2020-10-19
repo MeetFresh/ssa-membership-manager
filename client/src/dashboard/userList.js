@@ -49,5 +49,25 @@ export const userList = [
         first: "Lavern",
         last: "Prosacco",
         status: "postdoc"
+    }, { 
+        email: "donaldjtrump@trump.com",
+        first: "Donald",
+        last: "Trump",
+        status: "undergrad"
+    }, {
+        email: "gb303@gatech.edu",
+        first: "George",
+        last: "Burdell",
+        status: "graduate"
+    }, {
+        email: "joebiden@democrat.org",
+        first: "Joe",
+        last: "Biden",
+        status: "scholar"
+    }, {
+        email: "jason_zhen@gatech.edu",
+        first: "Jason",
+        last: "Jia",
+        status: "nt-faculty"
     }
 ];
