@@ -91,14 +91,20 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
           switch (filterStatus) {
             case 'none':
               return true
-            case 'student':
-              return row.status === 'student'
+            case 'graduate':
+              return row.status === 'graduate'
+            case 'undergrad':
+              return row.status === 'undergrad'
+            case 'nt-faculty':
+              return row.status === 'nt-faculty'
             case 'faculty':
               return row.status === 'faculty'
-            case 'general':
-              return row.status === 'general'
+            case 'postdoc':
+              return row.status === 'postdoc'
+            case 'scholar':
+              return row.status === 'scholar'
             case 'member':
-              return ['student', 'faculty', 'general'].indexOf(row.status) != -1
+              return ['graduate', 'undergrad', 'nt-faculty', 'faculty', 'postdoc', 'scholar'].indexOf(row.status) != -1
             case 'non-member':
               return row.status === 'non-member'
           }
@@ -142,9 +148,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                                 }}
                               >
                                 <option aria-label="None" value="none">All</option>
-                                <option value={'student'}>Student</option>
+                                <option value={'graduate'}>Graduate</option>
+                                <option value={'undergrad'}>Undergrad</option>
+                                <option value={'nt-faculty'}>NT-Faculty</option>
                                 <option value={'faculty'}>Faculty</option>
-                                <option value={'general'}>General</option>
+                                <option value={'postdoc'}>Postdoc</option>
+                                <option value={'scholar'}>Scholar</option>
                                 <option value={'member'}>Member</option>
                                 <option value={'non-member'}>Non-Member</option>
                               </Select>
@@ -221,9 +230,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                                                     name: 'status',
                                                 }}
                                         >
-                                            <option value={'student'}>Student</option>
+                                            <option value={'graduate'}>Graduate</option>
+                                            <option value={'undergrad'}>Undergrad</option>
+                                            <option value={'nt-faculty'}>NT-Faculty</option>
                                             <option value={'faculty'}>Faculty</option>
-                                            <option value={'general'}>General</option>
+                                            <option value={'postdoc'}>Postdoc</option>
+                                            <option value={'scholar'}>Scholar</option>
                                             <option value={'non-member'}>Non-Member</option>
                                         </Select>
                                     </Typography>
@@ -249,27 +261,27 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                                         </TableHead>
                                         <TableBody>
                                             <TableRow>
-                                                <TableCell>student</TableCell>
+                                                <TableCell>undergrad</TableCell>
                                                 <TableCell>2013-01-03</TableCell>
                                                 <TableCell>2014-01-04</TableCell>
                                             </TableRow>
                                             <TableRow>
-                                                <TableCell>student</TableCell>
+                                                <TableCell>undergrad</TableCell>
                                                 <TableCell>2014-01-03</TableCell>
                                                 <TableCell>2015-01-04</TableCell>
                                             </TableRow>
                                             <TableRow>
-                                                <TableCell>student</TableCell>
+                                                <TableCell>undergrad</TableCell>
                                                 <TableCell>2015-01-03</TableCell>
                                                 <TableCell>2016-01-04</TableCell>
                                             </TableRow>
                                             <TableRow>
-                                                <TableCell>student</TableCell>
+                                                <TableCell>graduate</TableCell>
                                                 <TableCell>2016-01-03</TableCell>
                                                 <TableCell>2017-01-04</TableCell>
                                             </TableRow>
                                             <TableRow>
-                                                <TableCell>student</TableCell>
+                                                <TableCell>graduate</TableCell>
                                                 <TableCell>2017-01-03</TableCell>
                                                 <TableCell>2018-01-04</TableCell>
                                             </TableRow>

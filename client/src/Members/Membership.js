@@ -10,7 +10,7 @@ import {actionCreators} from "../store";
 import {connect} from "react-redux";
 
 const membership = [
-    { name: 'Status:', desc: 'Decides your subscription rate', value: 'Student' },
+    { name: 'Status:', desc: 'Decides your subscription rate', value: 'Undergrad' },
     { name: 'Expire Time:', desc: 'Pay to continue as a member!', value: '08/31/2021' },
 ];
 
@@ -104,13 +104,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                     </Grid>
                 </Grid>
                 <Typography variant="body2">
-                    {
-                        profile.status === 'student' ?
-                        'As a student, you may enjoy a discounted subscription rate as low as $2.51 per month.'
-                        : profile.status === 'faculty' ?
-                        'All faculties in SSA must pay $9.96 per month. We appreciate your contribution!'
-                        : profile.status === 'general' ?
-                        'The standard subscription rate for SSA is $4.04 per month. We appreciate your contribution!'
+                    {   
+                        profile.status !== '' ?
+                        "You are about to subscribe as " + profile.status + "."
                         : 'Oops, seems you have not declared your status yet. You should claim one in your Profile.'
                     }
                     

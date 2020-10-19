@@ -165,8 +165,8 @@ function EventComponent(props) {
                                 inputProps={{
                                     name: 'price'
                                 }}
-                                defaultValue={props.price}
-                            /> : props.price
+                                defaultValue={props.price.toFixed(2)}
+                            /> : props.price.toFixed(2)
                         }
                     </Typography> : null
                 }

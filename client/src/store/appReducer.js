@@ -84,6 +84,24 @@ export const reducer = (state=defaultState, action) => {
                 }
             }
             return state.set('userList', fromJS(userList0))
+        case constants.EDIT_MEMBERSHIP_PRICE:
+            let checkoutItemList4 = state.get('checkoutItemList').toJS()
+            const keys = [
+                ["undergradPrice", "undergrad-membership"],
+                ["graduatePrice", "graduate-membership"],
+                ["ntFacultyPrice", "nt-faculty-membership"],
+                ["facultyPrice", "faculty-membership"],
+                ["postdocPrice", "postdoc-membership"],
+                ["scholarPrice", "scholar-membership"]
+            ]
+            checkoutItemList4.forEach(item => {
+                keys.forEach(key => {
+                    if (item.id === key[1]) {
+                        item.price = Math.max(parseFloat(action.priceDict[key[0]]) || 0, 0)
+                    }
+                })
+            })
+            return state.set('checkoutItemList', fromJS(checkoutItemList4))
         default:
             return state
     }

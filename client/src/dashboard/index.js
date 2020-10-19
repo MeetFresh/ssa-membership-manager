@@ -34,6 +34,7 @@ import Button from "@material-ui/core/Button";
 import logo from '../img/SSALogo.png';
 import MailingList from './MailingList'
 import MemberList from './MemberList'
+import Pricing from './Pricing'
 
 import { connect } from 'react-redux'
 import {actionCreators} from '../store'
@@ -252,8 +253,18 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                                   style={{
                                       marginRight: 10
                                   }}
-                                  onClick={() => {props.togglePage('member-list')}}
-                              >Member List</Button>
+                                  onClick={() => {props.togglePage('member-info')}}
+                              >Member Info</Button>
+                      }
+                      {
+                          !props.isAdmin ? null :
+                              <Button
+                                  variant="outlined"
+                                  style={{
+                                      marginRight: 10
+                                  }}
+                                  onClick={() => {props.togglePage('membership-pricing')}}
+                              >Membership Pricing</Button>
                       }
                       {
                           !props.isAdmin ? null :
@@ -303,7 +314,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                           style={{
                             marginRight: 10
                           }}
-                          onClick={ () => { props.togglePage(null) } }
+                          onClick={ () => { props.togglePage('') } }
                         >Sign In</Button>
                       )
                     }
@@ -357,9 +368,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         <Route path="/event" component={Event} />
                         <Route path="/edit-profile" component={EditProfile} />
                         <Route path="/mailing-list" component={MailingList} />
-                        <Route path="/member-list" component={MemberList} />
+                        <Route path="/member-info" component={MemberList} />
+                        <Route path="/membership-pricing" component={Pricing} />
                     </Switch> :
-                    window.location.pathname === '/signup' ?
+                    props.currPage === 'signup' ?
                     <SignUp /> : <SignIn />
                 }
             </main>
