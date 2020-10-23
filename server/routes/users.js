@@ -15,12 +15,12 @@ router.get('/all', function(req, res, next) {
     .catch(next);
 });
 
-router.get('/one', (req, res, next) => {
-  const username = req.body;
-  const query = {email : user};
+router.get('/:id', (req, res, next) => {
+  const username = req.params.id;
+  const query = {email : username};
   UserData.findOne(filter)
     .then(user => {
-      res.status(200).json({users});
+      res.status(200).json({user});
     })
     .catch(next);
 })
@@ -78,25 +78,93 @@ router.put('/', (req, res, next) => {
   });
 })
 
-router.put('/update', async (req, res, next)=> {
-  console.log(req.body);
-  console.log('Here update');
+router.put('/membership_update', async (req, res, next) =>{
   const user = req.session.user;
+  // const user = "jadams@gmail.com"
   const filter = {email : user};
-  let date = new Date();
-  date.setDate(date.getDate() + 365);
-  const update = {membership: true, expirationdate: date};
-  UserData.findOneAndUpdate(filter, update, {
-    new: true
-  })
-  .then(event => {
-    res.json({
-      event
+  let curr_registration = null;
+  let curr_expiration = null;
+  UserData.findOne(filter)
+    .then(user => {
+      curr_registration = user.registrationdate;
+      curr_expiration = user.expirationdate;
+      curr_usertype = user.usertype;
+      curr_history = user.activityhistory;
+      console.log(curr_registration);
+      console.log(curr_expiration);
+      let today = new Date()
+      if (typeof curr_registration === "undefined" || today > curr_expiration) {
+        curr_registration = today;
+      }
+      if (today > curr_expiration) {
+        curr_expiration.setDate(today.getDate() + 365);
+      } else {
+        curr_expiration.setDate(curr_expiration.getDate() + 365);
+      }
+      curr_history.push(curr_usertype + "," + curr_registration + "," + curr_expiration);
+      const update = {
+        membership: true, 
+        expirationdate: curr_expiration, 
+        registrationdate: curr_registration,
+        activityhistory: curr_history
+      };
+      UserData.findOneAndUpdate(filter, update, {
+        new: true
+      })
+      .catch(err => {
+        next(err);
+      });
+      res.json({user});
+    })
+    .catch(err => {
+      next(err);
     });
-  })
-  .catch(err => {
-    next(err);
-  });
 })
+
+router.put('/mtest', async (req, res, next) =>{
+  // const user = req.session.user;
+  const user = "jadams@gmail.com"
+  const filter = {email : user};
+  let curr_registration = null;
+  let curr_expiration = null;
+  UserData.findOne(filter)
+    .then(user => {
+      console.log(user);
+      curr_registration = user.registrationdate;
+      curr_expiration = user.expirationdate;
+      curr_usertype = user.usertype;
+      curr_history = user.activityhistory;
+      console.log(curr_registration);
+      console.log(curr_expiration);
+      let today = new Date();
+      if (typeof curr_registration === "undefined" || today > curr_expiration) {
+        curr_registration = today;
+      }
+      if (today > curr_expiration) {
+        curr_expiration.setDate(today.getDate() + 365);
+      } else {
+        curr_expiration.setDate(curr_expiration.getDate() + 365);
+      }
+      curr_history.push(curr_usertype + "," + curr_registration + "," + curr_expiration);
+      const update = {
+        membership: true, 
+        expirationdate: curr_expiration, 
+        registrationdate: curr_registration,
+        activityhistory: curr_history
+      };
+      UserData.findOneAndUpdate(filter, update, {
+        new: true
+      })
+      .catch(err => {
+        next(err);
+      });
+      res.json({user});
+    })
+    .catch(err => {
+      next(err);
+    });
+})
+
+
 
 module.exports = router;

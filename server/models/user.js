@@ -18,10 +18,19 @@ const userDataSchema = new mongoose.Schema(
         type: Boolean,
         required: false
     },
+    registrationdate: {
+      type: Date,
+      required: false
+    },
     expirationdate: {
         type: Date,
         required: false
-    }
+    },
+    activityhistory: { 
+      type: [String],
+      required: false,
+      default: []
+    },
   },
   {
     timestamps: true
