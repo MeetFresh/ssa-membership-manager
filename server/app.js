@@ -13,8 +13,6 @@ const stripe = require("stripe")("sk_test_51HKUBkCT0gTsZJ1O1ZC3378RpnCGkOitdo6ym
 
 const api = require('./routes');
 const multiparty = require('multiparty');
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
 const UserData = require('./models/user.js');
 
 var app = express();
@@ -81,24 +79,6 @@ app.post("/api/create-payment-intent", async (req, res) => {
   });
 });
 
-// app.post("./api/user/membership_update", async (req, res) => {
-//   console.log('Here update');
-//   const user = req.session.user;
-//   const filter = {email : user};
-//   const update = {membership: true, expirationdate: Date.now() + 365};
-//   UserData.findOneAndUpdate(filter, update, {
-//     new: true
-//   })
-//   .then(event => {
-//     res.json({
-//       event
-//     });
-//   })
-//   .catch(err => {
-//     next(err);
-//   });
-// })
-
 app.post("/update-profile", async (req, res) => {
   let form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {
@@ -119,7 +99,6 @@ app.post("/update-profile", async (req, res) => {
 
 
 app.post('/api/login',  (req, res) => {
-  // console.log(req)
   let form = new multiparty.Form();
   form.parse(req, function(e, fields, files) {
     const username = fields.username[0]
@@ -143,7 +122,6 @@ app.post('/api/login',  (req, res) => {
         }
         res.send({loginSuccess: status, isAdmin: false});
       })
-      // res.send({loginSuccess: status, isAdmin: false});
     }
   })
 });
