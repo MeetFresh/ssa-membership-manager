@@ -2,26 +2,29 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const multiparty = require('multiparty');
+var session = require('express-session');
+
+require('dotenv').config()
+
 const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
 //replace with Truran's api key
 const stripe = require("stripe")("sk_test_51HKUBkCT0gTsZJ1O1ZC3378RpnCGkOitdo6ymQ5H5H6RTB4w7ZDA82SpV8xgufEuzv7s0M5XtN2dCwShAVPYmchE00Tbu95CAz");
 
 const api = require('./routes');
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
+const multiparty = require('multiparty');
+const UserData = require('./models/user.js');
 
 var app = express();
-
 // Connect to MongoDB
-// mongoose.connect(
-//   process.env.MONGODB_URI,
-//   {useNewUrlParser: true, useUnifiedTopology: true},
-//   err => {
-//     if (err) throw err;
-//     console.log('Conected to MongoDB');
-//   }
-// );
+mongoose.connect(
+  process.env.MONGODB_URI,
+  {useNewUrlParser: true, useUnifiedTopology: true},
+  err => {
+    if (err) throw err;
+    console.log('Conected to MongoDB');
+  }
+);
 
 // mongoose.Promise = global.Promise;
 
@@ -32,6 +35,16 @@ app.use(cookieParser());
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
+app.use(session({
+  cookie: {
+    path    : '/api',
+    httpOnly: false,
+    maxAge  : 24*60*60*1000
+  },
+  secret: '2C44-4D44-WppQ38S',
+  resave: true,
+  saveUninitialized: false
+}));
 app.use('/api', api);
 
 // Render React page
@@ -51,12 +64,15 @@ const calculateOrderAmount = items => {
   return parseInt(price * 100);
 };
 
-app.post("/create-payment-intent", async (req, res) => {
-  const { email, items } = req.body;
+app.post("/api/create-payment-intent", async (req, res) => {
+  const { items } = req.body;
+  console.log(req.session.user);
+  console.log(items);
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
     amount: calculateOrderAmount(items),
-    currency: "usd"
+    currency: "usd",
+    receipt_email: req.session.user
   });
   res.send({
     clientSecret: paymentIntent.client_secret
@@ -66,40 +82,54 @@ app.post("/create-payment-intent", async (req, res) => {
 app.post("/update-profile", async (req, res) => {
   let form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {
-    console.log(fields)
+    // console.log(fields)
+    let filter = {}
+    console.log(Object.keys(fields))
+    Object.keys(fields).forEach((k) => {
+      if (k === 'username') {
+        continue;
+      }
+      console.log(fields[k]);
+      filter[k] = fields[k][0];
+    })
+    console.log(filter)
     res.send({})
   });
 })
 
-app.post("/login", async (req, res) => {
+
+app.post('/api/login',  (req, res) => {
   let form = new multiparty.Form();
-  form.parse(req, function(err, fields, files) {
+  form.parse(req, function(e, fields, files) {
     const username = fields.username[0]
     const password = fields.password[0]
+    req.session.user = username;
+    req.session.password = password;
+    req.session.save();
+    let filter = {email: username, password: password};
+    let status = true;
+    console.log(filter);
     if (username === 'wtruran@gatech.edu' && password === '111111') {
       res.send({loginSuccess: true, isAdmin: true})
     } else {
-      res.send({loginSuccess: true, isAdmin: false})
+      UserData.findOne(filter, (err, obj) => {
+        if (err) {
+          return res.status(500).send('Something broke!');
+        }
+        console.log(obj);
+        if (obj === null) {
+          status = false;
+        }
+        res.send({loginSuccess: status, isAdmin: false});
+      })
     }
-  });
-})
+  })
+});
 
-let DATABASE_ID = 100
-app.post("/new-event", async (req, res) => {
-  const newId = 'event/announcement-' + DATABASE_ID
-  DATABASE_ID++
-  res.send({newId: newId})
-})
-
-app.post("/edit-event", async (req, res) => {
-  console.log(req.body)
-  res.send({success: true})
-})
-
-app.post("/delete-event", async (req, res) => {
-  console.log(req.body)
-  res.send({success: true})
-})
+app.get('/api/logout', (req, res)=>{
+  req.session.destroy();
+  res.send({status: true});
+});
 
 app.listen(4242, () => console.log('Node server listening on port 4242!'));
 

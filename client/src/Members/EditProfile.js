@@ -71,8 +71,8 @@ const mapDispatchToProps = (dispatch) => ({
         }
         
         const formData = new FormData(event.target)
-        const UPDATE_PROFILE_API = '/update-profile'
-        axios.post(
+        const UPDATE_PROFILE_API = '/api/user'
+        axios.put(
             UPDATE_PROFILE_API, formData,
             {'Content-Type': 'multipart/form-data'}
         ).then(res => {
