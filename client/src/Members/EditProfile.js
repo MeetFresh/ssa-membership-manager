@@ -67,7 +67,7 @@ const mapDispatchToProps = (dispatch) => ({
         }
         if (['graduate', 'undergrad'].indexOf(status) !== -1) {
             profile.instituteId = state.instituteId
-            profile.email = state.email
+            profile.email = state.instituteEmail
         }
         
         const formData = new FormData(event.target)
@@ -80,6 +80,7 @@ const mapDispatchToProps = (dispatch) => ({
             dispatch(actionCreators.setCurrPage("profile"))
         }).catch(err => {
             console.log(err)
+            dispatch(actionCreators.setConnectionError(true))
         })
     },
     goProfile() {
@@ -106,8 +107,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
         instituteValidation: true,
         instituteId: profile.instituteId || '',
         instituteIdValidation: true,
-        email: profile.email || '',
-        emailValidation: true
+        instituteEmail: profile.email || '',
+        instituteEmailValidation: true
     });
 
     const handleChange = (event) => {
@@ -136,7 +137,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
         if (['graduate', 'undergrad'].indexOf(state.status) !== -1) {
             return validateInput(null, 'institute', state.institute)
             && validateInput(null, 'instituteId', state.instituteId)
-            && validateInput(null, 'email', state.email)
+            && validateInput(null, 'instituteEmail', state.instituteEmail)
         }
         if (['nt-faculty', 'faculty', 'postdoc'].indexOf(state.status) !== -1) {
             return validateInput(null, 'institute', state.institute)
@@ -146,7 +147,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
 
     const applyRule = (name, value) => {
         switch (name) {
-            case 'email':
+            case 'instituteEmail':
                 return validator.validate(value) && value.substring(value.indexOf('.')) === '.edu' ? true :
                 (value === '' ? 'Email is required.' : 'Institute (.edu) email required.')
             case 'status':
@@ -342,14 +343,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     <Grid item sm={6}>
                                         <TextField 
                                             id="standard-basic" 
-                                            label="Email" 
+                                            label="Institute Email" 
                                             fullWidth="true"
-                                            value={state.email}
+                                            value={state.instituteEmail}
                                             onChange={(event) => {handleChange(event); validateInput(event)}}
                                             inputProps={{
-                                                name: 'email',
+                                                name: 'instituteEmail',
                                             }}
-                                            error={state.emailValidation === true ? false : true}
+                                            error={state.instituteEmailValidation === true ? false : true}
                                             helperText={state.emailValidation}
                                         />
                                     </Grid>

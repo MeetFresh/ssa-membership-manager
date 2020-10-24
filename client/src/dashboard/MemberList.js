@@ -19,6 +19,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import {updateUserProfile} from '../queries'
+
 const useStyles = makeStyles((theme) => ({
     listItem: {
         padding: theme.spacing(1, 0),
@@ -51,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
 const mapDispatchToProps = (dispatch) => ({
   changeUserStatus(username, newStatus) {
       dispatch(actionCreators.changeUserStatus(username, newStatus))
+  },
+  openConnectionError() {
+    dispatch(actionCreators.setConnectionError(true))
   }
 })
 
@@ -77,7 +82,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
     };
 
     const changeStatus = (event, email) => {
-        props.changeUserStatus(email, event.target.value)
+        const formData = new FormData()
+        formData.append("email", email)
+        formData.append("usertype", event.target.value)
+        const event_target_value = event.target.value
+        updateUserProfile(formData).then((res) => {
+          props.changeUserStatus(email, event_target_value)
+        }).catch(err => {
+          props.openConnectionError()
+        })
     };
 
     function filteredList() {
@@ -125,6 +138,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
     const checkList = props.userList.toJS().filter((row) => (state.checks[row.email] === true))
     const sendEmailString = checkList.map((row) => (row.email)).join(';')
     const isClicked = props.userList.toJS().find(e => e.email === state.clicked);
+
+    let history = props.userList.toJS().filter(user => (user.email === state.clicked))
+    history = history.length === 1 ? history[0].history.filter(hist => hist !== "").map(hist => {
+      const status_register = hist.split(",")
+      return {
+        status: status_register[0],
+        register: (new Date(status_register[1])).toDateString(),
+        expire: (new Date(status_register[2])).toDateString()
+      }
+    }) : []
 
     return (
         <React.Fragment>
@@ -260,46 +283,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            <TableRow>
-                                                <TableCell>undergrad</TableCell>
-                                                <TableCell>2013-01-03</TableCell>
-                                                <TableCell>2014-01-04</TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>undergrad</TableCell>
-                                                <TableCell>2014-01-03</TableCell>
-                                                <TableCell>2015-01-04</TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>undergrad</TableCell>
-                                                <TableCell>2015-01-03</TableCell>
-                                                <TableCell>2016-01-04</TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>graduate</TableCell>
-                                                <TableCell>2016-01-03</TableCell>
-                                                <TableCell>2017-01-04</TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>graduate</TableCell>
-                                                <TableCell>2017-01-03</TableCell>
-                                                <TableCell>2018-01-04</TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>faculty</TableCell>
-                                                <TableCell>2018-01-03</TableCell>
-                                                <TableCell>2019-01-04</TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>faculty</TableCell>
-                                                <TableCell>2019-01-03</TableCell>
-                                                <TableCell>2020-01-04</TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>faculty</TableCell>
-                                                <TableCell>2020-01-03</TableCell>
-                                                <TableCell>2021-01-04</TableCell>
-                                            </TableRow>
+                                            {
+                                              history.map(hist => (
+                                                <TableRow>
+                                                  <TableCell>{hist.status}</TableCell>
+                                                  <TableCell>{hist.register}</TableCell>
+                                                  <TableCell>{hist.expire}</TableCell>
+                                                </TableRow>
+                                              ))
+                                            }
                                         </TableBody>
                                         </Table>
                                     </TableContainer>

@@ -31,6 +31,8 @@ import EditProfile from '../Members/EditProfile';
 import Event from '../Event';
 import Review from '../Payment/Review'
 import Button from "@material-ui/core/Button";
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
 import logo from '../img/SSALogo.png';
 import MailingList from './MailingList'
 import MemberList from './MemberList'
@@ -163,7 +165,9 @@ const CheckoutWrapper = function(props) {
 const mapStateToProps = (state) => ({
   loggedIn: state.getIn(['app', 'loggedIn']),
   currPage: state.getIn(['app', 'currPage']),
-  isAdmin: state.getIn(['app', 'isAdmin'])
+  isAdmin: state.getIn(['app', 'isAdmin']),
+  connectionError: state.getIn(['app', 'connectionError']),
+  wrongCredentials: state.getIn(['app', 'wrongCredentials'])
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -174,6 +178,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   togglePage(pageName) {
       dispatch(actionCreators.setCurrPage(pageName))
+  },
+  closeConnectionError() {
+      dispatch(actionCreators.setConnectionError(false))
+  },
+  closeCredentialError() {
+      dispatch(actionCreators.setWrongCredentials(false))
   }
 })
 
@@ -334,6 +344,24 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                     {/*</IconButton>*/}
 
                 </Toolbar>
+                {
+                    props.connectionError ? 
+                    <Alert
+                        severity="error"
+                        onClose={() => {props.closeConnectionError()}}
+                    >
+                        <AlertTitle>Oops, something went wrong. <strong>Check Internet connection and reload page later</strong>.</AlertTitle>
+                    </Alert> : null
+                }
+                {
+                    props.wrongCredentials ? 
+                    <Alert
+                        severity="warning"
+                        onClose={() => {props.closeCredentialError()}}
+                    >
+                        <AlertTitle>Your email or password is incorrect. Try Again.</AlertTitle>
+                    </Alert> : null
+                }
             </AppBar>
 
             <Drawer

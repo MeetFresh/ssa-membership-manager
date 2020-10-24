@@ -85,7 +85,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                             marginTop: 10,
                         }}
                         onClick={() => {props.subscribe(profile.status)}}
-                        disabled={profile.status === ''}
+                        disabled={profile.status === '' || profile.status === 'non-member'}
                     >Subscribe</Button>
                 </Grid>
 
@@ -105,7 +105,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                 </Grid>
                 <Typography variant="body2">
                     {   
-                        profile.status !== '' ?
+                        profile.status !== '' && profile.status !== 'non-member' ?
                         "You are about to subscribe as " + profile.status + "."
                         : 'Oops, seems you have not declared your status yet. You should claim one in your Profile.'
                     }

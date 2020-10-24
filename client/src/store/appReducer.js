@@ -17,7 +17,9 @@ const defaultState = fromJS({
     shoppingCart: [],
     isAdmin: false,
     checkoutItemList: checkoutItemList,
-    userList: userList
+    userList: [],
+    connectionError: false,
+    wrongCredentials: false
 })
 
 export const reducer = (state=defaultState, action) => {
@@ -102,6 +104,13 @@ export const reducer = (state=defaultState, action) => {
                 })
             })
             return state.set('checkoutItemList', fromJS(checkoutItemList4))
+        case constants.SET_USER_LIST:
+            return state.set('userList', fromJS(action.users))
+        case constants.SET_CONNECTION_ERROR:
+            return state.set('connectionError', fromJS(action.isError))
+        case constants.SET_WRONG_CREDENTIALS:
+            
+            return state.set('wrongCredentials', fromJS(action.isWrong))
         default:
             return state
     }

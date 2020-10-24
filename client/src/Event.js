@@ -67,6 +67,8 @@ const mapPropsToDispatch = (dispatch) => ({
             if (res.data.success) {
                 dispatch(actionCreators.editCheckoutItemList(targetItem))
             }
+        }).catch((err) => {
+            dispatch(actionCreators.setConnectionError(true))
         })
     },
     deleteEvent(deletedId) {
@@ -74,13 +76,19 @@ const mapPropsToDispatch = (dispatch) => ({
             if (res.data.success) {
                 dispatch(actionCreators.deleteCheckoutItemList(deletedId))
             }
+        }).catch((err) => {
+            dispatch(actionCreators.setConnectionError(true))
         })
     },
     addEvent() {
         axios.post('/new-event').then(res => {
             if (res.data.newId) {
                 dispatch(actionCreators.addCheckoutItemList(res.data.newId))
+            } else {
+                dispatch(actionCreators.setConnectionError(true))
             }
+        }).catch((err) => {
+            dispatch(actionCreators.setConnectionError(true))
         })
     }
 });
@@ -108,7 +116,6 @@ function EventComponent(props) {
       const name = event.target.name;
       state[[name]] = event.target.value
       setState({...state})
-      console.log(event.target.value)
     };
 
     const saveEvent = () => {

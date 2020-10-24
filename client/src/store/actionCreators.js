@@ -59,3 +59,18 @@ export const editMembershipPrice = (priceDict) => ({
     type: constants.EDIT_MEMBERSHIP_PRICE,
     priceDict
 })
+
+export const setUserList = (users) => ({
+    type: constants.SET_USER_LIST,
+    users
+})
+
+export const setConnectionError = (isError) => ({
+    type: constants.SET_CONNECTION_ERROR,
+    isError
+})
+
+export const setWrongCredentials = (isWrong) => ({
+    type: constants.SET_WRONG_CREDENTIALS,
+    isWrong
+})
