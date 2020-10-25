@@ -11,16 +11,6 @@ import Button from "@material-ui/core/Button";
 import {connect} from "react-redux";
 import {actionCreators} from "../store";
 
-
-// const profile = [
-//     { name: 'Name', value: 'First Last' },
-//     { name: 'Gender', value: 'Male' },
-//     { name: 'Membership Status', value: 'Student' },
-//     { name: 'Institue', value: 'Georgia Tech' },
-//     { name: 'Email', value: 'myemail@gatech.edu' },
-// ];
-
-
 const useStyles = makeStyles((theme) => ({
     listItem: {
         padding: theme.spacing(1, 0),
@@ -103,11 +93,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Profile(pro
                                     <Typography variant="body2">{profile.instituteId}</Typography>
                                 </ListItem> : null
                             }
-                            <ListItem className={classes.listItem}>
-                                <ListItemText primary='Email' />
-                                <Typography variant="body2">{profile.email}</Typography>
-                            </ListItem>
-                            
+                            {
+                                profile.email ?
+                                <ListItem className={classes.listItem}>
+                                    <ListItemText primary='Institute Email' />
+                                    <Typography variant="body2">{profile.email}</Typography>
+                                </ListItem> : null
+                            }
                         </List>
                         <Button
                             variant="outlined"

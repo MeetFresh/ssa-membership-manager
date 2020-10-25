@@ -1,15 +1,21 @@
 export const checkoutItemList = [
     {
-        id: 'student-membership',
-        name: 'Student Membership',
+        id: 'undergrad-membership',
+        name: 'Undergrad Membership',
         type: 'membership',
-        desc: 'Subscription as a student for one month.',
+        desc: 'Subscription as an undergrad for one month.',
+        price: 1.51 
+    }, {
+        id: 'graduate-membership',
+        name: 'Graduate Membership',
+        type: 'membership',
+        desc: 'Subscription as a graduate for one month.',
         price: 2.51 
     }, { 
-        id: 'general-membership', 
-        name: 'General Membership',
+        id: 'scholar-membership', 
+        name: 'Scholar Membership',
         type: 'membership',
-        desc: 'Subscription as a general member for one month.',
+        desc: 'Subscription as a scholar member for one month.',
         price: 4.04 
     }, { 
         id: 'faculty-membership',
@@ -17,6 +23,18 @@ export const checkoutItemList = [
         type: 'membership',
         desc: 'Subscription as a faculty member for one month.',
         price: 9.96 
+    }, { 
+        id: 'nt-faculty-membership',
+        name: 'NT-Faculty Membership',
+        type: 'membership',
+        desc: 'Subscription as an nt-faculty member for one month.',
+        price: 7.96 
+    }, { 
+        id: 'postdoc-membership',
+        name: 'Postdoc Membership',
+        type: 'membership',
+        desc: 'Subscription as an postdoc member for one month.',
+        price: 6.66
     }, { 
         id: 'event/announcement-0', 
         name: '2021 Summer School',

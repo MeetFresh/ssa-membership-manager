@@ -62,12 +62,12 @@ const mapDispatchToProps = (dispatch) => ({
         const profile = {
             first, last, pronoun, status, 
         }
-        if (status === 'faculty' || status === 'student') {
+        if (['graduate', 'undergrad', 'nt-faculty', 'faculty', 'postdoc'].indexOf(status) !== -1) {
             profile.institute = state.institute
         }
-        if (status === 'student') {
+        if (['graduate', 'undergrad'].indexOf(status) !== -1) {
             profile.instituteId = state.instituteId
-            profile.email = state.email
+            profile.email = state.instituteEmail
         }
         
         const formData = new FormData(event.target)
@@ -80,6 +80,7 @@ const mapDispatchToProps = (dispatch) => ({
             dispatch(actionCreators.setCurrPage("profile"))
         }).catch(err => {
             console.log(err)
+            dispatch(actionCreators.setConnectionError(true))
         })
     },
     goProfile() {
@@ -106,8 +107,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
         instituteValidation: true,
         instituteId: profile.instituteId || '',
         instituteIdValidation: true,
-        email: profile.email || '',
-        emailValidation: true
+        instituteEmail: profile.email || '',
+        instituteEmailValidation: true
     });
 
     const handleChange = (event) => {
@@ -133,12 +134,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
         if (!basic) {
             return false
         }
-        if (state.status === 'student') {
+        if (['graduate', 'undergrad'].indexOf(state.status) !== -1) {
             return validateInput(null, 'institute', state.institute)
             && validateInput(null, 'instituteId', state.instituteId)
-            && validateInput(null, 'email', state.email)
+            && validateInput(null, 'instituteEmail', state.instituteEmail)
         }
-        if (state.status === 'faculty') {
+        if (['nt-faculty', 'faculty', 'postdoc'].indexOf(state.status) !== -1) {
             return validateInput(null, 'institute', state.institute)
         }
         return true
@@ -146,7 +147,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
 
     const applyRule = (name, value) => {
         switch (name) {
-            case 'email':
+            case 'instituteEmail':
                 return validator.validate(value) && value.substring(value.indexOf('.')) === '.edu' ? true :
                 (value === '' ? 'Email is required.' : 'Institute (.edu) email required.')
             case 'status':
@@ -268,32 +269,35 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     error={state.statusValidation === true ? false : true}
                                 >
                                     <option aria-label="None" value="" />
-                                    <option value={'student'}>Student</option>
+                                    <option value={'graduate'}>Graduate</option>
+                                    <option value={'undergrad'}>Undergrad</option>
+                                    <option value={'nt-faculty'}>NT-Faculty</option>
                                     <option value={'faculty'}>Faculty</option>
-                                    <option value={'general'}>General</option>
+                                    <option value={'postdoc'}>Postdoc</option>
+                                    <option value={'scholar'}>Scholar</option>
                                 </Select>
                                 {state.statusValidation !== true ? <FormHelperText error>{state.statusValidation}</FormHelperText> : null}
                             </Grid>
                         </Grid>
                         {
-                            ['student', 'faculty'].indexOf(state.status) !== -1 ?
+                            ['graduate', 'undergrad', 'nt-faculty', 'faculty', 'postdoc'].indexOf(state.status) !== -1 ?
                             <Grid container spacing={1}  className={classes.grid}>
                                 {
-                                    state.status === 'student' ?
-                                    <FormHelperText>To verify your student status, enter the institute you attend, institute ID and email.</FormHelperText>
-                                    : state.status === 'faculty' ?
-                                    <FormHelperText>To verify your faculty status, enter the institute you work at.</FormHelperText>
+                                    ['graduate', 'undergrad'].indexOf(state.status) !== -1 ?
+                                    <FormHelperText style={{width: "100%"}}>Enter the institute you attend, institute ID and email.</FormHelperText>
+                                    : ['nt-faculty', 'faculty', 'postdoc'].indexOf(state.status) !== -1 ?
+                                    <FormHelperText style={{width: "100%"}}>Enter the institute you work at.</FormHelperText>
                                     : null
                                 }
                                 <Grid item sm={6}>
                                     <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
-                                        Insitute*
+                                        Institute*
                                     </Typography>
                                 </Grid>
                                 <Grid item sm={6}>
                                     <TextField
                                         id="standard-basic"
-                                        label="Intsitute"
+                                        label="Institute"
                                         fullWidth="true"
                                         value={state.institute}
                                         onChange={(event) => {handleChange(event); validateInput(event)}}
@@ -307,7 +311,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                             </Grid> : null
                         }
                         {
-                            state.status === 'student' ?
+                            ['graduate', 'undergrad'].indexOf(state.status) !== -1 ?
                             <Fragment>
                                 <Grid container spacing={1}  className={classes.grid}>
                                     <Grid item sm={6}>
@@ -318,7 +322,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     <Grid item sm={6}>
                                         <TextField
                                             id="standard-basic"
-                                            label="Intsitute ID"
+                                            label="Institute ID"
                                             fullWidth="true"
                                             value={state.instituteId}
                                             onChange={(event) => {handleChange(event); validateInput(event)}}
@@ -339,14 +343,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     <Grid item sm={6}>
                                         <TextField 
                                             id="standard-basic" 
-                                            label="Email" 
+                                            label="Institute Email" 
                                             fullWidth="true"
-                                            value={state.email}
+                                            value={state.instituteEmail}
                                             onChange={(event) => {handleChange(event); validateInput(event)}}
                                             inputProps={{
-                                                name: 'email',
+                                                name: 'instituteEmail',
                                             }}
-                                            error={state.emailValidation === true ? false : true}
+                                            error={state.instituteEmailValidation === true ? false : true}
                                             helperText={state.emailValidation}
                                         />
                                     </Grid>

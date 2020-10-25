@@ -17,7 +17,9 @@ const defaultState = fromJS({
     shoppingCart: [],
     isAdmin: false,
     checkoutItemList: checkoutItemList,
-    userList: userList
+    userList: [],
+    connectionError: false,
+    wrongCredentials: false
 })
 
 export const reducer = (state=defaultState, action) => {
@@ -76,6 +78,39 @@ export const reducer = (state=defaultState, action) => {
             let profile0 = state.get('profile').toJS()
             profile0.username = action.username
             return state.set('profile', fromJS(profile0))
+        case constants.CHANGE_USER_STATUS:
+            let userList0 = state.get('userList').toJS()
+            for (let idx = 0; idx < userList0.length; ++idx) {
+                if (userList0[idx].email === action.username) {
+                    userList0[idx].status = action.newStatus
+                }
+            }
+            return state.set('userList', fromJS(userList0))
+        case constants.EDIT_MEMBERSHIP_PRICE:
+            let checkoutItemList4 = state.get('checkoutItemList').toJS()
+            const keys = [
+                ["undergradPrice", "undergrad-membership"],
+                ["graduatePrice", "graduate-membership"],
+                ["ntFacultyPrice", "nt-faculty-membership"],
+                ["facultyPrice", "faculty-membership"],
+                ["postdocPrice", "postdoc-membership"],
+                ["scholarPrice", "scholar-membership"]
+            ]
+            checkoutItemList4.forEach(item => {
+                keys.forEach(key => {
+                    if (item.id === key[1]) {
+                        item.price = Math.max(parseFloat(action.priceDict[key[0]]) || 0, 0)
+                    }
+                })
+            })
+            return state.set('checkoutItemList', fromJS(checkoutItemList4))
+        case constants.SET_USER_LIST:
+            return state.set('userList', fromJS(action.users))
+        case constants.SET_CONNECTION_ERROR:
+            return state.set('connectionError', fromJS(action.isError))
+        case constants.SET_WRONG_CREDENTIALS:
+            
+            return state.set('wrongCredentials', fromJS(action.isWrong))
         default:
             return state
     }

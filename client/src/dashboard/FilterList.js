@@ -37,8 +37,7 @@ export default function FilterList(props) {
             {
               props.filteredList.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell style={{maxWidth: 300, overflow: "hidden", whiteSpace: "nowrap"}}
-                  >
+                  <TableCell style={{maxWidth: 300, overflow: "hidden", whiteSpace: "nowrap"}}>
                   <label style={{cursor: "pointer"}}>
                     <Checkbox
                       color="default"
@@ -48,6 +47,7 @@ export default function FilterList(props) {
                       inputProps={{ 'aria-label': 'checkbox with default color' }}
                       checked={props.checks[row.email]}
                       value={row.email}
+                      style={{visibility: props.showCheckbox ? "visible" : "hidden"}}
                     />
                     {row.email}
                   </label>
