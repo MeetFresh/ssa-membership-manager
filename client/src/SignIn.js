@@ -112,7 +112,7 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
+                        id="username"
                         label="Email Address"
                         name="username"
                         autoComplete="email"
