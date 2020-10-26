@@ -3,6 +3,7 @@ var router = express.Router();
 const { matchedData } = require('express-validator/filter');
 const UserData = require('../models/user.js');
 const multiparty = require('multiparty');
+var md5 = require('md5');
 
 // /* GET users listing. */
 router.get('/all', function(req, res, next) {
@@ -18,7 +19,7 @@ router.get('/all', function(req, res, next) {
 router.get('/:id', (req, res, next) => {
   const username = req.params.id;
   const query = {email : username};
-  UserData.findOne(filter)
+  UserData.findOne(query)
     .then(user => {
       res.status(200).json({user});
     })
@@ -27,7 +28,9 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next)=> {
     // res.redirect("./");
-    const newUserData = req.body
+    const newUserData = req.body;
+    let password = md5(newUserData.password);
+    newUserData.password = password;
     console.log(newUserData);
     const newUser = new UserData(newUserData);
     // console.log(req)

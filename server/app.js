@@ -3,6 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
+var md5 = require('md5');
 
 require('dotenv').config()
 
@@ -101,15 +102,16 @@ app.post("/update-profile", async (req, res) => {
 app.post('/api/login',  (req, res) => {
   let form = new multiparty.Form();
   form.parse(req, function(e, fields, files) {
+    console.log(fields);
     const username = fields.username[0]
-    const password = fields.password[0]
+    const password = md5(fields.password[0])
     req.session.user = username;
     req.session.password = password;
     req.session.save();
     let filter = {email: username, password: password};
     let status = true;
     console.log(filter);
-    if (username === 'wtruran@gatech.edu' && password === '111111') {
+    if (username === 'wtruran@gatech.edu' && password === md5('111111')) {
       res.send({loginSuccess: true, isAdmin: true})
     } else {
       UserData.findOne(filter, (err, obj) => {
