@@ -12,6 +12,8 @@
     "dotenv": "^8.2.0",
     "dotenv-cli": "^3.2.0",
     "express": "~4.16.0",
+    "express-session": "^1.17.1",
+    "md5": "^2.3.0",
     "mongoose": "^5.10.0",
     "morgan": "~1.9.0",
     "multiparty": "^4.2.2",
