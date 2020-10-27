@@ -58,12 +58,8 @@ export const reducer = (state=defaultState, action) => {
             return state.set('checkoutItemList', fromJS(checkoutItemList2))
         case constants.ADD_CHECKOUT_ITEM_LIST:
             let checkoutItemList3 = state.get('checkoutItemList').toJS()
-            let maxId = 0
-            checkoutItemList3.filter((item) => (item.type === 'event'))
-            .forEach((item) => {parseInt(maxId = Math.max(maxId, item.id.split('-')[1]))})
-            const newId = action.newId
             const newEvent = {
-                id: newId,
+                id: action.newId,
                 name: 'New Unnamed Event',
                 type: 'event',
                 desc: "SSA Event",
@@ -109,8 +105,10 @@ export const reducer = (state=defaultState, action) => {
         case constants.SET_CONNECTION_ERROR:
             return state.set('connectionError', fromJS(action.isError))
         case constants.SET_WRONG_CREDENTIALS:
-            
             return state.set('wrongCredentials', fromJS(action.isWrong))
+        case constants.MERGE_CHECKOUT_ITEM_LIST:
+            let checkoutItemList5 = state.get('checkoutItemList').toJS().filter(item => item.type === 'membership')
+            return state.set('checkoutItemList', fromJS(checkoutItemList5.concat(action.events)))
         default:
             return state
     }

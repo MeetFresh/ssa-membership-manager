@@ -53,8 +53,8 @@ const mapPropsToDispatch = (dispatch) => ({
         dispatch(actionCreators.setCurrPage("checkout"))
     },
     saveEvent(eventId, eventContent) {
-        const targetItem = {
-            id: eventId,
+        let targetItem = {
+            _id: eventId,
             name: eventContent.name,
             type: eventContent.type,
             desc: 'SSA Event',
@@ -63,8 +63,10 @@ const mapPropsToDispatch = (dispatch) => ({
             picSrc: eventContent.tempPicSrc,
             learnMoreLink: eventContent.learnMoreLink
         }
-        axios.post('/edit-event', targetItem).then(res => {
+        axios.put('/api/event', targetItem).then(res => {
             if (res.data.success) {
+                targetItem.id = targetItem["_id"]
+                delete targetItem["_id"]
                 dispatch(actionCreators.editCheckoutItemList(targetItem))
             }
         }).catch((err) => {
@@ -72,7 +74,7 @@ const mapPropsToDispatch = (dispatch) => ({
         })
     },
     deleteEvent(deletedId) {
-        axios.post('/delete-event', {deletedId: deletedId}).then(res => {
+        axios.post('/api/event/del', {_id: deletedId}).then(res => {
             if (res.data.success) {
                 dispatch(actionCreators.deleteCheckoutItemList(deletedId))
             }
@@ -81,9 +83,9 @@ const mapPropsToDispatch = (dispatch) => ({
         })
     },
     addEvent() {
-        axios.post('/new-event').then(res => {
-            if (res.data.newId) {
-                dispatch(actionCreators.addCheckoutItemList(res.data.newId))
+        axios.post('/api/event').then(res => {
+            if (res.data["_id"]) {
+                dispatch(actionCreators.addCheckoutItemList(res.data["_id"]))
             } else {
                 dispatch(actionCreators.setConnectionError(true))
             }
