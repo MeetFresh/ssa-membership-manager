@@ -353,15 +353,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         <AlertTitle>Oops, something went wrong. <strong>Check Internet connection and reload page later</strong>.</AlertTitle>
                     </Alert> : null
                 }
-                {
-                    props.wrongCredentials ? 
-                    <Alert
-                        severity="warning"
-                        onClose={() => {props.closeCredentialError()}}
-                    >
-                        <AlertTitle>Your email or password is incorrect. Try Again.</AlertTitle>
-                    </Alert> : null
-                }
             </AppBar>
 
             <Drawer

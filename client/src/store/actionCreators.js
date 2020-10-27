@@ -65,6 +65,11 @@ export const setUserList = (users) => ({
     users
 })
 
+export const mergeCheckoutItemList = (events) => ({
+    type: constants.MERGE_CHECKOUT_ITEM_LIST,
+    events
+})
+
 export const setConnectionError = (isError) => ({
     type: constants.SET_CONNECTION_ERROR,
     isError

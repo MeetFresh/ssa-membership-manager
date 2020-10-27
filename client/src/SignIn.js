@@ -21,6 +21,9 @@ import {actionCreators} from './store'
 import { ThemeProvider } from '@material-ui/core/styles';
 import {theme} from './theme';
 
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
+
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -96,6 +99,14 @@ function handleSubmit(event, props) {
                     props.setProfile(profile)
                 })
             }
+            axios.get('/api/event/all').then(res => {
+                let events = res.data.events.map(event => {
+                    event.id = event["_id"]
+                    delete event["_id"]
+                    return event
+                })
+                props.mergeCheckoutItemList(events)
+            })
         } else {
             props.openWrongCredentials()
         }
@@ -125,6 +136,9 @@ const mapDispatchToProps = (dispatch) => ({
     setUserList(users) {
         dispatch(actionCreators.setUserList(users))
     },
+    mergeCheckoutItemList(events) {
+        dispatch(actionCreators.mergeCheckoutItemList(events))
+    },
     openConnectionError() {
         dispatch(actionCreators.setConnectionError(true))
     },
@@ -133,10 +147,15 @@ const mapDispatchToProps = (dispatch) => ({
     },
     closeWrongCredentials() {
         dispatch(actionCreators.setWrongCredentials(false))
-    }
+    },
 })
+
+const mapStateToProps = (state) => ({
+    wrongCredentials: state.getIn(['app', 'wrongCredentials'])
+})
+
 // onSubmit={(event) => {handleSubmit(event, props.login)}}
-export default connect(null, mapDispatchToProps)(function SignIn(props) {
+export default connect(mapStateToProps, mapDispatchToProps)(function SignIn(props) {
     const classes = useStyles();
 
     return (
@@ -176,6 +195,15 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                     <FormControlLabel
                         control={< Checkbox value = "remember" color = "#888888" />}
                         label="Remember me"/>
+                    {
+                    props.wrongCredentials ? 
+                        <Alert
+                            severity="warning"
+                            onClose={() => {props.closeWrongCredentials()}}
+                        >
+                            <AlertTitle>Wrong email/password. Try Again.</AlertTitle>
+                        </Alert> : null
+                    }
                     <Button
                         type="submit"
                         fullWidth
