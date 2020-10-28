@@ -31,8 +31,12 @@ import EditProfile from '../Members/EditProfile';
 import Event from '../Event';
 import Review from '../Payment/Review'
 import Button from "@material-ui/core/Button";
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
 import logo from '../img/SSALogo.png';
 import MailingList from './MailingList'
+import MemberList from './MemberList'
+import Pricing from './Pricing'
 
 import { connect } from 'react-redux'
 import {actionCreators} from '../store'
@@ -158,40 +162,12 @@ const CheckoutWrapper = function(props) {
     )
 }
 
-function getPageDisplay(props) {
-    if (!props.loggedIn) {
-        if (props.currPage === 'signup') {
-            return <SignUp />
-        } else {
-            return <SignIn />
-        }
-    } else if (props.currPage === 'profile') {
-        return <Profile />
-    } else if (props.currPage === 'membership') {
-        return <Membership />
-    } else if (props.currPage === 'checkout') {
-        return (
-        <div align="center">
-            <Elements stripe={promise}>
-                <Checkout/>
-            </Elements>
-        </div>
-        )
-    } else if (props.currPage == 'event') {
-        return <Event/>
-    } else if (props.currPage == 'edit-profile') {
-        return <EditProfile />
-    } else if (props.currPage == 'mailing-list') {
-        return <MailingList />
-    } else {
-        return null
-    }
-}
-
 const mapStateToProps = (state) => ({
   loggedIn: state.getIn(['app', 'loggedIn']),
   currPage: state.getIn(['app', 'currPage']),
-  isAdmin: state.getIn(['app', 'isAdmin'])
+  isAdmin: state.getIn(['app', 'isAdmin']),
+  connectionError: state.getIn(['app', 'connectionError']),
+  wrongCredentials: state.getIn(['app', 'wrongCredentials'])
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -202,6 +178,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   togglePage(pageName) {
       dispatch(actionCreators.setCurrPage(pageName))
+  },
+  closeConnectionError() {
+      dispatch(actionCreators.setConnectionError(false))
+  },
+  closeCredentialError() {
+      dispatch(actionCreators.setWrongCredentials(false))
   }
 })
 
@@ -289,6 +271,26 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                                   style={{
                                       marginRight: 10
                                   }}
+                                  onClick={() => {props.togglePage('member-info')}}
+                              >Member Info</Button>
+                      }
+                      {
+                          !props.isAdmin ? null :
+                              <Button
+                                  variant="outlined"
+                                  style={{
+                                      marginRight: 10
+                                  }}
+                                  onClick={() => {props.togglePage('membership-pricing')}}
+                              >Membership Pricing</Button>
+                      }
+                      {
+                          !props.isAdmin ? null :
+                              <Button
+                                  variant="outlined"
+                                  style={{
+                                      marginRight: 10
+                                  }}
                                   href="http://stripe.com/"
                               >Transactions</Button>
                       }
@@ -330,7 +332,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                           style={{
                             marginRight: 10
                           }}
-                          onClick={ () => { props.togglePage(null) } }
+                          onClick={ () => { props.togglePage('') } }
                         >Sign In</Button>
                       )
                     }
@@ -342,6 +344,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                     {/*</IconButton>*/}
 
                 </Toolbar>
+                {
+                    props.connectionError ? 
+                    <Alert
+                        severity="error"
+                        onClose={() => {props.closeConnectionError()}}
+                    >
+                        <AlertTitle>Oops, something went wrong. <strong>Check Internet connection and reload page later</strong>.</AlertTitle>
+                    </Alert> : null
+                }
             </AppBar>
 
             <Drawer
@@ -384,8 +395,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         <Route path="/event" component={Event} />
                         <Route path="/edit-profile" component={EditProfile} />
                         <Route path="/mailing-list" component={MailingList} />
+                        <Route path="/member-info" component={MemberList} />
+                        <Route path="/membership-pricing" component={Pricing} />
                     </Switch> :
-                    window.location.pathname === '/signup' ?
+                    props.currPage === 'signup' ?
                     <SignUp /> : <SignIn />
                 }
             </main>

@@ -14,11 +14,15 @@ import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import axios from 'axios'
+import {loginUser, getOneUser, getAllUsers} from './queries'
 import { connect } from 'react-redux'
 import {actionCreators} from './store'
 
 import { ThemeProvider } from '@material-ui/core/styles';
 import {theme} from './theme';
+
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
 
 function Copyright() {
     return (
@@ -54,22 +58,60 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function handleSubmit(event, login, loginAdmin) {
+function handleSubmit(event, props) {
     event.preventDefault();
 
     const formData = new FormData(event.target)
     const LOGIN_API = '/api/login'
-    axios.post(
-        LOGIN_API, formData,
-        {'Content-Type': 'multipart/form-data'}
-    ).then(res => {
-        // console.log(res.data.isAdmin)
+    loginUser(formData).then(res => {
         if (res.data.loginSuccess) {
+            props.closeWrongCredentials()
             const username = formData.get('username')
-            loginAdmin(res.data.isAdmin)
-            login(username)
+            props.loginAdmin(res.data.isAdmin)
+            props.login(username)
+            if (res.data.isAdmin) {
+                getAllUsers().then(res => {
+                    const users = res.data.users.map(user => ({
+                        first: user.first,
+                        last: user.last,
+                        status: user.usertype,
+                        email: user.email,
+                        history: user.activityhistory
+                    }))
+                    props.setUserList(users)
+                })
+            } else {
+                getOneUser(username).then(res => {
+                    const { first, last, pronoun, usertype, institute, instituteId, instituteEmail } = res.data.user
+                    let profile = {
+                        first: first || "",
+                        last: last || last,
+                        pronoun: pronoun || "",
+                        status: usertype || "",
+                    }
+                    if (["undergrad", "graduate", "nt-faculty", "faculty", "postdoc"].indexOf(usertype) !== -1) {
+                        if (institute) {profile.institute = institute}
+                    }
+                    if (["undergrad", "graduate"].indexOf(usertype) !== -1) {
+                        if (instituteId) {profile.instituteId = instituteId}
+                        if (instituteEmail) {profile.email = instituteEmail}
+                    }
+                    props.setProfile(profile)
+                })
+            }
+            axios.get('/api/event/all').then(res => {
+                let events = res.data.events.map(event => {
+                    event.id = event["_id"]
+                    delete event["_id"]
+                    return event
+                })
+                props.mergeCheckoutItemList(events)
+            })
+        } else {
+            props.openWrongCredentials()
         }
     }).catch(err => {
+        props.openConnectionError()
         console.log(err)
     })
 }
@@ -87,10 +129,33 @@ const mapDispatchToProps = (dispatch) => ({
     },
     setUserName(username) {
         dispatch(actionCreators.setUsername(username))
-    }
+    },
+    setProfile(profile) {
+        dispatch(actionCreators.setProfile(profile))
+    },
+    setUserList(users) {
+        dispatch(actionCreators.setUserList(users))
+    },
+    mergeCheckoutItemList(events) {
+        dispatch(actionCreators.mergeCheckoutItemList(events))
+    },
+    openConnectionError() {
+        dispatch(actionCreators.setConnectionError(true))
+    },
+    openWrongCredentials() {
+        dispatch(actionCreators.setWrongCredentials(true))
+    },
+    closeWrongCredentials() {
+        dispatch(actionCreators.setWrongCredentials(false))
+    },
 })
+
+const mapStateToProps = (state) => ({
+    wrongCredentials: state.getIn(['app', 'wrongCredentials'])
+})
+
 // onSubmit={(event) => {handleSubmit(event, props.login)}}
-export default connect(null, mapDispatchToProps)(function SignIn(props) {
+export default connect(mapStateToProps, mapDispatchToProps)(function SignIn(props) {
     const classes = useStyles();
 
     return (
@@ -106,7 +171,7 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                 <ThemeProvider theme={theme}>
                 <form 
                     className={classes.form} noValidate
-                    onSubmit={(event) => {handleSubmit(event, props.login, props.loginAdmin)}}>
+                    onSubmit={(event) => {handleSubmit(event, props)}}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -130,6 +195,15 @@ export default connect(null, mapDispatchToProps)(function SignIn(props) {
                     <FormControlLabel
                         control={< Checkbox value = "remember" color = "#888888" />}
                         label="Remember me"/>
+                    {
+                    props.wrongCredentials ? 
+                        <Alert
+                            severity="warning"
+                            onClose={() => {props.closeWrongCredentials()}}
+                        >
+                            <AlertTitle>Wrong email/password. Try Again.</AlertTitle>
+                        </Alert> : null
+                    }
                     <Button
                         type="submit"
                         fullWidth

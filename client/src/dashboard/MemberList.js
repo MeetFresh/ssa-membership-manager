@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -12,6 +12,14 @@ import {actionCreators} from "../store";
 import {connect} from "react-redux";
 import FilterList from './FilterList'
 import DisplayList from './DisplayList';
+import Table from '@material-ui/core/Table';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
+import {updateUserProfile} from '../queries'
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
@@ -43,7 +51,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const mapDispatchToProps = (dispatch) => ({
-
+  changeUserStatus(username, newStatus) {
+      dispatch(actionCreators.changeUserStatus(username, newStatus))
+  },
+  openConnectionError() {
+    dispatch(actionCreators.setConnectionError(true))
+  }
 })
 
 const mapStateToProps = (state) => ({
@@ -66,6 +79,18 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
       const name = event.target.name;
       state[[name]] = event.target.value
       setState({...state})
+    };
+
+    const changeStatus = (event, email) => {
+        const formData = new FormData()
+        formData.append("email", email)
+        formData.append("usertype", event.target.value)
+        const event_target_value = event.target.value
+        updateUserProfile(formData).then((res) => {
+          props.changeUserStatus(email, event_target_value)
+        }).catch(err => {
+          props.openConnectionError()
+        })
     };
 
     function filteredList() {
@@ -113,6 +138,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
     const checkList = props.userList.toJS().filter((row) => (state.checks[row.email] === true))
     const sendEmailString = checkList.map((row) => (row.email)).join(';')
     const isClicked = props.userList.toJS().find(e => e.email === state.clicked);
+
+    let history = props.userList.toJS().filter(user => (user.email === state.clicked))
+    history = history.length === 1 ? history[0].history.filter(hist => hist !== "").map(hist => {
+      const status_register = hist.split(",")
+      return {
+        status: status_register[0],
+        register: (new Date(status_register[1])).toDateString(),
+        expire: (new Date(status_register[2])).toDateString()
+      }
+    }) : []
 
     return (
         <React.Fragment>
@@ -183,65 +218,88 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                         checks={state.checks}
                         toggleCheck={(email) => {state.checks[email] = !state.checks[email]; setState({...state})}}
                         mouseEnter={(email) => {state.clicked = email; setState({...state})}}
-                        showCheckbox={true}
+                        showCheckbox={false}
                       />
-                    </Grid>
-                    <Grid container alignItems="center" justify="center">
-                      <Button
-                        variant="outlined"
-                        style={{
-                            marginTop: 10,
-                            marginRight: 10,
-                        }}
-                        onClick={() => {filteredList().forEach((row) => {state.checks[row.email] = false}); setState({...state}) }}
-                      >Clear Select</Button>
-                      <Button
-                        variant="outlined"
-                        style={{
-                            marginTop: 10,
-                            marginRight: 10,
-                        }}
-                        onClick={() => {filteredList().forEach((row) => {state.checks[row.email] = true}); setState({...state}) }}
-                      >Select All</Button>
                     </Grid>
                 </Grid>
 
                 <Grid item container direction="column" xs={12} sm={6}>
                     <Typography variant="h5" gutterBottom className={classes.title}>
-                        Mailing List
+                        Member Info
                     </Typography>
-                    <Grid style={{marginTop: 20, marginBottom: 20}}container alignItems="center" justify="center">
-                      <DisplayList
-                        checkList={checkList}
-                      />
-                    </Grid>
                     <Grid container alignItems="center" justify="center">
-                      <Button
-                          variant="outlined"
-                          style={{
-                              marginTop: 10,
-                              marginRight: 10,
-                          }}
-                          onClick={() => {copyToClipboard(sendEmailString)}}
-                          disabled={ sendEmailString.length === 0}
-                      >Copy Address</Button>
-                      <a
-                        style={{textDecoration: "none"}}
-                        disabled={ sendEmailString.length === 0}
-                        href={"mailto:" + sendEmailString}
-                      >
-                        <Button
-                            disabled={ sendEmailString.length === 0}
-                            variant="outlined"
-                            style={{
-                                marginTop: 10,
-                                marginRight: 10,
-                            }}
-                        >Send Email</Button>
-                      </a>
+
+                        {   state.clicked === '' ?
+                            <Typography variant="body">
+                                Click from the list on the left to show member's information.
+                            </Typography>
+                            :
+                            <Fragment>
+                                <List disablePadding>
+
+                                <ListItem className={classes.listItem}>
+                                <ListItemText primary='Name' />
+                                <Typography variant="body2" style={{marginLeft: 40}}>{isClicked.first + ' ' + isClicked.last}</Typography>
+                                </ListItem>
+                                <ListItem className={classes.listItem}>
+                                <ListItemText primary='Membership Status' />
+                                    <Typography variant="body2" style={{marginLeft: 40}}>
+                                        <Select className={classes.col}
+                                                native
+                                                fullWidth="true"
+                                                value={isClicked.status}
+                                                onChange={(event) => {changeStatus(event, state.clicked)}}
+                                                inputProps={{
+                                                    name: 'status',
+                                                }}
+                                        >
+                                            <option value={'graduate'}>Graduate</option>
+                                            <option value={'undergrad'}>Undergrad</option>
+                                            <option value={'nt-faculty'}>NT-Faculty</option>
+                                            <option value={'faculty'}>Faculty</option>
+                                            <option value={'postdoc'}>Postdoc</option>
+                                            <option value={'scholar'}>Scholar</option>
+                                            <option value={'non-member'}>Non-Member</option>
+                                        </Select>
+                                    </Typography>
+                                </ListItem>
+                                <ListItem className={classes.listItem}>
+                                <ListItemText primary='Email' />
+                                <Typography variant="body2" style={{marginLeft: 40}}>{isClicked.email}</Typography>
+                                </ListItem>
+
+                                </List>
+                                <Typography variant="h6" gutterBottom className={classes.title}>
+                                    Membership History
+                                </Typography>
+                                <Grid style={{marginTop: 20, marginBottom: 20}} container alignItems="center" justify="center">
+                                    <TableContainer style={{ maxHeight: 246 }}>
+                                        <Table stickyHeader size="small">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Status</TableCell>
+                                                <TableCell>Registration</TableCell>
+                                                <TableCell>Expiration</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {
+                                              history.map(hist => (
+                                                <TableRow>
+                                                  <TableCell>{hist.status}</TableCell>
+                                                  <TableCell>{hist.register}</TableCell>
+                                                  <TableCell>{hist.expire}</TableCell>
+                                                </TableRow>
+                                              ))
+                                            }
+                                        </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Grid>
+                            </Fragment>
+                        }
                     </Grid>
                 </Grid>
-                
             </Grid>
 
             </main>

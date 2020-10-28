@@ -18,6 +18,7 @@ router.get('/all', function(req, res, next) {
 
 router.get('/:id', (req, res, next) => {
   const username = req.params.id;
+  console.log(username)
   const query = {email : username};
   UserData.findOne(query)
     .then(user => {
@@ -50,7 +51,7 @@ router.post('/', (req, res, next)=> {
 router.put('/', (req, res, next) => {
   let form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {
-    // console.log(fields)
+    console.log(fields)
     let filter = {}
     console.log(Object.keys(fields))
     Object.keys(fields).forEach((k) => {
@@ -65,7 +66,7 @@ router.put('/', (req, res, next) => {
     })
     console.log(filter)
     const user = req.session.user;
-    const query = {email : user};
+    const query = user === "wtruran@gatech.edu" ? {email: filter.email} : {email : user};
     UserData.findOneAndUpdate(query, filter, {
       new: true,
       useFindAndModify: false

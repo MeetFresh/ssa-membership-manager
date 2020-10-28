@@ -50,9 +50,6 @@ app.use('/api', api);
 
 // Render React page
 app.use(express.static(path.join(__dirname, "../client/build/")));
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build/index.html"));
-});
 
 const calculateOrderAmount = items => {
   // Replace this constant with a calculation of the order's amount
@@ -131,6 +128,11 @@ app.post('/api/login',  (req, res) => {
 app.get('/api/logout', (req, res)=>{
   req.session.destroy();
   res.send({status: true});
+});
+
+// this should be at the very last
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
 app.listen(4242, () => console.log('Node server listening on port 4242!'));
