@@ -157,18 +157,21 @@ const handleChange = async (event) => {
 const handleSubmit = async ev => {
   ev.preventDefault();
   setProcessing(true);
-
   const payload = await stripe.confirmCardPayment(clientSecret, {
     payment_method: {
       card: elements.getElement(CardElement)
     }
   });
-
+  console.log(payload);
   if (payload.error) {
     setError(`Payment failed ${payload.error.message}`);
     setProcessing(false);
   } else {
-    axios.put('./api/user/membership_update', payload.paymentIntent);
+    if (payload.paymentIntent.description === 'membership') {
+      axios.put('./api/user/membership_update', payload.paymentIntent);
+    } else {
+      //event router
+    }
     setError(null);
     setProcessing(false);
     setSucceeded(true);
