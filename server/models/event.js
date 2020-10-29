@@ -4,37 +4,41 @@ const eventSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      default: "New Unnamed Event"
+      default: "New Unnamed Event",
     },
     type: {
       type: String,
-      enum: ['event', 'announcement'],
-      default: "event"
+      enum: ["event", "announcement"],
+      default: "event",
     },
     desc: {
       type: String,
-      default: "SSA Event"
+      default: "SSA Event",
     },
     longDesc: {
       type: String,
-      default: ""
+      default: "",
     },
     price: {
       type: Number,
-      default: 0
+      default: 0,
     },
     picSrc: {
       type: String,
-      default: ""
+      default: "",
     },
     learnMoreLink: {
       type: String,
-      default: ""
+      default: "",
+    },
+    participants: {
+      type: Array,
+      default: [],
     },
   },
   { timestamps: true }
 );
 
 // export user model to app
-module.exports = mongoose.model('EventData', eventSchema);
+module.exports = mongoose.model("EventData", eventSchema);
 module.exports.UserDataSchema = eventSchema;
