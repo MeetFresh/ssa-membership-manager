@@ -80,6 +80,7 @@ router.put('/', (req, res, next) => {
 })
 
 router.put('/membership_update', async (req, res, next) =>{
+  // console.log(req);
   const user = req.session.user;
   // const user = "jadams@gmail.com"
   const filter = {email : user};

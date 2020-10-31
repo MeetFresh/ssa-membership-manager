@@ -170,7 +170,11 @@ const handleSubmit = async ev => {
     if (payload.paymentIntent.description === 'membership') {
       axios.put('./api/user/membership_update', payload.paymentIntent);
     } else {
-      //event router
+      let items = props.shoppingCart.toJS().map((item) => ({
+        id: item.id,
+        name: item.name,
+      }))
+      //event routing
     }
     setError(null);
     setProcessing(false);
