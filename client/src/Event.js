@@ -41,7 +41,8 @@ const useStyles = makeStyles((theme) => ({
 
 const mapPropsToState = (state) => ({
     checkoutItemList: state.getIn(['app', 'checkoutItemList']),
-    isAdmin: state.getIn(['app', 'isAdmin'])
+    isAdmin: state.getIn(['app', 'isAdmin']),
+    username: state.getIn(['app', 'profile']).toJS().username
 })
 
 const mapPropsToDispatch = (dispatch) => ({
@@ -212,6 +213,19 @@ function EventComponent(props) {
                         />
                     </Typography> : null
                 }
+                {
+                    props.isAdmin && state.type === 'event' ?
+                    <Fragment>
+                        <Typography variant="h6" align="left" gutterBottom className={classes.title}>
+                          Participants: {props.participants.length}
+                        </Typography>
+                        <Typography variant="body1" align="left"> {
+                            props.participants.map((user) => (user + "; "))
+                        }
+                        </Typography>
+                    </Fragment>
+                    : null
+                }
             </Grid>
 
             <Grid item container direction="column" xs={12} sm={4}>
@@ -254,16 +268,20 @@ function EventComponent(props) {
                                         marginTop: 10,
                                         marginLeft: 20
                                     }}>
-                                    <Typography variant="button">
-                                        Select
-                                    </Typography>
-                                    <Checkbox
-                                        color="default"
-                                        onChange={(e) =>
-                                            select(props.id)
+                                        {
+                                            props.participants.indexOf(props.username) == -1 ?
+                                            <Fragment>
+                                            <Typography variant="button">
+                                                Select
+                                            </Typography>
+                                            <Checkbox
+                                                color="default"
+                                                onChange={(e) =>
+                                                    select(props.id)
+                                                }
+                                                inputProps={{ 'aria-label': 'checkbox with default color' }}
+                                            /> </Fragment>: <Typography>You've signed up!</Typography>
                                         }
-                                        inputProps={{ 'aria-label': 'checkbox with default color' }}
-                                    />
                                     </div> : null
                                 }
                             </Fragment>
@@ -373,6 +391,8 @@ export default connect(mapPropsToState, mapPropsToDispatch)(function Event(props
                                 saveEvent = {props.saveEvent}
                                 deleteEvent = {props.deleteEvent}
                                 setEditing = {(id) => {state.isEditing[id] = !state.isEditing[id]; setState({...state})}}
+                                participants = {item.participants}
+                                username = {props.username}
                             />
                         )
                     )

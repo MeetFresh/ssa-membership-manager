@@ -66,7 +66,8 @@ export const reducer = (state=defaultState, action) => {
                 longDesc: "",
                 price: 0.00,
                 picSrc: "",
-                learnMoreLink: ''
+                learnMoreLink: '',
+                participants: []
             }
             checkoutItemList3.splice(0, 0, newEvent)
             return state.set('checkoutItemList', fromJS(checkoutItemList3))

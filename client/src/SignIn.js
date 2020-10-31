@@ -82,12 +82,13 @@ function handleSubmit(event, props) {
                 })
             } else {
                 getOneUser(username).then(res => {
-                    const { first, last, pronoun, usertype, institute, instituteId, instituteEmail } = res.data.user
+                    const { first, last, pronoun, usertype, institute, instituteId, instituteEmail, activityhistory } = res.data.user
                     let profile = {
                         first: first || "",
                         last: last || last,
                         pronoun: pronoun || "",
                         status: usertype || "",
+                        history: activityhistory || []
                     }
                     if (["undergrad", "graduate", "nt-faculty", "faculty", "postdoc"].indexOf(usertype) !== -1) {
                         if (institute) {profile.institute = institute}

@@ -91,7 +91,7 @@ router.put('/membership_update', async (req, res, next) =>{
   UserData.findOne(filter)
     .then(user => {
       curr_registration = user.registrationdate;
-      curr_expiration = user.expirationdate;
+      curr_expiration = user.expirationdate || (new Date());
       curr_usertype = user.usertype;
       curr_history = user.activityhistory;
       console.log(curr_registration);
