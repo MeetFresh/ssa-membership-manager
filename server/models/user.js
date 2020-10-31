@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const moment = require("moment");
+moment().format();
 
 // define schema for user collection (user model)
 const userDataSchema = new mongoose.Schema(
@@ -12,6 +14,9 @@ const userDataSchema = new mongoose.Schema(
     pronoun: {type: String},
     email: { type: String, index: true, unique: true },
     password: {type: String},
+    passwordResetToken: { type: String, default: "" },
+    
+    passwordResetExpires: { type: Date, default: moment().utcOffset(0) },
     institute: {type: String},
     instituteId: {type: String},
     instituteEmail: {type: String},
