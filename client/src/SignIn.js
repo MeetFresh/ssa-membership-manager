@@ -177,7 +177,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function SignIn(prop
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
+                        id="username"
                         label="Email Address"
                         name="username"
                         autoComplete="email"
