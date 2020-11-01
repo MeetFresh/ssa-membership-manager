@@ -94,13 +94,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                           justify="center">
                         <img className={classes.pic} src={"https://upload.wikimedia.org/wikipedia/en/thumb/6/6c/Georgia_Tech%27s_Buzz_logo.svg/1200px-Georgia_Tech%27s_Buzz_logo.svg.png"}>
                         </img>
-                        <Button
-                            variant="outlined"
-                            style={{
-                                marginTop: 10,
-                            }}
-                            // onClick={() => {props.changePic()}}
-                        >Change My Picture</Button>
                     </Grid>
                 </Grid>
                 <Typography variant="body2">
