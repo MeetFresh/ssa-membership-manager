@@ -61,6 +61,13 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(function Membership(props) {
     const classes = useStyles();
     const profile = props.profile.toJS()
+
+    const history = profile.history
+    let expiration = "N/A"
+    if (history.length > 0) {
+        expiration = (new Date(history[history.length - 1].split(",")[2])).toDateString()
+    }
+
     return (
         <React.Fragment>
             <main className={classes.layout}>
@@ -76,7 +83,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                         </ListItem>
                         <ListItem className={classes.listItem}>
                             <ListItemText primary={membership[1].name} secondary={membership[1].desc} />
-                            <Typography variant="body2">{membership[1].value}</Typography>
+                            <Typography variant="body2">{expiration}</Typography>
                         </ListItem>
                     </List>
                     <Button
