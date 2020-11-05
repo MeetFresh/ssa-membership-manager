@@ -37,6 +37,7 @@ import logo from '../img/SSALogo.png';
 import MailingList from './MailingList'
 import MemberList from './MemberList'
 import Pricing from './Pricing'
+import ChangePic from '../Members/changePic';
 
 import { connect } from 'react-redux'
 import {actionCreators} from '../store'
@@ -394,6 +395,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         <Route path="/checkout" component={CheckoutWrapper} />
                         <Route path="/event" component={Event} />
                         <Route path="/edit-profile" component={EditProfile} />
+                        <Route path="/changePic" component={ChangePic} />
                         <Route path="/mailing-list" component={MailingList} />
                         <Route path="/member-info" component={MemberList} />
                         <Route path="/membership-pricing" component={Pricing} />
