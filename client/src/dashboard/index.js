@@ -22,6 +22,7 @@ import {how2Join, linksListItems, mainListItems, secondaryListItems} from './lis
 import {TypographyTypeMap as align} from "@material-ui/core/Typography/Typography";
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
+import RecoverAccount from "../RecoverAccount"
 import AddressForm from '../Payment/AddressForm'
 import PaymentForm from '../Payment/PaymentForm'
 import Checkout from '../Payment/Checkout'
@@ -168,7 +169,8 @@ const mapStateToProps = (state) => ({
   currPage: state.getIn(['app', 'currPage']),
   isAdmin: state.getIn(['app', 'isAdmin']),
   connectionError: state.getIn(['app', 'connectionError']),
-  wrongCredentials: state.getIn(['app', 'wrongCredentials'])
+  wrongCredentials: state.getIn(['app', 'wrongCredentials']),
+  signUpSuccess: state.getIn(['app', 'signUpSuccess'])
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -185,12 +187,20 @@ const mapDispatchToProps = (dispatch) => ({
   },
   closeCredentialError() {
       dispatch(actionCreators.setWrongCredentials(false))
+  },
+  closeSignUpSuccess() {
+    dispatch(actionCreators.setSignUpSuccess(false))
+  },
+  openConnectionError() {
+    dispatch(actionCreators.setConnectionError(true))
   }
 })
 
-function handleLogout(logout) {
+function handleLogout(logout, openConnectionError) {
     axios.get('/api/logout').then(res => {
         logout();
+    }).catch(err => {
+        openConnectionError()
     });
 }
 
@@ -316,25 +326,31 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         <Button
                           variant="outlined"
                           style={{ marginRight: 10 }}
-                        onClick={ () => { handleLogout(props.logout)} }
+                        onClick={ () => { handleLogout(props.logout, props.openConnectionError)} }
                         >Log Out</Button>
                       ) : (
-                        props.currPage !== 'signup' ?
-                        <Button
-                          variant="outlined"
-                          style={{
-                            marginRight: 10
-                          }}
-                          onClick={ () => { props.togglePage('signup') } }
-                        >Sign Up</Button>
-                        :
-                        <Button
-                          variant="outlined"
-                          style={{
-                            marginRight: 10
-                          }}
-                          onClick={ () => { props.togglePage('') } }
-                        >Sign In</Button>
+                        <Fragment>
+                            {
+                            props.currPage !== 'signup' ?
+                            <Button
+                            variant="outlined"
+                            style={{
+                                marginRight: 10
+                            }}
+                            onClick={ () => { props.togglePage('signup') } }
+                            >Sign Up</Button> : null
+                            }
+                            {
+                                props.currPage !== '' ?
+                                <Button
+                                variant="outlined"
+                                style={{
+                                    marginRight: 10
+                                }}
+                                onClick={ () => { props.togglePage('') } }
+                                >Sign In</Button> : null
+                            }
+                        </Fragment>
                       )
                     }
         
@@ -352,6 +368,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         onClose={() => {props.closeConnectionError()}}
                     >
                         <AlertTitle>Oops, something went wrong. <strong>Check Internet connection and reload page later</strong>.</AlertTitle>
+                    </Alert> : null
+                }
+                { props.signUpSuccess ? 
+                    <Alert
+                        severity="success"
+                        onClose={() => {props.closeSignUpSuccess()}}
+                    >
+                        <AlertTitle>Sign up successful! You can now log in using your new account.</AlertTitle>
                     </Alert> : null
                 }
             </AppBar>
@@ -401,7 +425,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                         <Route path="/membership-pricing" component={Pricing} />
                     </Switch> :
                     props.currPage === 'signup' ?
-                    <SignUp /> : <SignIn />
+                    <SignUp /> :
+                    props.currPage === 'recover-account' ?
+                    <RecoverAccount /> :
+                    <SignIn />
                 }
             </main>
 

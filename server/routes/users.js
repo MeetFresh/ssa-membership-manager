@@ -29,23 +29,49 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next)=> {
     // res.redirect("./");
-    const newUserData = req.body;
-    let password = md5(newUserData.password);
-    newUserData.password = password;
-    console.log(newUserData);
-    const newUser = new UserData(newUserData);
-    // console.log(req)
-    newUser
-    .save()
-    .then(() => {
-      res.redirect("./");
-      // res.json({
-      //   message: 'User successfully created!'
-      // });
+    let form = new multiparty.Form();
+    form.parse(req, function(err, fields, files) {
+      let newUserData = {}
+      Object.keys(fields).forEach((k) => {
+        newUserData[k] = fields[k][0];
+      })
+      console.log(newUserData)
+      let password = md5(newUserData.password);
+      newUserData.password = password;
+      newUserData.usertype = 'non-member'
+      newUserData.first = newUserData.firstName
+      newUserData.last = newUserData.lastName
+      newUserData.profilePic = "row-1-col-1"
+      console.log(newUserData);
+      const newUser = new UserData(newUserData);
+      // console.log(req)
+      newUser
+      .save()
+      .then(() => {
+        res.redirect("./");
+      })
+      .catch(err => {
+        next(err);
+      });
     })
-    .catch(err => {
-      next(err);
-    });
+
+    // const newUserData = req.body;
+    // let password = md5(newUserData.password);
+    // newUserData.password = password;
+    // console.log(newUserData);
+    // const newUser = new UserData(newUserData);
+    // // console.log(req)
+    // newUser
+    // .save()
+    // .then(() => {
+    //   res.redirect("./");
+    //   // res.json({
+    //   //   message: 'User successfully created!'
+    //   // });
+    // })
+    // .catch(err => {
+    //   next(err);
+    // });
 })
 
 router.put('/', (req, res, next) => {
@@ -55,16 +81,18 @@ router.put('/', (req, res, next) => {
     let filter = {}
     console.log(Object.keys(fields))
     Object.keys(fields).forEach((k) => {
-      if (k === 'username') {
+      if (k === 'username' || k === 'confirmPassword' || k === 'newPassword' && fields[k][0] === '') {
         return;
       }
       if (k === 'status') {
         filter.usertype = fields[k][0];
+      } else if (k === 'newPassword') {
+        filter.password = md5(fields[k][0])
       } else {
         filter[k] = fields[k][0];
       }
     })
-    console.log(filter)
+    console.log('filter: ', filter)
     const user = req.session.user;
     const query = user === "wtruran@gatech.edu" ? {email: filter.email} : {email : user};
     UserData.findOneAndUpdate(query, filter, {

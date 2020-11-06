@@ -5,7 +5,7 @@ const userDataSchema = new mongoose.Schema(
   {
     usertype: {
       type: String,
-      enum: ['undergrad', 'graduate', 'nt-faculty', 'faculty', 'postdoc', 'scholar']
+      enum: ['undergrad', 'graduate', 'nt-faculty', 'faculty', 'postdoc', 'scholar', 'non-member']
     },
     first: { type: String },
     last: { type: String },
@@ -15,6 +15,7 @@ const userDataSchema = new mongoose.Schema(
     institute: {type: String},
     instituteId: {type: String},
     instituteEmail: {type: String},
+    profilePic: {type: String},
     membership: {
         type: Boolean,
         required: false

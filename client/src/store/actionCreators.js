@@ -79,3 +79,13 @@ export const setWrongCredentials = (isWrong) => ({
     type: constants.SET_WRONG_CREDENTIALS,
     isWrong
 })
+
+export const setDuplicateEmail = (isDup) => ({
+    type: constants.SET_DUPLICATE_EMAIL,
+    isDup
+})
+
+export const setSignUpSuccess = (isSuccess) => ({
+    type: constants.SET_SIGNUP_SUCCESS,
+    isSuccess
+})

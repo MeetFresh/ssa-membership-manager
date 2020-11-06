@@ -72,9 +72,9 @@ const useStyles = makeStyles((theme) => ({
 
 
 const mapDispatchToProps = (dispatch) => ({
-    saveProfile(state, event) {
+    saveProfilePic(state, event, profile) {
         //do something to save the input
-
+        event.preventDefault()
         profile.profilePic = state.profilePic;
         
         const formData = new FormData(event.target)
@@ -134,9 +134,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                     noValidate autoComplete="off"
                     className={classes.btn}
                     onSubmit={(event) => {
-                            props.saveProfile(state, event)
+                            props.saveProfilePic(state, event, props.profile.toJS())
                     }}
                 >
+                    <input type="hidden" id="username-input" name="username" value={props.profile.toJS().username} />
+                    <input type="hidden" id="profile-pic-input" name="profilePic" value={state.profilePic} />
                     <img className={classes.pic} src={require('../img/profilePics/' + state.profilePic + '.png')}>
                     </img>
                     <br/>
@@ -169,7 +171,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                         }
                     </div>
                     <a style={{color: "black"}} href="http://www.freepik.com">Designed by vectorpocket / Freepik</a>
-
                 </form>
                 </ThemeProvider>
             </main>

@@ -72,6 +72,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Profile(pro
                                 <Typography variant="body2">{profile.first + ' ' + profile.last}</Typography>
                             </ListItem>
                             <ListItem className={classes.listItem}>
+                                <ListItemText primary='Password' />
+                                <Typography variant="body2">{"******"}</Typography>
+                            </ListItem>
+                            <ListItem className={classes.listItem}>
                                 <ListItemText primary='Pronoun' />
                                 <Typography variant="body2">{profile.pronoun}</Typography>
                             </ListItem>
@@ -113,8 +117,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Profile(pro
                     <Grid item container direction="column" xs={12} sm={6}>
                         <Grid container alignItems="center"
                               justify="center">
-                            <img className={classes.pic} src={"https://upload.wikimedia.org/wikipedia/en/thumb/6/6c/Georgia_Tech%27s_Buzz_logo.svg/1200px-Georgia_Tech%27s_Buzz_logo.svg.png"}>
-                            </img>
+                            {
+                                profile.profilePic ?
+                                <img className={classes.pic} src={require('../img/profilePics/' + profile.profilePic + '.png')} />
+                                : null
+                            }
                             <Button
                                 variant="outlined"
                                 style={{

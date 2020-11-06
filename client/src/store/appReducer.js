@@ -19,7 +19,9 @@ const defaultState = fromJS({
     checkoutItemList: checkoutItemList,
     userList: [],
     connectionError: false,
-    wrongCredentials: false
+    wrongCredentials: false,
+    duplicateEmail: false,
+    signUpSuccess: false
 })
 
 export const reducer = (state=defaultState, action) => {
@@ -110,6 +112,10 @@ export const reducer = (state=defaultState, action) => {
         case constants.MERGE_CHECKOUT_ITEM_LIST:
             let checkoutItemList5 = state.get('checkoutItemList').toJS().filter(item => item.type === 'membership')
             return state.set('checkoutItemList', fromJS(checkoutItemList5.concat(action.events)))
+        case constants.SET_DUPLICATE_EMAIL:
+            return state.set('duplicateEmail', fromJS(action.isDup))
+        case constants.SET_SIGNUP_SUCCESS:
+            return state.set('signUpSuccess', fromJS(action.isSuccess))
         default:
             return state
     }
