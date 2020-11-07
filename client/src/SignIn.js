@@ -110,6 +110,13 @@ function handleSubmit(event, props) {
                 })
                 props.mergeCheckoutItemList(events)
             })
+            axios.get('/api/member').then(res => {
+                const priceDict = {}
+                res.data.member.forEach(item => {
+                    priceDict[item.usertype.toLowerCase().replace("-f", "F") + "Price"] = item.pricing
+                })
+                props.editMembershipPrice(priceDict)
+            })
         } else {
             props.openWrongCredentials()
         }
@@ -156,6 +163,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     closeSignUpSuccess() {
         dispatch(actionCreators.setSignUpSuccess(false))
+    },
+    editMembershipPrice(priceDict) {
+        dispatch(actionCreators.editMembershipPrice(priceDict))
     }
 })
 

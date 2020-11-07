@@ -62,7 +62,6 @@ function handleSubmit(event, state, setState) {
     event.preventDefault()
     const form = new FormData(event.target)
     const email = form.get('username')
-    console.log(email)
     axios.post('/api/auth/login/forgot', {email}).then(res => {
         state.emailSent = true
         setState({...state})

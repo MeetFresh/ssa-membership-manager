@@ -15,27 +15,25 @@ router.get('/', (req, res, next) => {
 })
 
 router.put('/', (req, res, next)=> {
-    let form = new multiparty.Form();
-    form.parse(req, function(err, fields, files) {
-        Object.keys(fields).forEach((k) => {
-            let query = {usertype: k};
-            let filter = {pricing: fields[k][0]};
-            console.log(query);
-            console.log(filter);
-            MemberPricing.findOneAndUpdate(query, filter, {
-                new: true,
-                useFindAndModify: false
-            })
-            .then(member=>{
-                res.json({ 
-                    member
-                });
-            })
-            .catch(err=> {
-                next(err);
-            })
+    const priceDict = req.body
+    Object.keys(priceDict).forEach(k => {
+        let query = {usertype: k}
+        let filter = {pricing: priceDict[k]}
+        console.log(query);
+        console.log(filter);
+        MemberPricing.findOneAndUpdate(query, filter, {
+            new: true,
+            useFindAndModify: false
         })
-    });
+        .then(member=>{
+            res.json({ 
+                member
+            });
+        })
+        .catch(err=> {
+            next(err);
+        })
+    })
 })
 
 module.exports = router;

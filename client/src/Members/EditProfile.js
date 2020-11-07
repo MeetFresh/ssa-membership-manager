@@ -116,7 +116,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
     });
 
     const handleChange = (event) => {
-        console.log(event.target.name, event.target.value)
         const name = event.target.name;
         state[[name]] = event.target.value
         if (name === 'newPassword' && state[[name]] === '') {
@@ -244,7 +243,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                         <Grid container spacing={1}  className={classes.grid}>
                             <Grid item sm={6}>
                                 <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
-                                    New Password (Optional)
+                                    New Password
                                 </Typography>
                             </Grid>
                             <Grid item sm={6}>
@@ -254,6 +253,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     label="New Password"
                                     fullWidth="true"
                                     value={state.newPassword}
+                                    autoComplete="new-password"
                                     onChange={(event) => {handleChange(event); validateInput(event)}}
                                     inputProps={{
                                         name: 'newPassword'
@@ -277,6 +277,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                         type="password"
                                         label="Confirm Password"
                                         fullWidth="true"
+                                        autoComplete="new-password"
                                         value={state.confirmPassword}
                                         onChange={(event) => {handleChange(event); state["confirmPasswordValidation"] = true; setState({...state})}}
                                         inputProps={{
