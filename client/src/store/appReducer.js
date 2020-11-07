@@ -13,6 +13,8 @@ const defaultState = fromJS({
         pronoun: '',
         status: '',
         username: '',
+        profilePic: '',
+        history: []
     },
     shoppingCart: [],
     isAdmin: false,
@@ -21,7 +23,8 @@ const defaultState = fromJS({
     connectionError: false,
     wrongCredentials: false,
     duplicateEmail: false,
-    signUpSuccess: false
+    signUpSuccess: false,
+    tempResetPassToken: ''
 })
 
 export const reducer = (state=defaultState, action) => {
@@ -31,9 +34,12 @@ export const reducer = (state=defaultState, action) => {
         case constants.SET_CURR_PAGE:
             return state.set('currPage', fromJS(action.pageName))
         case constants.SET_PROFILE:
+            const oldProfile = state.get('profile').toJS()
             return state.set('profile', fromJS({
                 ...action.profile,
-                ...{username: state.get('profile').toJS().username}
+                ...{username: oldProfile.username,
+                    history: action.profile.history || oldProfile.history,
+                    profilePic: action.profile.profilePic || oldProfile.profilePic}
             }))
         case constants.CLEAR_CART:
             return state.set('shoppingCart', fromJS([]))
@@ -116,6 +122,8 @@ export const reducer = (state=defaultState, action) => {
             return state.set('duplicateEmail', fromJS(action.isDup))
         case constants.SET_SIGNUP_SUCCESS:
             return state.set('signUpSuccess', fromJS(action.isSuccess))
+        case constants.SET_PASS_TOKEN:
+            return state.set('tempResetPassToken', fromJS(action.passToken))
         default:
             return state
     }

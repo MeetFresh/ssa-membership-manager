@@ -329,7 +329,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     }}
                                     error={state.statusValidation === true ? false : true}
                                 >
-                                    <option aria-label="None" value="" />
+                                    <option aria-label="None" value="non-member">Non-Member</option>
                                     <option value={'graduate'}>Graduate</option>
                                     <option value={'undergrad'}>Undergrad</option>
                                     <option value={'nt-faculty'}>NT-Faculty</option>

@@ -89,3 +89,8 @@ export const setSignUpSuccess = (isSuccess) => ({
     type: constants.SET_SIGNUP_SUCCESS,
     isSuccess
 })
+
+export const setTempResetPassToken = (passToken) => ({
+    type: constants.SET_PASS_TOKEN,
+    passToken
+})

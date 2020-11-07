@@ -58,26 +58,47 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function handleSubmit(event, state, setState) {
+function handleSubmit(event, state, setState, passToken) {
     event.preventDefault()
     const form = new FormData(event.target)
-    const email = form.get('username')
-    console.log(email)
-    axios.post('/api/auth/login/forgot', {email}).then(res => {
-        state.emailSent = true
+    const newPassword = form.get('newPassword')
+    const confirmPassword = form.get('confirmPassword')
+
+    if (newPassword.length < 6) {
+        state.success = false
+        state.errorText = 'Password is too simple.'
+        setState({...state})
+        return
+    }
+    if (newPassword !== confirmPassword) {
+        state.success = false
+        state.errorText = 'Passwords do not match.'
+        setState({...state})
+        return
+    }
+    
+    axios.post('/api/auth/login/reset/' + passToken, {password: newPassword}).then(res => {
+        state.success = true
+        state.errorText = ''
         setState({...state})
     }).catch(err => {
-        state.emailSent = false
+        state.success = false
+        state.errorText = 'Reset password failed. Retry.'
         setState({...state})
     })
 }
 
+const mapStateToProps = (state) => ({
+    passToken: state.getIn(['app', 'tempResetPassToken'])
+})
+
 // onSubmit={(event) => {handleSubmit(event, props.login)}}
-export default connect(null, null)(function RecoverAccount(props) {
+export default connect(mapStateToProps, null)(function ResetPassword(props) {
     const classes = useStyles();
 
     const [state, setState] = React.useState({
-        emailSent: null
+        success: null,
+        errorText: ""
     })
 
     return (
@@ -88,49 +109,53 @@ export default connect(null, null)(function RecoverAccount(props) {
                     <LockOutlinedIcon/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Recover account
+                    Reset password
                 </Typography>
-                <Typography variant="body2" color="textSecondary" align="left">
-                    <ol>
-                        <li>Provide your sign up email below and click continue.</li>
-                        <li>A temporary link will be sent to that email address.</li>
-                        <li>Use the link to access the page to reset your password.</li>
-                    </ol>
-                </Typography>
-
                 <ThemeProvider theme={theme}>
                 <form 
                     className={classes.form} noValidate
-                    onSubmit={(event) => {handleSubmit(event, state, setState)}}
+                    onSubmit={(event) => {handleSubmit(event, state, setState, props.passToken)}}
                 >
                     <TextField
                         variant="outlined"
                         margin="normal"
                         required
                         fullWidth
-                        id="username"
-                        label="Email Address"
-                        name="username"
-                        autoComplete="email"
-                        autoFocus/>
+                        id="newPassword"
+                        label="New Password"
+                        name="newPassword"
+                        type="password"
+                        autoFocus
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="confirmPassword"
+                        label="Confirm Password"
+                        name="confirmPassword"
+                        type="password"
+                    />
                     <Button
-                        disabled={state.emailSent !== true ? false : true}
+                        disabled={state.success !== true ? false : true}
                         type="submit"
                         fullWidth
                         variant="outlined"
                         className={classes.submit}>
-                        Continue
+                        Confirm
                     </Button>
                     {
-                        state.emailSent === true ?
+                        state.success === true ?
                         <Alert severity="success">
-                            <AlertTitle>Email sent successfully.</AlertTitle>
+                            <AlertTitle>Your password has been reset.</AlertTitle>
+                            <Link href="/">Click here to log in.</Link>
                         </Alert> : null
                     }
                     {
-                        state.emailSent === false ?
+                        state.success === false ?
                         <Alert severity="error">
-                            <AlertTitle>Email is invalid or not signed up.</AlertTitle>
+                            <AlertTitle>{state.errorText}</AlertTitle>
                         </Alert> : null
                     }
                 </form>

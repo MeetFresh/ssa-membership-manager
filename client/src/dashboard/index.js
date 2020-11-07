@@ -23,6 +23,7 @@ import {TypographyTypeMap as align} from "@material-ui/core/Typography/Typograph
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
 import RecoverAccount from "../RecoverAccount"
+import ResetPassword from "../ResetPassword"
 import AddressForm from '../Payment/AddressForm'
 import PaymentForm from '../Payment/PaymentForm'
 import Checkout from '../Payment/Checkout'
@@ -193,6 +194,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   openConnectionError() {
     dispatch(actionCreators.setConnectionError(true))
+  },
+  setTempPassToken(token) {
+    dispatch(actionCreators.setTempResetPassToken(token))
   }
 })
 
@@ -215,6 +219,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
         setOpen(false);
     };
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+    const currURL = window.location.href
+    const RESET_PASS_API = '/login/reset'
+    const tokenIdx = currURL.indexOf(RESET_PASS_API)
+    if (tokenIdx !== -1) {
+        props.setTempPassToken(currURL.substring(tokenIdx + RESET_PASS_API.length + 1))
+    }
 
     return (
         <div className={classes.root}>
@@ -428,11 +439,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                     <SignUp /> :
                     props.currPage === 'recover-account' ?
                     <RecoverAccount /> :
-                    <SignIn />
+                    props.currPage === '' && window.location.href.indexOf('/login/reset') !== -1 ?
+                    <ResetPassword /> : <SignIn />
                 }
             </main>
-
-            
         </div>
     );
 })
