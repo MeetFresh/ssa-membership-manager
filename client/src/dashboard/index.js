@@ -247,18 +247,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                     {
                       props.loggedIn ?
                       <Fragment>
-                      {
-                          !props.isAdmin ?
-                              <Button
-                                  variant="outlined"
-                                  style={{
-                                      marginRight: 10
-                                  }}
-                                  onClick={() => {
-                                      props.togglePage('profile')
-                                  }}
-                              >Profile</Button> : null
-                      }
+                      <Button
+                        variant="outlined"
+                        style={{
+                            marginRight: 10
+                        }}
+                        onClick={() => {
+                            props.togglePage('profile')
+                        }}
+                      >Profile</Button>
                       {
                           !props.isAdmin ?
                             <Button

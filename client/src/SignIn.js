@@ -77,31 +77,31 @@ function handleSubmit(event, props) {
                         last: user.last,
                         status: user.usertype,
                         email: user.email,
-                        history: user.activityhistory
+                        history: user.activityhistory,
+                        isAdmin: user.isAdmin
                     }))
                     props.setUserList(users)
                 })
-            } else {
-                getOneUser(username).then(res => {
-                    const { first, last, pronoun, usertype, institute, instituteId, instituteEmail, activityhistory, profilePic } = res.data.user
-                    let profile = {
-                        first: first || "",
-                        last: last || last,
-                        pronoun: pronoun || "",
-                        status: usertype || "",
-                        history: activityhistory || [],
-                        profilePic: profilePic || ""
-                    }
-                    if (["undergrad", "graduate", "nt-faculty", "faculty", "postdoc"].indexOf(usertype) !== -1) {
-                        if (institute) {profile.institute = institute}
-                    }
-                    if (["undergrad", "graduate"].indexOf(usertype) !== -1) {
-                        if (instituteId) {profile.instituteId = instituteId}
-                        if (instituteEmail) {profile.email = instituteEmail}
-                    }
-                    props.setProfile(profile)
-                })
             }
+            getOneUser(username).then(res => {
+                const { first, last, pronoun, usertype, institute, instituteId, instituteEmail, activityhistory, profilePic } = res.data.user
+                let profile = {
+                    first: first || "",
+                    last: last || last,
+                    pronoun: pronoun || "",
+                    status: usertype || "",
+                    history: activityhistory || [],
+                    profilePic: profilePic || ""
+                }
+                if (["undergrad", "graduate", "nt-faculty", "faculty", "postdoc"].indexOf(usertype) !== -1) {
+                    if (institute) {profile.institute = institute}
+                }
+                if (["undergrad", "graduate"].indexOf(usertype) !== -1) {
+                    if (instituteId) {profile.instituteId = instituteId}
+                    if (instituteEmail) {profile.email = instituteEmail}
+                }
+                props.setProfile(profile)
+            })
             axios.get('/api/event/all').then(res => {
                 let events = res.data.events.map(event => {
                     event.id = event["_id"]

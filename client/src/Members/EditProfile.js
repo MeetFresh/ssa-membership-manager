@@ -243,7 +243,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                         <Grid container spacing={1}  className={classes.grid}>
                             <Grid item sm={6}>
                                 <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
-                                    New Password
+                                    New Password (Optional)
                                 </Typography>
                             </Grid>
                             <Grid item sm={6}>

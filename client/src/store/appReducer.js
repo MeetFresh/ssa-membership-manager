@@ -91,6 +91,14 @@ export const reducer = (state=defaultState, action) => {
                 }
             }
             return state.set('userList', fromJS(userList0))
+        case constants.CHANGE_USER_IS_ADMIN:
+            let userList1 = state.get('userList').toJS()
+            for (let idx = 0; idx < userList1.length; ++idx) {
+                if (userList1[idx].email === action.username) {
+                    userList1[idx].isAdmin = action.newIsAdmin
+                }
+            }
+            return state.set('userList', fromJS(userList1))
         case constants.EDIT_MEMBERSHIP_PRICE:
             let checkoutItemList4 = state.get('checkoutItemList').toJS()
             const keys = [

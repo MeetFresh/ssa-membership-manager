@@ -134,6 +134,8 @@ app.post("/api/login", (req, res) => {
       console.log(obj);
       if (obj === null) {
         status = false;
+        res.send({ loginSuccess: status, isAdmin: false})
+        return
       }
       if (obj.isAdmin === true) {
         res.send({loginSuccess: true, isAdmin: true})

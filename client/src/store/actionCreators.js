@@ -55,6 +55,12 @@ export const changeUserStatus = (username, newStatus) => ({
     newStatus
 })
 
+export const changeUserIsAdmin = (username, newIsAdmin) => ({
+    type: constants.CHANGE_USER_IS_ADMIN,
+    username,
+    newIsAdmin
+})
+
 export const editMembershipPrice = (priceDict) => ({
     type: constants.EDIT_MEMBERSHIP_PRICE,
     priceDict
