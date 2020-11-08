@@ -19,7 +19,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-import {updateUserProfile} from '../queries'
+import {adminUpdateUserProfile} from '../queries'
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
@@ -86,7 +86,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
         formData.append("email", email)
         formData.append("usertype", event.target.value)
         const event_target_value = event.target.value
-        updateUserProfile(formData).then((res) => {
+        adminUpdateUserProfile(formData).then((res) => {
           props.changeUserStatus(email, event_target_value)
         }).catch(err => {
           props.openConnectionError()

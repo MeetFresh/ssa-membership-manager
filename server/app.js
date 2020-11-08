@@ -113,20 +113,34 @@ app.post("/api/login", (req, res) => {
     let filter = { email: username, password: password };
     let status = true;
     console.log(filter);
-    if (username === 'wtruran@gatech.edu' && password === md5('111111')) {
-      res.send({loginSuccess: true, isAdmin: true})
-    } else {
-      UserData.findOne(filter, (err, obj) => {
-        if (err) {
-          return res.status(500).send("Something broke!");
-        }
-        console.log(obj);
-        if (obj === null) {
-          status = false;
-        }
+    // if (username === 'wtruran@gatech.edu' && password === md5('111111')) {
+    //   res.send({loginSuccess: true, isAdmin: true})
+    // } else {
+    //   UserData.findOne(filter, (err, obj) => {
+    //     if (err) {
+    //       return res.status(500).send("Something broke!");
+    //     }
+    //     console.log(obj);
+    //     if (obj === null) {
+    //       status = false;
+    //     }
+    //     res.send({ loginSuccess: status, isAdmin: false });
+    //   });
+    // }
+    UserData.findOne(filter, (err, obj) => {
+      if (err) {
+        return res.status(500).send("Something broke!");
+      }
+      console.log(obj);
+      if (obj === null) {
+        status = false;
+      }
+      if (obj.isAdmin === true) {
+        res.send({loginSuccess: true, isAdmin: true})
+      } else {
         res.send({ loginSuccess: status, isAdmin: false });
-      });
-    }
+      }
+    });
   });
 });
 

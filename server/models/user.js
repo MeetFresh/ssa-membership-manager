@@ -9,6 +9,10 @@ const userDataSchema = new mongoose.Schema(
       type: String,
       enum: ['undergrad', 'graduate', 'nt-faculty', 'faculty', 'postdoc', 'scholar', 'non-member']
     },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
     first: { type: String },
     last: { type: String },
     pronoun: {type: String},
