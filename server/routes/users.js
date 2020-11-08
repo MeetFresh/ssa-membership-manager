@@ -94,7 +94,7 @@ router.put('/', (req, res, next) => {
     })
     console.log('filter: ', filter)
     const user = req.session.user;
-    const query = user === "wtruran@gatech.edu" ? {email: filter.email} : {email : user};
+    const query = {email : user};
     UserData.findOneAndUpdate(query, filter, {
       new: true,
       useFindAndModify: false
@@ -151,6 +151,41 @@ router.put('/membership_update', async (req, res, next) =>{
     .catch(err => {
       next(err);
     });
+})
+
+router.put('/admin', (req, res, next) => {
+  let form = new multiparty.Form();
+  form.parse(req, function(err, fields, files) {
+    console.log(fields)
+    let filter = {}
+    console.log(Object.keys(fields))
+    Object.keys(fields).forEach((k) => {
+      if (k === 'username' || k === 'confirmPassword' || k === 'newPassword' && fields[k][0] === '') {
+        return;
+      }
+      if (k === 'status') {
+        filter.usertype = fields[k][0];
+      } else if (k === 'newPassword') {
+        filter.password = md5(fields[k][0])
+      } else {
+        filter[k] = fields[k][0];
+      }
+    })
+    console.log('filter: ', filter);
+    const query = {email: filter.email};
+    UserData.findOneAndUpdate(query, filter, {
+      new: true,
+      useFindAndModify: false
+    })
+    .then(event => {
+      res.json({
+        event
+      });
+    })
+    .catch(err => {
+      next(err);
+    });
+  });
 })
 
 module.exports = router;
