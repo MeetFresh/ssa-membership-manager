@@ -25,15 +25,11 @@ router.put('/', (req, res, next)=> {
             new: true,
             useFindAndModify: false
         })
-        .then(member=>{
-            res.json({ 
-                member
-            });
-        })
         .catch(err=> {
             next(err);
         })
     })
+    res.send({});
 })
 
 module.exports = router;
