@@ -19,7 +19,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-import {updateUserProfile} from '../queries'
+import {adminUpdateUserProfile} from '../queries'
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
@@ -54,6 +54,9 @@ const mapDispatchToProps = (dispatch) => ({
   changeUserStatus(username, newStatus) {
       dispatch(actionCreators.changeUserStatus(username, newStatus))
   },
+  changeUserIsAdmin(username, newIsAdmin) {
+    dispatch(actionCreators.changeUserIsAdmin(username, newIsAdmin))
+  },
   openConnectionError() {
     dispatch(actionCreators.setConnectionError(true))
   }
@@ -69,6 +72,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
 
     const [state, setState] = React.useState({
         status: 'none',
+        isAdmin: null,
         name: '',
         email: '',
         clicked: '',
@@ -86,12 +90,24 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
         formData.append("email", email)
         formData.append("usertype", event.target.value)
         const event_target_value = event.target.value
-        updateUserProfile(formData).then((res) => {
+        adminUpdateUserProfile(formData).then((res) => {
           props.changeUserStatus(email, event_target_value)
         }).catch(err => {
           props.openConnectionError()
         })
     };
+
+    const changeIsAdmin = (event, email) => {
+      const formData = new FormData()
+      formData.append("email", email)
+      formData.append("isAdmin", event.target.value)
+      const event_target_value = event.target.value
+      adminUpdateUserProfile(formData).then((res) => {
+        props.changeUserIsAdmin(email, event_target_value)
+      }).catch(err => {
+        props.openConnectionError()
+      })
+    }
 
     function filteredList() {
       return props.userList.toJS().filter(
@@ -260,6 +276,23 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                                             <option value={'postdoc'}>Postdoc</option>
                                             <option value={'scholar'}>Scholar</option>
                                             <option value={'non-member'}>Non-Member</option>
+                                        </Select>
+                                    </Typography>
+                                </ListItem>
+                                <ListItem className={classes.listItem}>
+                                <ListItemText primary='Admin Permission' />
+                                    <Typography variant="body2" style={{marginLeft: 40}}>
+                                        <Select className={classes.col}
+                                                native
+                                                fullWidth="true"
+                                                value={isClicked.isAdmin}
+                                                onChange={(event) => {changeIsAdmin(event, state.clicked)}}
+                                                inputProps={{
+                                                    name: 'isAdmin',
+                                                }}
+                                        >
+                                            <option value={true}>Admin</option>
+                                            <option value={false}>Non-Admin</option>
                                         </Select>
                                     </Typography>
                                 </ListItem>

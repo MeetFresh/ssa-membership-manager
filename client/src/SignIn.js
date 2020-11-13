@@ -66,6 +66,7 @@ function handleSubmit(event, props) {
     loginUser(formData).then(res => {
         if (res.data.loginSuccess) {
             props.closeWrongCredentials()
+            props.closeSignUpSuccess()
             const username = formData.get('username')
             props.loginAdmin(res.data.isAdmin)
             props.login(username)
@@ -76,30 +77,31 @@ function handleSubmit(event, props) {
                         last: user.last,
                         status: user.usertype,
                         email: user.email,
-                        history: user.activityhistory
+                        history: user.activityhistory,
+                        isAdmin: user.isAdmin
                     }))
                     props.setUserList(users)
                 })
-            } else {
-                getOneUser(username).then(res => {
-                    const { first, last, pronoun, usertype, institute, instituteId, instituteEmail, activityhistory } = res.data.user
-                    let profile = {
-                        first: first || "",
-                        last: last || last,
-                        pronoun: pronoun || "",
-                        status: usertype || "",
-                        history: activityhistory || []
-                    }
-                    if (["undergrad", "graduate", "nt-faculty", "faculty", "postdoc"].indexOf(usertype) !== -1) {
-                        if (institute) {profile.institute = institute}
-                    }
-                    if (["undergrad", "graduate"].indexOf(usertype) !== -1) {
-                        if (instituteId) {profile.instituteId = instituteId}
-                        if (instituteEmail) {profile.email = instituteEmail}
-                    }
-                    props.setProfile(profile)
-                })
             }
+            getOneUser(username).then(res => {
+                const { first, last, pronoun, usertype, institute, instituteId, instituteEmail, activityhistory, profilePic } = res.data.user
+                let profile = {
+                    first: first || "",
+                    last: last || last,
+                    pronoun: pronoun || "",
+                    status: usertype || "",
+                    history: activityhistory || [],
+                    profilePic: profilePic || ""
+                }
+                if (["undergrad", "graduate", "nt-faculty", "faculty", "postdoc"].indexOf(usertype) !== -1) {
+                    if (institute) {profile.institute = institute}
+                }
+                if (["undergrad", "graduate"].indexOf(usertype) !== -1) {
+                    if (instituteId) {profile.instituteId = instituteId}
+                    if (instituteEmail) {profile.email = instituteEmail}
+                }
+                props.setProfile(profile)
+            })
             axios.get('/api/event/all').then(res => {
                 let events = res.data.events.map(event => {
                     event.id = event["_id"]
@@ -107,6 +109,13 @@ function handleSubmit(event, props) {
                     return event
                 })
                 props.mergeCheckoutItemList(events)
+            })
+            axios.get('/api/member').then(res => {
+                const priceDict = {}
+                res.data.member.forEach(item => {
+                    priceDict[item.usertype.toLowerCase().replace("-f", "F") + "Price"] = item.pricing
+                })
+                props.editMembershipPrice(priceDict)
             })
         } else {
             props.openWrongCredentials()
@@ -124,6 +133,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     toSignUp() {
         dispatch(actionCreators.setCurrPage('signup'))
+    },
+    toRecoverAccount() {
+        dispatch(actionCreators.setCurrPage('recover-account'))
     },
     loginAdmin(isLogin) {
         dispatch(actionCreators.setAdmin(isLogin))
@@ -149,10 +161,16 @@ const mapDispatchToProps = (dispatch) => ({
     closeWrongCredentials() {
         dispatch(actionCreators.setWrongCredentials(false))
     },
+    closeSignUpSuccess() {
+        dispatch(actionCreators.setSignUpSuccess(false))
+    },
+    editMembershipPrice(priceDict) {
+        dispatch(actionCreators.editMembershipPrice(priceDict))
+    }
 })
 
 const mapStateToProps = (state) => ({
-    wrongCredentials: state.getIn(['app', 'wrongCredentials'])
+    wrongCredentials: state.getIn(['app', 'wrongCredentials']),
 })
 
 // onSubmit={(event) => {handleSubmit(event, props.login)}}
@@ -196,8 +214,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function SignIn(prop
                     <FormControlLabel
                         control={< Checkbox value = "remember" color = "#888888" />}
                         label="Remember me"/>
-                    {
-                    props.wrongCredentials ? 
+                    { props.wrongCredentials ? 
                         <Alert
                             severity="warning"
                             onClose={() => {props.closeWrongCredentials()}}
@@ -214,7 +231,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function SignIn(prop
                     </Button>
                     <Grid container>
                         <Grid item xs>
-                            <Link href="#" variant="body2">
+                            <Link href="#" variant="body2" onClick={() => {props.toRecoverAccount()}}>
                                 Forgot password?
                             </Link>
                         </Grid>

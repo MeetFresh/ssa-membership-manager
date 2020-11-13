@@ -20,18 +20,34 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import {theme} from './theme';
 
 import { createUser } from './queries';
+import axios from 'axios';
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
+      <Typography variant="body2" color="textSecondary" align="center">
+          {'Copyright © '}
+          <Link color="inherit" href="https://material-ui.com/">
+              Society of Study of Affect
+          </Link>{' '}
+          {new Date().getFullYear()}
+          {'.'}
+      </Typography>
   );
+}
+
+function handleSubmit(event, props) {
+  event.preventDefault()
+  const formData = new FormData(event.target)
+  const SIGNUP_API = '/api/user'
+  axios.post(SIGNUP_API, formData).then(res => {
+    props.closeDuplicateEmail()
+    props.openSignUpSuccess()
+    props.togglePage('')
+  }).catch(err => {
+    props.openDuplicateEmail()
+  })
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -57,10 +73,29 @@ const useStyles = makeStyles((theme) => ({
 const mapDispatchToProps = (dispatch) => ({
   toSignIn() {
       dispatch(actionCreators.setCurrPage(''))
+  },
+  openConnectionError() {
+    dispatch(actionCreators.setConnectionError(true))
+  },
+  openDuplicateEmail() {
+    dispatch(actionCreators.setDuplicateEmail(true))
+  },
+  closeDuplicateEmail() {
+    dispatch(actionCreators.setDuplicateEmail(false))
+  },
+  openSignUpSuccess() {
+    dispatch(actionCreators.setSignUpSuccess(true))
+  },
+  togglePage(pageName) {
+    dispatch(actionCreators.setCurrPage(pageName))
   }
 })
 
-export default connect(null, mapDispatchToProps)(function SignUp(props) {
+const mapStateToProps = (state) => ({
+  duplicateEmail: state.getIn(['app', 'duplicateEmail'])
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(function SignUp(props) {
   const classes = useStyles();
 
   return (
@@ -74,7 +109,12 @@ export default connect(null, mapDispatchToProps)(function SignUp(props) {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} action='/api/user' method='post'>
+        <form
+          className={classes.form}
+          action='/api/user'
+          method='post'
+          onSubmit={(event) => {handleSubmit(event, props)}}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -122,12 +162,20 @@ export default connect(null, mapDispatchToProps)(function SignUp(props) {
                 autoComplete="current-password"
               />
             </Grid>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
                 label="I want to receive inspiration, marketing promotions and updates via email."
               />
-            </Grid>
+            </Grid> */}
+            { props.duplicateEmail ? 
+              <Alert
+                  severity="warning"
+                  onClose={() => {props.closeDuplicateEmail()}}
+              >
+                  <AlertTitle>This email has signed up. Try another one.</AlertTitle>
+              </Alert> : null
+            }
           </Grid>
           <Button
             type="submit"

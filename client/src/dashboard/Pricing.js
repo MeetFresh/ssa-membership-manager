@@ -11,6 +11,7 @@ import Button from "@material-ui/core/Button";
 import {connect} from "react-redux";
 import {actionCreators} from "../store";
 import TextField from "@material-ui/core/TextField";
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
     listItem: {
@@ -44,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
 const mapDispatchToProps = (dispatch) => ({
     editMembershipPrice(priceDict) {
         dispatch(actionCreators.editMembershipPrice(priceDict))
+    },
+    openConnectionError() {
+        dispatch(actionCreators.setConnectionError(true))
     }
 })
 
@@ -79,7 +83,20 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Profile(pro
     function savePrice(state) {
         const {undergradPrice, graduatePrice, ntFacultyPrice, facultyPrice, postdocPrice, scholarPrice} = state
         const priceDict = {undergradPrice, graduatePrice, ntFacultyPrice, facultyPrice, postdocPrice, scholarPrice}
-        props.editMembershipPrice(priceDict)
+        const backPriceDict = {
+            "Undergrad": undergradPrice,
+            "Graduate": graduatePrice,
+            "NT-Faculty": ntFacultyPrice,
+            "Faculty": facultyPrice,
+            "Postdoc": postdocPrice,
+            "scholar": scholarPrice
+        }
+        console.log(backPriceDict)
+        axios.put('/api/member', backPriceDict).then(res => {
+            props.editMembershipPrice(priceDict)
+        }).catch(err => {
+            props.openConnectionError()
+        })
     }
 
     return (
@@ -183,7 +200,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Profile(pro
                                 </Typography>
                             </ListItem>
                             <ListItem className={classes.listItem}>
-                                <ListItemText primary='scholar' />
+                                <ListItemText primary='Scholar' />
                                 <Typography variant="body3">
                                     <span style={{position: "relative", top: state.isEdit ? 6 : 0}}>$</span>
                                     { state.isEdit ?

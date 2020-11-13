@@ -108,12 +108,20 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
         instituteId: profile.instituteId || '',
         instituteIdValidation: true,
         instituteEmail: profile.email || '',
-        instituteEmailValidation: true
+        instituteEmailValidation: true,
+        newPassword: "",
+        newPasswordValidation: true,
+        confirmPassword: "",
+        confirmPasswordValidation: true
     });
 
     const handleChange = (event) => {
         const name = event.target.name;
         state[[name]] = event.target.value
+        if (name === 'newPassword' && state[[name]] === '') {
+            state["confirmPassword"] = ""
+            state["confirmPasswordValidation"] = true
+        }
         setState({...state})
     };
 
@@ -130,7 +138,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
 
     const validateAll = () => {
         const basic = validateInput(null, 'first', state.first) && validateInput(null, 'last', state.last)
-        && validateInput(null, 'status', state.status)
+        && validateInput(null, 'status', state.status) && validateInput(null, 'newPassword', state.newPassword)
+        && validateInput(null, 'confirmPassword', state.confirmPassword)
         if (!basic) {
             return false
         }
@@ -160,6 +169,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                 return value !== '' ? true : 'First name is required.'
             case 'last':
                 return value !== '' ? true : 'Last name is required.'
+            case 'newPassword':
+                return value.length == 0 || value.length >= 6 ? true : 'New password is too simple.'
+            case 'confirmPassword':
+                return value === state.newPassword ? true : 'Passwords do not match.'
             default:
                 return true
         }
@@ -197,7 +210,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     label="First Name"
                                     fullWidth="true"
                                     value={state.first}
-                                    onChange={(event) => {handleChange(event); validateInput(event)}}
+                                    onChange={(event) => { handleChange(event); validateInput(event)}}
                                     inputProps={{
                                         name: 'first'
                                     }}
@@ -227,6 +240,55 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                 />
                             </Grid>
                         </Grid>
+                        <Grid container spacing={1}  className={classes.grid}>
+                            <Grid item sm={6}>
+                                <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
+                                    New Password (Optional)
+                                </Typography>
+                            </Grid>
+                            <Grid item sm={6}>
+                                <TextField
+                                    id=""
+                                    type="password"
+                                    label="New Password"
+                                    fullWidth="true"
+                                    value={state.newPassword}
+                                    autoComplete="new-password"
+                                    onChange={(event) => {handleChange(event); validateInput(event)}}
+                                    inputProps={{
+                                        name: 'newPassword'
+                                    }}
+                                    error={state.newPasswordValidation === true ? false : true}
+                                    helperText={state.newPasswordValidation}
+                                />
+                            </Grid>
+                        </Grid>
+                        {
+                            state.newPassword !== "" ?
+                            <Grid container spacing={1}  className={classes.grid}>
+                                <Grid item sm={6}>
+                                    <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
+                                        Confirm Password*
+                                    </Typography>
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <TextField
+                                        id=""
+                                        type="password"
+                                        label="Confirm Password"
+                                        fullWidth="true"
+                                        autoComplete="new-password"
+                                        value={state.confirmPassword}
+                                        onChange={(event) => {handleChange(event); state["confirmPasswordValidation"] = true; setState({...state})}}
+                                        inputProps={{
+                                            name: 'confirmPassword'
+                                        }}
+                                        error={state.confirmPasswordValidation === true ? false : true}
+                                        helperText={state.confirmPasswordValidation}
+                                    />
+                                </Grid>
+                            </Grid> : null
+                        }
                         <Grid container spacing={1}  className={classes.grid}>
                             <Grid item sm={6}>
                                 <Typography variant="subtitle1" gutterBottom className={classes.col} align="left">
@@ -268,7 +330,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     }}
                                     error={state.statusValidation === true ? false : true}
                                 >
-                                    <option aria-label="None" value="" />
+                                    <option aria-label="None" value="non-member">Non-Member</option>
                                     <option value={'graduate'}>Graduate</option>
                                     <option value={'undergrad'}>Undergrad</option>
                                     <option value={'nt-faculty'}>NT-Faculty</option>

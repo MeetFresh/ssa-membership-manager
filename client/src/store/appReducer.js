@@ -13,13 +13,18 @@ const defaultState = fromJS({
         pronoun: '',
         status: '',
         username: '',
+        profilePic: '',
+        history: []
     },
     shoppingCart: [],
     isAdmin: false,
     checkoutItemList: checkoutItemList,
     userList: [],
     connectionError: false,
-    wrongCredentials: false
+    wrongCredentials: false,
+    duplicateEmail: false,
+    signUpSuccess: false,
+    tempResetPassToken: ''
 })
 
 export const reducer = (state=defaultState, action) => {
@@ -29,9 +34,12 @@ export const reducer = (state=defaultState, action) => {
         case constants.SET_CURR_PAGE:
             return state.set('currPage', fromJS(action.pageName))
         case constants.SET_PROFILE:
+            const oldProfile = state.get('profile').toJS()
             return state.set('profile', fromJS({
                 ...action.profile,
-                ...{username: state.get('profile').toJS().username}
+                ...{username: oldProfile.username,
+                    history: action.profile.history || oldProfile.history,
+                    profilePic: action.profile.profilePic || oldProfile.profilePic}
             }))
         case constants.CLEAR_CART:
             return state.set('shoppingCart', fromJS([]))
@@ -83,6 +91,14 @@ export const reducer = (state=defaultState, action) => {
                 }
             }
             return state.set('userList', fromJS(userList0))
+        case constants.CHANGE_USER_IS_ADMIN:
+            let userList1 = state.get('userList').toJS()
+            for (let idx = 0; idx < userList1.length; ++idx) {
+                if (userList1[idx].email === action.username) {
+                    userList1[idx].isAdmin = action.newIsAdmin
+                }
+            }
+            return state.set('userList', fromJS(userList1))
         case constants.EDIT_MEMBERSHIP_PRICE:
             let checkoutItemList4 = state.get('checkoutItemList').toJS()
             const keys = [
@@ -110,6 +126,12 @@ export const reducer = (state=defaultState, action) => {
         case constants.MERGE_CHECKOUT_ITEM_LIST:
             let checkoutItemList5 = state.get('checkoutItemList').toJS().filter(item => item.type === 'membership')
             return state.set('checkoutItemList', fromJS(checkoutItemList5.concat(action.events)))
+        case constants.SET_DUPLICATE_EMAIL:
+            return state.set('duplicateEmail', fromJS(action.isDup))
+        case constants.SET_SIGNUP_SUCCESS:
+            return state.set('signUpSuccess', fromJS(action.isSuccess))
+        case constants.SET_PASS_TOKEN:
+            return state.set('tempResetPassToken', fromJS(action.passToken))
         default:
             return state
     }

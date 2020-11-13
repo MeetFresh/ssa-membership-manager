@@ -55,6 +55,12 @@ export const changeUserStatus = (username, newStatus) => ({
     newStatus
 })
 
+export const changeUserIsAdmin = (username, newIsAdmin) => ({
+    type: constants.CHANGE_USER_IS_ADMIN,
+    username,
+    newIsAdmin
+})
+
 export const editMembershipPrice = (priceDict) => ({
     type: constants.EDIT_MEMBERSHIP_PRICE,
     priceDict
@@ -78,4 +84,19 @@ export const setConnectionError = (isError) => ({
 export const setWrongCredentials = (isWrong) => ({
     type: constants.SET_WRONG_CREDENTIALS,
     isWrong
+})
+
+export const setDuplicateEmail = (isDup) => ({
+    type: constants.SET_DUPLICATE_EMAIL,
+    isDup
+})
+
+export const setSignUpSuccess = (isSuccess) => ({
+    type: constants.SET_SIGNUP_SUCCESS,
+    isSuccess
+})
+
+export const setTempResetPassToken = (passToken) => ({
+    type: constants.SET_PASS_TOKEN,
+    passToken
 })

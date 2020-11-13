@@ -83,7 +83,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   mergeCheckoutItemList(events) {
-    console.log(events)
     dispatch(actionCreators.mergeCheckoutItemList(events))
   }
 })
