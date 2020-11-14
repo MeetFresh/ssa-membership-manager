@@ -1,5 +1,5 @@
 {
-    "name": "SSA Membership Platform",
+    "name": "ssa-membership-platform",
     "description": "YOUR PROJECT DESCRIPTION",
     "version": "1.0.0",
     "cacheDirectories": ["client/node_modules", "server/node_modules"],
