@@ -7,7 +7,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Checkbox from '@material-ui/core/CheckBox'
+import Checkbox from '@material-ui/core/Checkbox'
 import {connect} from "react-redux";
 import Title from './Title';
 
