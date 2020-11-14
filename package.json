@@ -11,7 +11,7 @@
       "postinstall": "npm run install-client && npm run install-server && npm run build-client"
     },
     "engines": {
-      "npm": "THE VERSION OF NPM YOU ARE RUNNING",
-      "node": "THE VERSION OF NODE YOU ARE RUNNING"
+      "npm": "6.13.7",
+      "node": "10.16.3"
     }
   }
