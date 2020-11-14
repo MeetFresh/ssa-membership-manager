@@ -4,6 +4,8 @@
   "proxy": "http://localhost:4242/",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.0.0",
+    "@emotion/styled": "^11.0.0",
     "@material-ui/core": "^5.0.0-alpha.16",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
