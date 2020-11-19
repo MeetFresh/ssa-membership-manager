@@ -84,6 +84,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   mergeCheckoutItemList(events) {
     dispatch(actionCreators.mergeCheckoutItemList(events))
+  }, 
+  setProfile(profile) {
+    dispatch(actionCreators.setProfile(profile))
   }
 })
 
@@ -185,7 +188,25 @@ export default connect(
           props.mergeCheckoutItemList(events)
         })
       } else {
-        axios.put("./api/user/membership_update", payload.paymentIntent);
+        axios.put("./api/user/membership_update", payload.paymentIntent).then(res => {
+          const { first, last, pronoun, usertype, institute, instituteId, instituteEmail, activityhistory, profilePic } = res.data.user
+          let profile = {
+              first: first || "",
+              last: last || last,
+              pronoun: pronoun || "",
+              status: usertype || "",
+              history: activityhistory || [],
+              profilePic: profilePic || ""
+          }
+          if (["undergrad", "graduate", "nt-faculty", "faculty", "postdoc"].indexOf(usertype) !== -1) {
+              if (institute) {profile.institute = institute}
+          }
+          if (["undergrad", "graduate"].indexOf(usertype) !== -1) {
+              if (instituteId) {profile.instituteId = instituteId}
+              if (instituteEmail) {profile.email = instituteEmail}
+          }
+          props.setProfile(profile)
+        });
       }
       setError(null);
       setProcessing(false);
