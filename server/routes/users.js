@@ -37,24 +37,34 @@ router.get('/sort', (req, res, next) => {
         let _d = new Date();
         let d = new Date(_d.getFullYear() + 100, _d.getMonth(), _d.getDate());
         users.sort((a, b) => {
-            let history_a = typeof a.expirationdate === 'undefined' ? d : a.expirationdate;
-            let history_b = typeof b.expirationdate === 'undefined' ? d : b.expirationdate;
+            let history_a = a.expirationdate
+            let history_b = b.expirationdate
+            if (typeof history_a === 'undefined') {
+              return 1;
+            } else if (typeof history_b === 'undefined') {
+              return -1;
+            }
             return history_a.getTime() < history_b.getTime() ? -1 : 1;
           }
         )
         res.status(200).json({users});
-        // users.forEach(user => console.log(user.expirationdate));
+        users.forEach(user => console.log(user.expirationdate));
       }
       else if (query.registrationdate) {
         let _d = new Date();
         let d = new Date(_d.getFullYear() - 100, _d.getMonth(), _d.getDate());
         users.sort((a, b) => {
-          let history_a = typeof a.registrationdate === 'undefined' ? d : a.registrationdate;
-          let history_b = typeof b.registrationdate === 'undefined' ? d : b.registrationdate;
+          let history_a = a.registrationdate;
+          let history_b = b.registrationdate;
+          if (typeof history_a === 'undefined') {
+            return 1;
+          } else if (typeof history_b === 'undefined') {
+            return -1;
+          }
           return history_b.getTime() < history_a.getTime() ? -1 : 1;
         }
       )
-      // users.forEach(user => console.log(user.registrationdate));
+      users.forEach(user => console.log(user.registrationdate));
       res.status(200).json({users});
       }
       else {
