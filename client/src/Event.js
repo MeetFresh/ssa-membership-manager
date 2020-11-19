@@ -53,7 +53,7 @@ const mapPropsToDispatch = (dispatch) => ({
         );
         dispatch(actionCreators.setCurrPage("checkout"))
     },
-    saveEvent(eventId, eventContent) {
+    saveEvent(eventId, eventParticipants, eventContent) {
         let targetItem = {
             _id: eventId,
             name: eventContent.name,
@@ -62,7 +62,8 @@ const mapPropsToDispatch = (dispatch) => ({
             longDesc: eventContent.description,
             price: Math.max(parseFloat(eventContent.price) || 0, 0),
             picSrc: eventContent.tempPicSrc,
-            learnMoreLink: eventContent.learnMoreLink
+            learnMoreLink: eventContent.learnMoreLink,
+            participants: eventParticipants,
         }
         axios.put('/api/event', targetItem).then(res => {
             if (res.data.success) {
@@ -122,7 +123,7 @@ function EventComponent(props) {
     };
 
     const saveEvent = () => {
-        props.saveEvent(props.id, state)
+        props.saveEvent(props.id, props.participants, state)
     }
 
     const deleteEvent = () => {

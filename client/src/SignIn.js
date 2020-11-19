@@ -15,10 +15,10 @@ import Container from '@material-ui/core/Container';
 
 import axios from 'axios'
 import {loginUser, getOneUser, getAllUsers} from './queries'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import {actionCreators} from './store'
 
-import { ThemeProvider } from '@material-ui/core/styles';
+import {ThemeProvider} from '@material-ui/core/styles';
 import {theme} from './theme';
 
 import Alert from '@material-ui/lab/Alert';
@@ -30,13 +30,11 @@ function Copyright() {
             {'Copyright © '}
             <Link color="inherit" href="https://material-ui.com/">
                 Society of Study of Affect
-            </Link>{' '}
-            {new Date().getFullYear()}
+            </Link>{' '} {new Date().getFullYear()}
             {'.'}
         </Typography>
     );
 }
-
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -47,14 +45,14 @@ const useStyles = makeStyles((theme) => ({
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: '#888888',
+        backgroundColor: '#888888'
     },
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(1)
     },
     submit: {
-        margin: theme.spacing(3, 0, 2),
+        margin: theme.spacing(3, 0, 2)
     }
 }));
 
@@ -72,19 +70,32 @@ function handleSubmit(event, props) {
             props.login(username)
             if (res.data.isAdmin) {
                 getAllUsers().then(res => {
-                    const users = res.data.users.map(user => ({
-                        first: user.first,
-                        last: user.last,
-                        status: user.usertype,
-                        email: user.email,
-                        history: user.activityhistory,
-                        isAdmin: user.isAdmin
-                    }))
+                    const users = res
+                        .data
+                        .users
+                        .map(user => ({
+                            first: user.first,
+                            last: user.last,
+                            status: user.usertype,
+                            email: user.email,
+                            history: user.activityhistory,
+                            isAdmin: user.isAdmin
+                        }))
                     props.setUserList(users)
                 })
             }
             getOneUser(username).then(res => {
-                const { first, last, pronoun, usertype, institute, instituteId, instituteEmail, activityhistory, profilePic } = res.data.user
+                const {
+                    first,
+                    last,
+                    pronoun,
+                    usertype,
+                    institute,
+                    instituteId,
+                    instituteEmail,
+                    activityhistory,
+                    profilePic
+                } = res.data.user
                 let profile = {
                     first: first || "",
                     last: last || last,
@@ -94,29 +105,48 @@ function handleSubmit(event, props) {
                     profilePic: profilePic || ""
                 }
                 if (["undergrad", "graduate", "nt-faculty", "faculty", "postdoc"].indexOf(usertype) !== -1) {
-                    if (institute) {profile.institute = institute}
+                    if (institute) {
+                        profile.institute = institute
+                    }
                 }
                 if (["undergrad", "graduate"].indexOf(usertype) !== -1) {
-                    if (instituteId) {profile.instituteId = instituteId}
-                    if (instituteEmail) {profile.email = instituteEmail}
+                    if (instituteId) {
+                        profile.instituteId = instituteId
+                    }
+                    if (instituteEmail) {
+                        profile.email = instituteEmail
+                    }
                 }
                 props.setProfile(profile)
             })
-            axios.get('/api/event/all').then(res => {
-                let events = res.data.events.map(event => {
-                    event.id = event["_id"]
-                    delete event["_id"]
-                    return event
+            axios
+                .get('/api/event/all')
+                .then(res => {
+                    let events = res
+                        .data
+                        .events
+                        .map(event => {
+                            event.id = event["_id"]
+                            delete event["_id"]
+                            return event
+                        })
+                    props.mergeCheckoutItemList(events)
                 })
-                props.mergeCheckoutItemList(events)
-            })
-            axios.get('/api/member').then(res => {
-                const priceDict = {}
-                res.data.member.forEach(item => {
-                    priceDict[item.usertype.toLowerCase().replace("-f", "F") + "Price"] = item.pricing
+            axios
+                .get('/api/member')
+                .then(res => {
+                    const priceDict = {}
+                    res
+                        .data
+                        .member
+                        .forEach(item => {
+                            priceDict[item
+                                    .usertype
+                                    .toLowerCase()
+                                    .replace("-f", "F") + "Price"] = item.pricing
+                        })
+                    props.editMembershipPrice(priceDict)
                 })
-                props.editMembershipPrice(priceDict)
-            })
         } else {
             props.openWrongCredentials()
         }
@@ -170,7 +200,7 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 const mapStateToProps = (state) => ({
-    wrongCredentials: state.getIn(['app', 'wrongCredentials']),
+    wrongCredentials: state.getIn(['app', 'wrongCredentials'])
 })
 
 // onSubmit={(event) => {handleSubmit(event, props.login)}}
@@ -188,66 +218,75 @@ export default connect(mapStateToProps, mapDispatchToProps)(function SignIn(prop
                     Sign in
                 </Typography>
                 <ThemeProvider theme={theme}>
-                <form 
-                    className={classes.form} noValidate
-                    onSubmit={(event) => {handleSubmit(event, props)}}>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="username"
-                        label="Email Address"
-                        name="username"
-                        autoComplete="email"
-                        autoFocus/>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"/>
-                    <FormControlLabel
-                        control={< Checkbox value = "remember" color = "#888888" />}
-                        label="Remember me"/>
-                    { props.wrongCredentials ? 
-                        <Alert
-                            severity="warning"
-                            onClose={() => {props.closeWrongCredentials()}}
-                        >
-                            <AlertTitle>Wrong email/password. Try Again.</AlertTitle>
-                        </Alert> : null
-                    }
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="outlined"
-                        className={classes.submit}>
-                        Sign In
-                    </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2" onClick={() => {props.toRecoverAccount()}}>
-                                Forgot password?
-                            </Link>
+                    <form
+                        className={classes.form}
+                        noValidate
+                        onSubmit={(event) => {
+                        handleSubmit(event, props)
+                    }}>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="username"
+                            label="Email Address"
+                            name="username"
+                            autoComplete="email"
+                            autoFocus/>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"/>
+                        <FormControlLabel
+                            control={< Checkbox value = "remember" color = "#888888" />}
+                            label="Remember me"/> {props.wrongCredentials
+                            ? <Alert
+                                    severity="warning"
+                                    onClose={() => {
+                                    props.closeWrongCredentials()
+                                }}>
+                                    <AlertTitle>Wrong email/password. Try Again.</AlertTitle>
+                                </Alert>
+                            : null
+}
+                        <Button type="submit" fullWidth variant="outlined" className={classes.submit}>
+                            Sign In
+                        </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link
+                                    href="#"
+                                    variant="body2"
+                                    onClick={() => {
+                                    props.toRecoverAccount()
+                                }}>
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link
+                                    href="#"
+                                    variant="body2"
+                                    onClick={() => {
+                                    props.toSignUp()
+                                }}>
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Link href="#" variant="body2" onClick={() => {props.toSignUp()}}>
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
+                    </form>
                 </ThemeProvider>
             </div>
             <Box mt={5}>
-                <Copyright />
+                <Copyright/>
             </Box>
         </Container>
     );
 })
-
