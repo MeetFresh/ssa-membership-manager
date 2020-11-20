@@ -14,7 +14,7 @@ In order to enable the software to function, node shall be installed.
 2. As the download of the installer completes, click the installer package and follow the instruction
     1. During the process, you must agree to the terms of the software license agreement
     2. You need to select a destination to install the software
-      1. For Mac users, the default Macintosh HD would be sufficient
+        1. For Mac users, the default Macintosh HD would be sufficient
     3. After the installation completes, you can move the Node.js installer to the Trash
 3. Node.js installation completes.
 
