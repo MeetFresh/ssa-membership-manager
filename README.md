@@ -6,7 +6,7 @@ CS3312/LMC3431 section JIA team 122 (MeetFresh) project with client Prof. Truran
 There is no required configuration of software and hardware that the customer must have before the installation process.
 
 ### Dependent libraries that must be installed:
-Install node:
+Install node:\
 In order to enable the software to function, node shall be installed. 
 1. Navigate to this link, https://nodejs.org/en/download/, and the screen would show different installer types for LTS Version (LTS Version should be sufficient)
     1. If you are a Windows user, click **Windows Installer**
