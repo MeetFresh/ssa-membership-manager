@@ -40,24 +40,24 @@ Then, the dependencies for the backend shall be installed
 The client also needs a .env file. Since this file contains private information, it is not included in the Github repo. The client can contact us through email to get the file. The client should put the .env file **under the server folder**.
 
 ### Run instructions:
-After the client completes all the above instructions, he/she can type npm start in the terminal under the server folder.
+After the client completes all the above instructions, he/she can type `npm start` in the terminal under the server folder.
 
 ### Troubleshooting:
-**Problem:** Broken npm installation
-**Action: **
+**Problem:** Broken npm installation\
+**Action:**
 If you are a Mac user, reinstall npm. 
 If you are a Windows user, reinstall node from the official installer.
 
-**Problem:** Random error with npm install
+**Problem:** Random error with npm install\
 **Action:**
-Some strange issues can be resolved by running npm cache clean and trying again.
-Use the to -verbose option see more details
+Some strange issues can be resolved by running `npm cache clean` and trying again.
+Use the to `-verbose` option see more details
 
-**Problem:** Not compatible version found
+**Problem:** Not compatible version found\
 **Action:**
 You have an outdated npm. Please update to the latest stable node/npm
 
-**Problem:** No git
+**Problem:** No git\
 **Action:**
 You need to install git. Or, you may need to add your git information to your npm profile.
 
