@@ -9,13 +9,13 @@ There is no required configuration of software and hardware that the customer mu
 Install node:
 In order to enable the software to function, node shall be installed. 
 1. Navigate to this link, https://nodejs.org/en/download/, and the screen would show different installer types for LTS Version (LTS Version should be sufficient)
-  1. If you are a Windows user, click **Windows Installer**
-  2. If you are a Mac user, click **macOS Installer**
+    1. If you are a Windows user, click **Windows Installer**
+    2. If you are a Mac user, click **macOS Installer**
 2. As the download of the installer completes, click the installer package and follow the instruction
-  1. During the process, you must agree to the terms of the software license agreement
-  2. You need to select a destination to install the software
-    - For Mac users, the default Macintosh HD would be sufficient
-  3. After the installation completes, you can move the Node.js installer to the Trash
+    1. During the process, you must agree to the terms of the software license agreement
+    2. You need to select a destination to install the software
+      1. For Mac users, the default Macintosh HD would be sufficient
+    3. After the installation completes, you can move the Node.js installer to the Trash
 3. Node.js installation completes.
 
 ### Download instructions:
@@ -44,21 +44,21 @@ After the client completes all the above instructions, he/she can type `npm star
 
 ### Troubleshooting:
 **Problem:** Broken npm installation\
-**Action:**
+**Action:**\
 If you are a Mac user, reinstall npm. 
 If you are a Windows user, reinstall node from the official installer.
 
 **Problem:** Random error with npm install\
-**Action:**
+**Action:**\
 Some strange issues can be resolved by running `npm cache clean` and trying again.
 Use the to `-verbose` option see more details
 
 **Problem:** Not compatible version found\
-**Action:**
+**Action:**\
 You have an outdated npm. Please update to the latest stable node/npm
 
 **Problem:** No git\
-**Action:**
+**Action:**\
 You need to install git. Or, you may need to add your git information to your npm profile.
 
 
