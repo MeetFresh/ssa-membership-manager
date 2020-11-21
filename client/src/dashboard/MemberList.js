@@ -72,6 +72,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
 
     const [state, setState] = React.useState({
         status: 'none',
+        sortBy: '',
         isAdmin: null,
         name: '',
         email: '',
@@ -110,7 +111,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
     }
 
     function filteredList() {
-      return props.userList.toJS().filter(
+      let ret =  props.userList.toJS().filter(
         (row) => (row.email.toLowerCase().indexOf(state.email.toLowerCase()) != -1)
       ).filter(
         (row) => ((row.first + " " + row.last).toLowerCase().indexOf(state.name.toLowerCase()) != -1)
@@ -140,6 +141,42 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
           return false
         }
       )
+
+      if (state.sortBy !== "") {
+        ret.sort(function(mem1, mem2) {
+          let reg1 = null
+          let reg2 = null
+          let exp1 = null
+          let exp2 = null
+          if (mem1.history && mem1.history[mem1.history.length - 1]) {
+            reg1 = mem1.history[mem1.history.length - 1].split(",")[1]
+            exp1 = mem1.history[mem1.history.length - 1].split(",")[2]
+          }
+          if (mem2.history && mem2.history[0]) {
+            reg2 = mem2.history[mem2.history.length - 1].split(",")[1]
+            exp2 = mem2.history[mem2.history.length - 1].split(",")[2]
+          }
+          if (reg1 === null && reg2 === null) {
+            return 0
+          } else if (reg1 === null) {
+            return -1
+          } else if (reg2 === null) {
+            return 1
+          }
+          reg1 = new Date(reg1)
+          reg2 = new Date(reg2)
+          exp1 = new Date(exp1)
+          exp2 = new Date(exp2)
+          console.log(exp1, exp2, exp1 < exp2)
+          if (state.sortBy === "reg") {
+            return reg1 === reg2 ? 0 : (reg1 < reg2 ? 1 : -1)
+          } else {
+            return exp1 === exp2 ? 0 : (exp1 < exp2 ? -1 : 1)
+          }
+        })
+      }
+
+      return ret
     }
 
     function copyToClipboard(value) {
@@ -192,7 +229,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                                 <option value={'nt-faculty'}>NT-Faculty</option>
                                 <option value={'faculty'}>Faculty</option>
                                 <option value={'postdoc'}>Postdoc</option>
-                                <option value={'scholar'}>Scholar</option>
+                                <option value={'scholar'}>Independent Scholar / Other</option>
                                 <option value={'member'}>Member</option>
                                 <option value={'non-member'}>Non-Member</option>
                               </Select>
@@ -224,6 +261,24 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                                           name: 'email'
                                       }}
                               />
+                            </Typography>
+                        </ListItem>
+                        <ListItem className={classes.listItem}>
+                            <ListItemText primary="Sort By" />
+                            <Typography variant="body2">
+                              <Select className={classes.col}
+                                native
+                                fullWidth="true"
+                                value={state.sortBy}
+                                onChange={handleChange}
+                                inputProps={{
+                                    name: 'sortBy',
+                                }}
+                              >
+                                <option aria-label="None" value="">None</option>
+                                <option value={'reg'}>Registration</option>
+                                <option value={'exp'}>Expiration</option>
+                              </Select>
                             </Typography>
                         </ListItem>
                     </List>
@@ -274,7 +329,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                                             <option value={'nt-faculty'}>NT-Faculty</option>
                                             <option value={'faculty'}>Faculty</option>
                                             <option value={'postdoc'}>Postdoc</option>
-                                            <option value={'scholar'}>Scholar</option>
+                                            <option value={'scholar'}>Independent Scholar / Other</option>
                                             <option value={'non-member'}>Non-Member</option>
                                         </Select>
                                     </Typography>
@@ -317,7 +372,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                                         </TableHead>
                                         <TableBody>
                                             {
-                                              history.map(hist => (
+                                              history.reverse().map(hist => (
                                                 <TableRow>
                                                   <TableCell>{hist.status}</TableCell>
                                                   <TableCell>{hist.register}</TableCell>

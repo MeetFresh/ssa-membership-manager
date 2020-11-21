@@ -29,7 +29,7 @@ function Copyright() {
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="https://material-ui.com/">
-                Society of Study of Affect
+                Society for Study of Affect
             </Link>{' '} {new Date().getFullYear()}
             {'.'}
         </Typography>

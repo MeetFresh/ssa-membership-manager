@@ -141,7 +141,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Membership(
                                 <option value={'nt-faculty'}>NT-Faculty</option>
                                 <option value={'faculty'}>Faculty</option>
                                 <option value={'postdoc'}>Postdoc</option>
-                                <option value={'scholar'}>Scholar</option>
+                                <option value={'scholar'}>Independent Scholar / Other</option>
                                 <option value={'member'}>Member</option>
                                 <option value={'non-member'}>Non-Member</option>
                               </Select>
