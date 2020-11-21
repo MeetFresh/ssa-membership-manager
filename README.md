@@ -1,5 +1,51 @@
 # ssa-membership-manager
 CS3312/LMC3431 section JIA team 122 (MeetFresh) project with client Prof. Truran from GaTech
+## Release Notes
+### Version 1.0:
+
+#### Section I: User interface:
+1. Registration, Log-in, Log-out.
+2. User profile
+3. Subscription payment
+4. View announcements, events
+5. Events sign-up & payment
+
+#### Section II: Administrator interface:
+1. Log-in, Log-out
+2. User subscription status management
+3. Mailing lists management
+4. Announcement edit and publication
+
+
+### I. User interface
+#### 1. Registration, Log-in, Log-out
+Any visitor of this site may register as a user with the “sign-up” function, where the user will be asked to provide basic information including name, email, academic status, institution, and password. Once a user register successfully, they can log in to the site by entering their email address and their password on the log-in site. If necessary, the user can also log out from their current profile by clicking “log out” at the upper-right corner of the website.
+
+#### 2. User profile
+The user profile consists of the basic information of the user. Aside from the information entered when registering a profile, membership information will also be displayed. A user may modify the content after logging into the profile. All user profiles will only be visible to the users themselves and the administrators.
+
+#### 3. Subscription payment
+Users will submit their payment of subscription through Stripe payment platform. After entering the correct information of the user’s debit/credit card, a confirmation will be automatically sent to the user via the user’s registered email, and the fees will be transferred to the society account. The subscription fee varies depending on the user’s academic status.
+
+#### 4. View announcements, events
+Users may view the latest announcements and event invitations posted by the administrators from the society.
+
+#### 5. Events sign-up & payment
+Similar to subscription payment, payments of events will also be fulfilled by Stripe payment platform. After the payment is completed, the administrators will receive the sign-up notification, so the user will be able to attend the events.
+
+### II. Administrator interface
+
+#### 1. Log-in, Log-out
+The administrators share the same log-in and log-out system as users, but with different functionalities and access.
+
+#### 2. User subscription status management
+The administrators may check the user profiles and subscription status, and may change the subscription status of any user.
+
+#### 3. Mailing lists management
+The administrators have access to mailing lists of different categories. By selecting a group of users, the administrator will be directed to the default email application on their computer with the emails copied as the recipients of the email.
+
+#### 4. Announcement edit and publication
+The administrators have access to announcement/events publication. After publishing an announcement, the information will be visible to all users of this site.
 
 ## Install Guide
 ### Pre-requisites:
