@@ -13,7 +13,7 @@ export const checkoutItemList = [
         price: 0.00
     }, { 
         id: 'scholar-membership', 
-        name: 'Scholar Membership',
+        name: 'Independent Scholar / Other Membership',
         type: 'membership',
         desc: 'Subscription as a scholar member for one month.',
         price: 0.00

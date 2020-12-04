@@ -200,7 +200,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Profile(pro
                                 </Typography>
                             </ListItem>
                             <ListItem className={classes.listItem}>
-                                <ListItemText primary='Scholar' />
+                                <ListItemText primary='Independent Scholar / Other' />
                                 <Typography variant="body3">
                                     <span style={{position: "relative", top: state.isEdit ? 6 : 0}}>$</span>
                                     { state.isEdit ?

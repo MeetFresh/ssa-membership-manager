@@ -50,6 +50,7 @@ import axios from 'axios'
 
 
 import { loadStripe } from "@stripe/stripe-js";
+import { profile } from '../Members/profileList';
 const promise = loadStripe("pk_test_51HKUBkCT0gTsZJ1O7Z5eOtt5HwxFFk1Mh6RDeVer8wxM5ioHdLohr4HovlxrdDW9SBZIQvSeOX3xbqnK3e4cOQVx00F3k0i43R");
 
 const drawerWidth = 240;
@@ -171,7 +172,8 @@ const mapStateToProps = (state) => ({
   isAdmin: state.getIn(['app', 'isAdmin']),
   connectionError: state.getIn(['app', 'connectionError']),
   wrongCredentials: state.getIn(['app', 'wrongCredentials']),
-  signUpSuccess: state.getIn(['app', 'signUpSuccess'])
+  signUpSuccess: state.getIn(['app', 'signUpSuccess']),
+  profile: state.getIn(['app', 'profile'])
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -226,6 +228,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
     if (tokenIdx !== -1) {
         props.setTempPassToken(currURL.substring(tokenIdx + RESET_PASS_API.length + 1))
     }
+
+    const first = props.profile.toJS().first
 
     return (
         <div className={classes.root}>
@@ -412,7 +416,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(function Dashboard(p
                 <div className={classes.appBarSpacer}/>
                 <h1 className={classes.header}>
                     {
-                        props.isAdmin ? "Welcome, SSA Admin!" : "Welcome to SSA Website!"
+                        (props.isAdmin ? "Welcome to SSA Admin" : "Welcome to Society for Study of Affect (SSA)")
+                        + (first ? ", " + first : "") + "!"
                     }
                 </h1>
                 {/* {

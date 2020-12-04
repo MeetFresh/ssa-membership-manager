@@ -336,7 +336,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(function EditProfile
                                     <option value={'nt-faculty'}>NT-Faculty</option>
                                     <option value={'faculty'}>Faculty</option>
                                     <option value={'postdoc'}>Postdoc</option>
-                                    <option value={'scholar'}>Scholar</option>
+                                    <option value={'scholar'}>Independent Scholar / Other</option>
                                 </Select>
                                 {state.statusValidation !== true ? <FormHelperText error>{state.statusValidation}</FormHelperText> : null}
                             </Grid>
